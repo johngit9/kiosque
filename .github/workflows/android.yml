@@ -1,0 +1,44 @@
+name: Appli Android (APK)
+
+on:
+  push:
+    branches: [main]
+    paths: ["www/**", "capacitor.config.json", "package.json", ".github/workflows/android.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Installer Capacitor
+        run: npm install
+      - name: Générer le projet Android
+        run: |
+          npx cap add android
+          npx cap sync android
+      - name: Construire l'APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Renommer
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk kiosque.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kiosque-apk
+          path: kiosque.apk
+      - name: Publier dans les Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android --yes --cleanup-tag || true
+          gh release create android kiosque.apk --title "Kiosque pour Android" --notes "APK construit automatiquement depuis le commit ${GITHUB_SHA::7}. Téléchargez kiosque.apk sur votre téléphone puis ouvrez-le pour l'installer." --latest
