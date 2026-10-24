@@ -116,6 +116,7 @@ article.card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
 .chip { font: 500 11px/1 var(--f-mono); padding: 4px 7px; border-radius: 99px; background: var(--chip); color: var(--accent); letter-spacing: 0.02em; }
 .chip.fibre { color: var(--fibre); box-shadow: inset 0 0 0 1px var(--fibre); background: none; }
+.chip.moi { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: none; }
 .chip.regl { color: var(--regl); box-shadow: inset 0 0 0 1px var(--regl); background: none; }
 .actions { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 2px; margin-left: -8px; }
 .icon-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid transparent; border-radius: 8px; padding: 5px 8px; cursor: pointer; color: var(--muted); font-size: 13px; }
@@ -551,7 +552,7 @@ if (!store.get("kiosque.links", null)) { store.set("kiosque.links", links); stor
 const saveLinks = () => store.set("kiosque.links", links);
 const linkById = id => links.find(l => l.id === id) || links[0];
 let saved = store.get("kiosque.saved", []);
-const VIEWS = ["une", ...RUBRICS.map(r => r.id), "autres", "saved"];
+const VIEWS = ["une", "moi", ...RUBRICS.map(r => r.id), "autres", "saved"];
 let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
 let telSub = "all";
 let filter = "all";
@@ -674,6 +675,46 @@ function ago(d) {
   return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
 }
 
+// ——— Rubrique « Pour moi » : profil tiré des articles enregistrés ———
+const MOI_MIN = 3, MOI_SCORE = 2;
+const STOP = new Set(("avec dans pour plus sont mais elle elles ils leur leurs nous vous cette cela ceux celle celles comme tout tous toute toutes sans sous apres avant entre encore aussi bien fait faire etre avoir deux trois quatre selon depuis contre chez quand alors donc ainsi dont quoi quel quelle quels quelles notre votre moins tres peut doit veut sera seront etait ont avait lors face vers pourquoi comment annee annees jour jours mois semaine nouveau nouvelle nouveaux nouvelles premier premiere grand grande grands petit autre autres ans fois leurs ceci celui elles cest aux des les une sur par qui que est son ses pas va vont veulent faut ete etes hier demain aujourd hui lundi mardi mercredi jeudi vendredi samedi dimanche janvier fevrier mars avril juin juillet aout septembre octobre novembre decembre article articles lire suite video photos direct").split(" "));
+function words(t) { return [...new Set(norm(t).replace(/[^a-z0-9]+/g, " ").split(" ").filter(w => w.length >= 4 && !STOP.has(w) && !/^\d+$/.test(w)))]; }
+// Forme accentuée d'un mot normalisé, pour l'affichage.
+function pretty(t, w) { return (t || "").toLowerCase().split(/[^\p{L}\p{N}]+/u).find(x => norm(x) === w) || w; }
+let profileCache = null;
+function profile() {
+  if (profileCache) return profileCache;
+  const df = new Map(), rub = new Map(), src = new Map();
+  const bump = (m, k) => m.set(k, (m.get(k) || 0) + 1);
+  for (const a of saved) {
+    for (const w of words(a.title + " " + (a.summary || ""))) bump(df, w);
+    for (const r of a.rubrics || []) if (r !== "autres") bump(rub, r);
+    if (a.tel?.fibre) bump(rub, "tel:fibre");
+    if (a.tel?.regl) bump(rub, "tel:regl");
+    bump(src, a.src);
+  }
+  // Mots qui reviennent dans plusieurs articles enregistrés (ou dans un seul tant qu'il y en a peu).
+  const min = saved.length >= 6 ? 2 : 1;
+  const kw = [...df].filter(([, c]) => c >= min).sort((a, b) => b[1] - a[1]).slice(0, 80);
+  const rubs = [...rub].filter(([k]) => !k.startsWith("tel:")).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+  return profileCache = { n: saved.length, kw: new Map(kw), rub, src, top: kw.slice(0, 12).map(([w]) => w), rubs,
+    shown: kw.slice(0, 12).map(([w]) => pretty(saved.map(a => a.title + " " + (a.summary || "")).find(t => norm(t).includes(w)), w)) };
+}
+function forMe(i) {
+  const p = profile();
+  if (p.n < MOI_MIN || isSaved(i)) return false;
+  if (i._moiP !== p) {
+    const hits = words(i.title + " " + i.summary).filter(w => p.kw.has(w)).sort((a, b) => p.kw.get(b) - p.kw.get(a));
+    let sc = hits.reduce((t, w) => t + Math.log2(1 + p.kw.get(w)), 0);
+    for (const r of i.rubrics) sc += 1.5 * (p.rub.get(r) || 0) / p.n;
+    if (i.tel?.fibre) sc += 1.5 * (p.rub.get("tel:fibre") || 0) / p.n;
+    if (i.tel?.regl) sc += 1.5 * (p.rub.get("tel:regl") || 0) / p.n;
+    sc += 0.5 * (p.src.get(i.src) || 0) / p.n;
+    i._moiP = p; i._moiW = hits; i._moi = hits.length ? sc : 0;
+  }
+  return i._moi >= MOI_SCORE;
+}
+
 // ——— Articles visibles ———
 let hideAds = store.get("kiosque.hideads", true);
 function allItems() {
@@ -684,6 +725,7 @@ function allItems() {
 }
 function inView(i) {
   if (view === "une") return true;
+  if (view === "moi") return forMe(i);
   if (!i.rubrics.includes(view)) return false;
   if (view === "telecoms" && telSub !== "all") return !!i.tel?.[telSub];
   return true;
@@ -699,8 +741,8 @@ function currentItems() {
 // ——— Menus ———
 function renderMenu() {
   const items = allItems();
-  const count = id => id === "une" ? items.length : items.filter(i => i.rubrics.includes(id)).length;
-  const entries = [{ id: "une", name: "À la une" }, ...RUBRICS, { id: "autres", name: "Autres" }, { id: "saved", name: "Enregistrés" }];
+  const count = id => id === "une" ? items.length : id === "moi" ? items.filter(forMe).length : items.filter(i => i.rubrics.includes(id)).length;
+  const entries = [{ id: "une", name: "À la une" }, { id: "moi", name: "Pour moi", me: true }, ...RUBRICS, { id: "autres", name: "Autres" }, { id: "saved", name: "Enregistrés" }];
   const nav = $("#menu");
   nav.innerHTML = "";
   for (const r of entries) {
@@ -708,6 +750,7 @@ function renderMenu() {
     b.type = "button";
     b.setAttribute("aria-current", String(r.id === view));
     if (r.star) { b.classList.add("tel"); b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">◆</span>'); }
+    if (r.me) { b.classList.add("me"); b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">★</span>'); }
     b.append(document.createTextNode(r.name));
     const n = document.createElement("span"); n.className = "n";
     n.textContent = r.id === "saved" ? saved.length : (items.length ? count(r.id) : "");
@@ -845,6 +888,8 @@ function toggleSave(i) {
   if (isSaved(i)) saved = saved.filter(s => s.link !== i.link);
   else saved.unshift({ title: i.title, link: i.link, src: i.src, srcName: feedById(i.src)?.name || i.src, date: i.date, summary: i.summary, image: i.image, rubrics: i.rubrics, tel: i.tel, savedAt: new Date().toISOString() });
   store.set("kiosque.saved", saved);
+  profileCache = null;
+  if (notif.enabled && notif.rules.includes("moi")) syncNotif();
   renderAll();
 }
 
@@ -869,12 +914,13 @@ function chips(i) {
   const box = document.createElement("div");
   box.className = "chips";
   const add = (txt, cls) => { const s = document.createElement("span"); s.className = "chip" + (cls ? " " + cls : ""); s.textContent = txt; box.append(s); };
+  if (view === "moi") for (const w of (i._moiW || []).slice(0, 3)) add(pretty(i.title + " " + i.summary, w), "moi");
   if (i.tel) {
     if (i.tel.fibre) add("Infra fibre", "fibre");
     if (i.tel.regl) add("Réglementaire", "regl");
     if (view !== "telecoms") add("Télécoms");
     else { if (i.tel.intl) add("International"); else add("France"); }
-  } else if (view === "une" || view === "saved") {
+  } else if (view === "une" || view === "saved" || view === "moi") {
     const r = i.rubrics.find(x => x !== "autres");
     if (r) add(rubricName(r));
   }
@@ -921,6 +967,13 @@ function render() {
   const sub = view === "telecoms" && TEL_SUBS.find(s => s.id === telSub);
   intro.hidden = !(sub && sub.intro);
   if (sub && sub.intro) intro.textContent = sub.intro;
+  if (view === "moi") {
+    const p = profile();
+    intro.hidden = false;
+    intro.textContent = p.n < MOI_MIN
+      ? "Cette rubrique se construit à partir de vos articles enregistrés. Enregistrez au moins " + MOI_MIN + " articles qui vous intéressent (il en manque " + (MOI_MIN - p.n) + ") et Kiosque vous proposera les nouveaux articles qui leur ressemblent."
+      : "Sélection d'après vos " + p.n + " articles enregistrés" + (p.rubs.length ? " (surtout " + p.rubs.slice(0, 3).map(rubricName).join(", ") + ")" : "") + ". Thèmes suivis : " + p.shown.join(", ") + ". Plus vous enregistrez, plus elle s'affine.";
+  }
 
   if (view === "saved") return renderSaved();
 
@@ -931,6 +984,7 @@ function render() {
     status.className = pending || allItems().length ? "status" : "status err";
     status.textContent = pending ? "Chargement des flux…"
       : $("#q").value ? "Aucun article ne correspond à cette recherche."
+      : view === "moi" && profile().n < MOI_MIN ? ""
       : allItems().length ? "Aucun article dans cette rubrique pour l'instant."
       : NO_NET_HINT();
     $("#more").hidden = true;
@@ -1100,6 +1154,7 @@ const NOTIF_RULES = [
   { id: "regl", name: "Réglementaire télécoms", re: TEL_REGL.source },
   { id: "telecoms", name: "Toute l'actualité télécoms", re: RUBRICS[0].re.source },
   ...RUBRICS.slice(1).map(r => ({ id: r.id, name: r.name, re: r.re.source })),
+  { id: "moi", name: "Pour moi (d'après vos enregistrés)", get re() { const t = profile().top; return t.length ? "\\b(" + t.join("|") + ")\\b" : "(?!)"; } },
   { id: "all", name: "Tous les articles", re: "." },
 ];
 let notif = store.get("kiosque.notif", { enabled: false, rules: ["fibre", "regl"], keywords: "", quiet: true });

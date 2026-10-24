@@ -31,6 +31,7 @@ jobs:
           grep -q "background-runner/android/src/main/libs" android/app/build.gradle
           sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n</manifest>#' android/app/src/main/AndroidManifest.xml
           grep -q POST_NOTIFICATIONS android/app/src/main/AndroidManifest.xml
+          echo "kotlin.jvm.target.validation.mode=warning" >> android/gradle.properties
           npx capacitor-assets generate --android
           npx cap sync android
       - name: Clé de signature fixe (pour pouvoir mettre l'appli à jour sans la désinstaller)
