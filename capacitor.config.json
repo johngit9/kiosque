@@ -3,6 +3,16 @@
   "appName": "Kiosque",
   "webDir": "www",
   "plugins": {
-    "CapacitorHttp": { "enabled": true }
+    "CapacitorHttp": {
+      "enabled": true
+    },
+    "BackgroundRunner": {
+      "label": "fr.kiosque.check",
+      "src": "runners/check.js",
+      "event": "checkNews",
+      "repeat": true,
+      "interval": 15,
+      "autoStart": true
+    }
   }
 }

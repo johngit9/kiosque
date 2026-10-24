@@ -136,6 +136,19 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .tabs { position: sticky; top: 66px; z-index: 2; display: flex; gap: 4px; background: var(--bg); border-radius: 99px; padding: 4px; margin-bottom: 14px; }
 .tabs button { flex: 1; border: 0; background: none; border-radius: 99px; padding: 8px 6px; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--muted); }
 .tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }
+.toggle-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); cursor: pointer; margin: 6px 0; }
+.toggle-line > span:first-child { display: grid; gap: 2px; }
+.toggle-line small { color: var(--muted); font-size: 12px; }
+.notifcard { display: grid; gap: 10px; }
+.notifprev { display: grid; gap: 3px; padding: 12px 14px; border-radius: 14px; background: var(--ink); color: var(--surface); font-size: 13px; }
+.notifprev .np-app { display: flex; align-items: center; gap: 6px; font-size: 11px; opacity: 0.75; }
+.notifprev svg { width: 16px; height: 16px; border-radius: 4px; }
+.notifprev span { opacity: 0.85; }
+.notifrules { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.notifrules label { display: flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 14px; background: var(--bg); }
+.notifrules label:has(input:checked) { border-color: var(--accent); background: var(--chip); }
+.notifrules input { accent-color: var(--accent); width: 16px; height: 16px; }
+.field input { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-weight: 400; min-width: 0; }
 .grouphead { font: 600 12px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 4px; }
 .switch { position: relative; width: 42px; height: 24px; flex: none; }
 .switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
@@ -183,6 +196,25 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 .shot { position: relative; margin: 14px 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg); min-height: 120px; display: grid; place-items: center; }
 .shot img { display: block; width: 100%; height: auto; }
 .shot .wait { color: var(--muted); font-size: 14px; padding: 24px; text-align: center; }
+.flurls { display: grid; gap: 4px; margin-bottom: 10px; }
+.flurls code { font: 11px var(--f-mono); color: var(--muted); word-break: break-all; }
+.fllist { list-style: none; margin: 0; padding: 0; counter-reset: n; }
+.fllist li { counter-increment: n; display: grid; grid-template-columns: 2.2em minmax(0, 1fr); gap: 2px 8px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.fllist li::before { content: counter(n); grid-row: 1 / 3; font: 12px var(--f-mono); color: var(--muted); padding-top: 2px; text-align: right; }
+.fllist a { font-weight: 600; text-decoration: none; }
+.fllist a:hover { text-decoration: underline; }
+.fllist small { font: 11px var(--f-mono); color: var(--muted); word-break: break-all; }
+.fllist .adtag { color: var(--warn); }
+.feedrow .opts .iconbtn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 9px; font-size: 12px; cursor: pointer; color: var(--ink); white-space: nowrap; }
+.sharechoices { display: grid; gap: 8px; }
+.sharechoice { display: flex; align-items: center; gap: 12px; text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 12px 14px; cursor: pointer; color: var(--ink); }
+.sharechoice svg { width: 26px; height: 26px; flex: none; color: var(--accent); }
+.sharechoice span { display: grid; gap: 2px; }
+.sharechoice small { color: var(--muted); font-size: 12px; }
+.sharechoice.primary { border-color: var(--accent); }
+.sharechoice:disabled { opacity: 0.6; cursor: progress; }
+.sharechoice:not(:disabled):hover { border-color: var(--accent); background: var(--chip); }
+.shot { max-height: 46vh; overflow-y: auto; place-items: start center; }
 .sharebtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
 .sharebtns .btn { text-align: center; text-decoration: none; }
 .sharelink { font: 12px var(--f-mono); color: var(--muted); word-break: break-all; margin: 6px 0 0; }
@@ -248,10 +280,12 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <div class="tabs" role="tablist">
     <button type="button" role="tab" data-tab="feeds" aria-selected="true">Journaux</button>
     <button type="button" role="tab" data-tab="links" aria-selected="false">Liens</button>
+    <button type="button" role="tab" data-tab="notif" aria-selected="false">Alertes</button>
     <button type="button" role="tab" data-tab="lang" aria-selected="false">Traduction</button>
   </div>
   <section class="tabpane" data-pane="feeds">
     <p class="note">Activez les journaux à suivre et choisissez, pour chacun, le lien qui s'ouvre quand vous touchez un article. Tous les articles sont triés automatiquement dans les rubriques.</p>
+    <label class="toggle-line" for="hideads"><span><b>Masquer les pubs déguisées</b><small>Articles sponsorisés, publi-rédactionnels, bons plans et codes promo</small></span><span class="switch"><input id="hideads" type="checkbox"><span></span></span></label>
     <div id="feedrows"></div>
     <h3 class="grouphead">Ajouter un flux</h3>
     <form id="addform" class="addform">
@@ -264,9 +298,27 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     </form>
   </section>
   <section class="tabpane" data-pane="links" hidden>
-    <p class="note">Ces liens apparaissent dans « Ouvrir avec… » sous chaque article, et peuvent être choisis comme lien par défaut d'un journal. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
+    <p class="note">Chaque journal ouvre ses articles avec le lien choisi dans l'onglet Journaux. Au retour d'un article, une barre propose de le rouvrir avec un autre de ces liens. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
     <div id="linkrows"></div>
     <div class="row"><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
+  </section>
+  <section class="tabpane" data-pane="notif" hidden>
+    <div class="notifcard">
+      <div class="notifprev" aria-hidden="true">
+        <div class="np-app"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#173a63"/><path d="M20 16v32M21 33l15-17M27 27l12 21" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="46" cy="18" r="4" fill="#7cf0c8"/></svg>Kiosque · maintenant</div>
+        <b>◆ Infra fibre · DegroupNews</b>
+        <span>Exemple : Xpfibre lance la fermeture du cuivre dans 200 communes</span>
+      </div>
+      <label class="toggle-line" for="notif-on"><span><b>Recevoir des alertes</b><small>Le téléphone vérifie vos journaux environ toutes les 15 minutes, même appli fermée</small></span><span class="switch"><input id="notif-on" type="checkbox"><span></span></span></label>
+    </div>
+    <h3 class="grouphead">M'alerter pour</h3>
+    <div id="notif-rules" class="notifrules"></div>
+    <label class="field" for="notif-kw">Mots-clés à surveiller <small class="note" style="font-weight:400">séparés par des virgules, ex. Xpfibre, Axione, Arcep</small>
+      <input id="notif-kw" type="text" placeholder="Xpfibre, Axione, Altitude, Arcep">
+    </label>
+    <label class="toggle-line" for="notif-quiet"><span><b>Pas d'alerte la nuit</b><small>Entre 22 h et 7 h, les alertes sont regroupées pour le matin</small></span><span class="switch"><input id="notif-quiet" type="checkbox"><span></span></span></label>
+    <div class="row"><button id="notif-test" class="btn" type="button">Envoyer une alerte de test</button></div>
+    <p id="notif-status" class="note"></p>
   </section>
   <section class="tabpane" data-pane="lang" hidden>
     <label class="field" for="tlang">Langue du bouton « Traduire »
@@ -278,6 +330,17 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </section>
 </dialog>
 
+<dialog id="feedlinks" class="sheet">
+  <div class="sheethead">
+    <h2 id="fl-title">Liens du flux</h2>
+    <button id="fl-close" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <p id="fl-sub" class="note"></p>
+  <div id="fl-urls" class="flurls"></div>
+  <ol id="fl-list" class="fllist"></ol>
+  <div class="row"><button id="fl-copy" class="btn" type="button">Copier tous les liens</button></div>
+</dialog>
+
 <div id="reopen" class="reopen" role="region" aria-label="Rouvrir l'article" hidden>
   <div class="reopen-in">
     <p><span>Rouvrir avec</span> <b id="reopentitle"></b></p>
@@ -286,27 +349,23 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </div>
 </div>
 
-<dialog id="withdlg" class="sheet small">
-  <div class="sheethead">
-    <h2>Ouvrir avec…</h2>
-    <button id="withclose" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-  </div>
-  <p id="withtitle" class="note"></p>
-  <div id="withlist" class="withlist"></div>
-</dialog>
 
 <dialog id="sharedlg">
   <h2>Partager l'article</h2>
   <p id="sharetitle" class="note"></p>
   <div class="shot" id="shot"><p class="wait">Capture de la version ordinateur en cours…</p></div>
-  <div class="sharebtns">
-    <button id="sh-native" class="btn primary" type="button">Partager l'image…</button>
-    <a id="sh-wa" class="btn" target="_blank" rel="noopener">WhatsApp</a>
-    <a id="sh-sms" class="btn">SMS</a>
-    <a id="sh-mail" class="btn">E-mail</a>
-    <button id="sh-copy" class="btn" type="button">Copier le lien</button>
+  <div class="sharechoices">
+    <button id="sh-image" class="sharechoice primary" type="button" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M4 18l5-5 4 4 3-3 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span><b>Partager l'image et le lien</b><small id="sh-image-sub">Capture de la page en cours…</small></span>
+    </button>
+    <button id="sh-link" class="sharechoice" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span><b>Partager le lien</b><small>Titre, journal et adresse de l'article</small></span>
+    </button>
   </div>
-  <p class="note" id="sharehint">« Partager l'image » ouvre le menu du téléphone : Element, WhatsApp, Messages, Gmail… L'image contient l'adresse d'origine de l'article.</p>
+  <p class="note" id="sharehint">Les deux boutons ouvrent le menu de partage du téléphone : choisissez Element, WhatsApp, Messages, Gmail ou une autre appli.</p>
+  <div class="row"><button id="sh-copy" class="btn" type="button">Copier le lien</button></div>
   <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
 </dialog>
 
@@ -314,6 +373,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 const DEFAULT_FEEDS = [
   { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-economie.xml", color: "#c8102e", on: true,
     more: ["entreprises", "finance-marches", "monde", "politique", "tech-medias", "idees", "start-up", "regions"].map(r => "https://services.lesechos.fr/rss/les-echos-" + r + ".xml") },
+  { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true },
   { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true },
   { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true },
   { id: "libe", name: "Libération", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml", color: "#e2001a", on: true },
@@ -321,7 +381,6 @@ const DEFAULT_FEEDS = [
   { id: "parisien", name: "Le Parisien", url: "https://feeds.leparisien.fr/leparisien/rss", color: "#0f6fb7", on: true },
   { id: "20min", name: "20 Minutes", url: "https://www.20minutes.fr/feeds/rss-une.xml", color: "#0072bc", on: true },
   { id: "courrier", name: "Courrier international", url: "https://www.courrierinternational.com/feed/all/rss.xml", color: "#d7262c", on: true },
-  { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true },
   { id: "lepoint", name: "Le Point", url: "https://www.lepoint.fr/rss.xml", color: "#b31b1b", on: false },
   { id: "lexpress", name: "L'Express", url: "https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml", color: "#e30613", on: false },
   { id: "01net", name: "01net", url: "https://www.01net.com/actualites/feed/", color: "#ff6600", on: true },
@@ -388,6 +447,8 @@ const TEL_SUBS = [
   { id: "regl", name: "Réglementaire", intro: "Arcep, BEREC, Commission européenne, fréquences, amendes, obligations de déploiement et textes de loi." },
 ];
 
+// Contenus sponsorisés et « bons plans » commerciaux, masqués par défaut.
+const AD_RE = /(\bbons? plans?\b|\bcodes? promo\b|\bpromo\b|\bsoldes\b|black friday|cyber monday|french days|prime day|vente flash|\bprix (casse|choc|fou|en chute)|\bmeilleur prix\b|a moins de \d+ ?(e|euros)\b|\boffre speciale\b|-\d+ ?%|sponsoris|publi-?redactionnel|publireportage|contenu partenaire|contenu sponsorise|brandvoice|\bsponsored\b|advertorial|partner content|paid post|bons-plans|bon-plan|codes-promo|\/partenaire|\/sponsor|\/deals?\/|\/promo)/;
 function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
 function classify(i) {
   const t = norm(i.title + " " + i.summary + " " + (i.cats || []).join(" "));
@@ -397,7 +458,8 @@ function classify(i) {
     const intl = TEL_INTL.test(t), fr = TEL_FR.test(t);
     tel = { fibre: TEL_FIBRE.test(t), regl: TEL_REGL.test(t), intl, france: fr || !intl };
   }
-  return { rubrics: rubrics.length ? rubrics : ["autres"], tel };
+  const ad = AD_RE.test(norm(i.title + " " + (i.cats || []).join(" ") + " " + i.link));
+  return { rubrics: rubrics.length ? rubrics : ["autres"], tel, ad };
 }
 
 // ——— Récupération des flux ———
@@ -456,7 +518,9 @@ function loadFeeds() {
     return d ? { ...d, on: f.on, link: f.link, open: f.open } : f;
   });
   for (const d of DEFAULT_FEEDS) if (!list.some(f => f.id === d.id)) list.push({ ...d });
-  return list;
+  // Les sources par défaut gardent l'ordre prévu (La Tribune après Les Echos…), les flux ajoutés à la main suivent.
+  const rank = id => { const k = DEFAULT_FEEDS.findIndex(d => d.id === id); return k < 0 ? 1e6 : k; };
+  return list.map((f, k) => [f, k]).sort((a, b) => rank(a[0].id) - rank(b[0].id) || a[1] - b[1]).map(x => x[0]);
 }
 let feeds = loadFeeds();
 let transLang = store.get("kiosque.tlang", "en");
@@ -611,8 +675,10 @@ function ago(d) {
 }
 
 // ——— Articles visibles ———
+let hideAds = store.get("kiosque.hideads", true);
 function allItems() {
   let items = activeFeeds().flatMap(f => results[f.id]?.items || []);
+  if (hideAds) items = items.filter(i => !i.ad);
   const seen = new Set();
   return items.filter(i => !seen.has(i.link) && seen.add(i.link));
 }
@@ -751,22 +817,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) show
 window.addEventListener("focus", showReopen);
 // Traduction : Google Traduction dans la langue choisie dans les réglages.
 const openTranslated = i => openInBrowser(buildUrl(DEFAULT_LINKS[1].tpl, i));
-function openWith(i) {
-  $("#withtitle").textContent = i.title;
-  const box = $("#withlist");
-  box.innerHTML = "";
-  for (const l of links) {
-    const b = document.createElement("button");
-    b.type = "button";
-    const n = document.createElement("span"); n.textContent = l.name;
-    const u = document.createElement("small"); u.textContent = buildUrl(l.tpl, i);
-    b.append(n, u);
-    b.onclick = () => { $("#withdlg").close(); lastOpen = { item: i, used: l.id, at: Date.now() }; openInBrowser(buildUrl(l.tpl, i)); };
-    box.append(b);
-  }
-  $("#withdlg").showModal();
-}
-$("#withclose").onclick = () => $("#withdlg").close();
+
 function link(i, cls) {
   const a = document.createElement("a");
   a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer";
@@ -800,7 +851,6 @@ function toggleSave(i) {
 // ——— Rendu ———
 const ICON_SAVE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
 const ICON_TRANSLATE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h10M8 3v2M5 5c1 4 4 7 7 8M11 5c-1 4-4 7-7 8M13 21l4-10 4 10M14.5 17.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const ICON_WITH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4" stroke="currentColor" stroke-width="1.8"/></svg>';
 
 function meta(i) {
@@ -847,11 +897,7 @@ function actions(i) {
   t.type = "button"; t.className = "icon-btn";
   t.innerHTML = ICON_TRANSLATE + "<span>Traduire</span>"; t.title = "Traduire";
   t.onclick = () => openTranslated(i);
-  const w = document.createElement("button");
-  w.type = "button"; w.className = "icon-btn";
-  w.innerHTML = ICON_WITH + "<span>Ouvrir avec</span>"; w.title = "Ouvrir avec…";
-  w.onclick = () => openWith(i);
-  box.append(s, w, t, p);
+  box.append(s, t, p);
   return box;
 }
 function card(i) {
@@ -942,9 +988,12 @@ function renderSaved() {
 
 // ——— Partage avec capture d'écran ———
 // La capture de la version ordinateur est faite par le service Microlink (bloqueur de pubs et de bandeaux cookies activé).
+// Page entière, avec bloqueur de pubs, et CSS qui masque bandeaux cookies, pop-ups, lettres d'information et blocs publicitaires.
+const SHOT_CSS = '[id*="didomi"],[class*="didomi"],[id*="cookie"],[class*="cookie"],[class*="consent"],[id*="consent"],[id^="sp_message"],[class*="newsletter"],[class*="popup"],[class*="popin"],[id*="popin"],[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],[class^="ad-"],[class*=" ad-"],[id^="ad-"],[class*="advert"],[id*="advert"],[class*="dfp"],[id*="dfp"],[class*="sponsor"],[class*="pub-"],[id^="pub"],[class*="sticky-ad"],[class*="banner"],[class*="interstitial"],iframe{display:none!important}html,body{overflow:visible!important}';
 function screenshotUrl(link) {
   return "https://api.microlink.io/?url=" + encodeURIComponent(link) +
-    "&screenshot=true&meta=false&embed=screenshot.url&adblock=true&viewport.width=1366&viewport.height=1024&viewport.deviceScaleFactor=1&waitForTimeout=1500";
+    "&screenshot=true&screenshot.fullPage=true&screenshot.type=jpeg&meta=false&embed=screenshot.url&adblock=true" +
+    "&viewport.width=1366&viewport.height=900&viewport.deviceScaleFactor=1&waitForTimeout=2500&styles=" + encodeURIComponent(SHOT_CSS);
 }
 let shareState = null;
 function shareText(i) { return i.title + " (" + (feedById(i.src)?.name || i.srcName || "") + ")\n" + i.link; }
@@ -959,25 +1008,28 @@ function wrapText(ctx, text, maxW) {
 }
 async function buildShareImage(i) {
   const shot = await loadImage(screenshotUrl(i.link));
-  const W = 1366, pad = 40;
+  // Les téléphones limitent la hauteur d'une image : au-delà de 14 000 px, on réduit l'ensemble proportionnellement.
+  const MAXH = 14000;
+  const W = Math.round(Math.min(1366, 1366 * MAXH / (shot.naturalHeight * 1366 / shot.naturalWidth + 300))), pad = Math.round(40 * W / 1366);
   const c = document.createElement("canvas");
   const ctx = c.getContext("2d");
-  ctx.font = "700 34px Georgia, serif";
+  const k = W / 1366;
+  ctx.font = `700 ${34 * k}px Georgia, serif`;
   const lines = wrapText(ctx, i.title, W - pad * 2).slice(0, 3);
-  const headH = 70 + lines.length * 44 + 20, footH = 72;
+  const headH = (70 + lines.length * 44 + 20) * k, footH = 72 * k;
   const shotH = Math.round(shot.naturalHeight * (W / shot.naturalWidth));
   c.width = W; c.height = headH + shotH + footH;
   ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, c.height);
   ctx.fillStyle = "#173a63"; ctx.fillRect(0, 0, W, headH);
-  ctx.fillStyle = "#7cf0c8"; ctx.font = "600 20px 'IBM Plex Mono', monospace";
-  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, 46);
-  ctx.fillStyle = "#ffffff"; ctx.font = "700 34px Georgia, serif";
-  lines.forEach((l, k) => ctx.fillText(l, pad, 96 + k * 44));
+  ctx.fillStyle = "#7cf0c8"; ctx.font = `600 ${20 * k}px 'IBM Plex Mono', monospace`;
+  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, 46 * k);
+  ctx.fillStyle = "#ffffff"; ctx.font = `700 ${34 * k}px Georgia, serif`;
+  lines.forEach((l, n) => ctx.fillText(l, pad, (96 + n * 44) * k));
   ctx.drawImage(shot, 0, headH, W, shotH);
   ctx.fillStyle = "#14202b"; ctx.fillRect(0, headH + shotH, W, footH);
-  ctx.fillStyle = "#ffffff"; ctx.font = "500 22px 'IBM Plex Mono', monospace";
+  ctx.fillStyle = "#ffffff"; ctx.font = `500 ${22 * k}px 'IBM Plex Mono', monospace`;
   let url = i.link; while (ctx.measureText("Source : " + url).width > W - pad * 2 && url.length > 20) url = url.slice(0, -2);
-  ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45);
+  ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45 * k);
   return c;
 }
 async function openShare(i) {
@@ -985,12 +1037,9 @@ async function openShare(i) {
   shareState = { item: i, canvas: null };
   $("#sharetitle").textContent = i.title;
   const box = $("#shot");
-  box.innerHTML = '<p class="wait">Capture de la version ordinateur en cours (environ 10 secondes)…</p>';
-  const txt = shareText(i);
-  $("#sh-wa").href = "https://wa.me/?text=" + encodeURIComponent(txt);
-  $("#sh-sms").href = "sms:?&body=" + encodeURIComponent(txt);
-  $("#sh-mail").href = "mailto:?subject=" + encodeURIComponent(i.title) + "&body=" + encodeURIComponent(txt);
-  $("#sh-native").textContent = "Partager l'image…";
+  box.innerHTML = '<p class="wait">Capture de la page entière, version ordinateur, en cours (10 à 20 secondes)…</p>';
+  $("#sh-image").disabled = true;
+  $("#sh-image-sub").textContent = "Capture de la page en cours…";
   dlg.showModal();
   try {
     const canvas = await buildShareImage(i);
@@ -1000,15 +1049,17 @@ async function openShare(i) {
     prev.alt = "Aperçu de la capture partagée";
     prev.src = canvas.toDataURL("image/jpeg", 0.85);
     box.innerHTML = ""; box.append(prev);
+    $("#sh-image").disabled = false;
+    $("#sh-image-sub").textContent = "Capture de la page entière, avec l'adresse d'origine";
   } catch (e) {
     if (shareState?.item !== i) return;
-    box.innerHTML = '<p class="wait">La capture n\'a pas pu être faite (' + (e.message || e) + '). Vous pouvez quand même partager le titre et le lien.</p>';
-    $("#sh-native").textContent = "Partager le lien…";
+    box.innerHTML = '<p class="wait">La capture n\'a pas pu être faite (' + (e.message || e) + '). Vous pouvez quand même partager le lien.</p>';
+    $("#sh-image-sub").textContent = "Capture indisponible pour cet article";
   }
 }
-async function shareNative() {
+async function shareNative(withImage) {
   if (!shareState) return;
-  const i = shareState.item, c = shareState.canvas, txt = shareText(i);
+  const i = shareState.item, c = withImage ? shareState.canvas : null, txt = shareText(i);
   try {
     if (NATIVE && PLUGINS.Share) {
       const opts = { title: i.title, text: txt, dialogTitle: "Partager l'article" };
@@ -1029,7 +1080,8 @@ async function shareNative() {
     if (c) { const a = document.createElement("a"); a.href = c.toDataURL("image/jpeg", 0.88); a.download = "kiosque-partage.jpg"; a.click(); }
   } catch (e) { /* partage annulé */ }
 }
-$("#sh-native").onclick = shareNative;
+$("#sh-image").onclick = () => shareNative(true);
+$("#sh-link").onclick = () => shareNative(false);
 $("#sh-copy").onclick = async () => {
   if (!shareState) return;
   try { await navigator.clipboard.writeText(shareState.item.link); $("#sh-copy").textContent = "Lien copié"; }
@@ -1037,7 +1089,68 @@ $("#sh-copy").onclick = async () => {
   setTimeout(() => { $("#sh-copy").textContent = "Copier le lien"; }, 2000);
 };
 $("#sh-close").onclick = () => { shareState = null; $("#sharedlg").close(); };
-if (!NATIVE) $("#sharehint").textContent = "« Partager l'image » ouvre le menu de partage de l'appareil quand il existe. Sinon, l'image est téléchargée. Elle contient l'adresse d'origine de l'article.";
+if (!NATIVE) $("#sharehint").textContent = "Les boutons ouvrent le menu de partage de l'appareil quand il existe. Sinon, l'image est téléchargée.";
+
+// ——— Alertes (notifications) ———
+// L'appli transmet ses réglages à la tâche de fond (www/runners/check.js), qui envoie les notifications.
+const RUNNER = "fr.kiosque.check";
+const BgRunner = plugin("BackgroundRunner");
+const NOTIF_RULES = [
+  { id: "fibre", name: "Infra fibre", re: TEL_FIBRE.source },
+  { id: "regl", name: "Réglementaire télécoms", re: TEL_REGL.source },
+  { id: "telecoms", name: "Toute l'actualité télécoms", re: RUBRICS[0].re.source },
+  ...RUBRICS.slice(1).map(r => ({ id: r.id, name: r.name, re: r.re.source })),
+  { id: "all", name: "Tous les articles", re: "." },
+];
+let notif = store.get("kiosque.notif", { enabled: false, rules: ["fibre", "regl"], keywords: "", quiet: true });
+function notifConfig() {
+  const rules = NOTIF_RULES.filter(r => notif.rules.includes(r.id)).map(r => ({ name: r.name, re: r.re }));
+  const kws = notif.keywords.split(",").map(k => norm(k.trim())).filter(Boolean).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  if (kws.length) rules.unshift({ name: "Mot-clé suivi", re: "\\b(" + kws.join("|") + ")" });
+  return {
+    enabled: notif.enabled, quiet: notif.quiet, rules, adRe: hideAds ? AD_RE.source : "",
+    feeds: activeFeeds().map(f => ({ name: f.name, urls: [f.url, ...(f.more || [])] })),
+  };
+}
+async function syncNotif() {
+  store.set("kiosque.notif", notif);
+  if (!BgRunner) return;
+  try { await BgRunner.dispatchEvent({ label: RUNNER, event: "config", details: notifConfig() }); }
+  catch (e) { $("#notif-status").textContent = "Réglage non transmis : " + (e.message || e); }
+}
+function renderNotifPane() {
+  $("#notif-on").checked = notif.enabled;
+  $("#notif-quiet").checked = notif.quiet;
+  $("#notif-kw").value = notif.keywords;
+  const box = $("#notif-rules");
+  box.innerHTML = "";
+  for (const r of NOTIF_RULES) {
+    const l = document.createElement("label");
+    const c = document.createElement("input");
+    c.type = "checkbox"; c.id = "nr-" + r.id; c.checked = notif.rules.includes(r.id);
+    c.onchange = () => { notif.rules = c.checked ? [...notif.rules, r.id] : notif.rules.filter(x => x !== r.id); syncNotif(); };
+    l.append(c, document.createTextNode(r.name));
+    box.append(l);
+  }
+  $("#notif-status").textContent = NATIVE ? "" : "Les alertes fonctionnent dans l'appli Android.";
+}
+$("#notif-on").onchange = async () => {
+  notif.enabled = $("#notif-on").checked;
+  if (notif.enabled && BgRunner) {
+    try {
+      const p = await BgRunner.requestPermissions({ apis: ["notifications"] });
+      if (p && p.notifications && p.notifications !== "granted") $("#notif-status").textContent = "Autorisez les notifications de Kiosque dans les réglages Android.";
+    } catch (e) { /* déjà accordé ou non requis */ }
+  }
+  syncNotif();
+};
+$("#notif-quiet").onchange = () => { notif.quiet = $("#notif-quiet").checked; syncNotif(); };
+$("#notif-kw").onchange = () => { notif.keywords = $("#notif-kw").value; syncNotif(); };
+$("#notif-test").onclick = async () => {
+  if (!BgRunner) { $("#notif-status").textContent = "Disponible dans l'appli Android."; return; }
+  try { await BgRunner.dispatchEvent({ label: RUNNER, event: "test", details: {} }); $("#notif-status").textContent = "Alerte de test envoyée."; }
+  catch (e) { $("#notif-status").textContent = "Échec de l'alerte de test : " + (e.message || e); }
+};
 
 // ——— Réglages ———
 const GROUPS = [
@@ -1047,11 +1160,11 @@ const GROUPS = [
   { name: "Télécoms et infra, international", ids: ["lightreading", "fierce", "totaltele", "mwl", "rcr", "capacity", "fibresystems", "telecomramblings", "developingtelecoms", "insidetowers", "dcd", "mobileeurope", "policytracker", "fastmode", "bbcmag"] },
 ];
 const ICON_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-function saveFeeds() { store.set("kiosque.feeds", feeds); }
+function saveFeeds() { store.set("kiosque.feeds", feeds); syncNotif(); }
 function feedRow(f) {
   const row = document.createElement("div");
   row.className = "feedrow";
-  row.innerHTML = '<label class="switch"><input type="checkbox"><span></span></label><div><div class="nm"></div><div class="url"></div></div><button class="iconx" type="button"></button><div class="opts"><span>Ouvre :</span><select></select></div>';
+  row.innerHTML = '<label class="switch"><input type="checkbox"><span></span></label><div><div class="nm"></div><div class="url"></div></div><button class="iconx" type="button"></button><div class="opts"><span>Ouvre :</span><select></select><button class="iconbtn" type="button">Voir les liens</button></div>';
   const cb = row.querySelector("input");
   cb.id = "cb-" + f.id; cb.checked = f.on;
   cb.setAttribute("aria-label", "Afficher " + f.name);
@@ -1066,6 +1179,7 @@ function feedRow(f) {
   for (const l of links) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.append(o); }
   sel.value = linkById(f.link || "orig").id;
   sel.onchange = () => { f.link = sel.value; saveFeeds(); render(); };
+  row.querySelector(".iconbtn").onclick = () => showFeedLinks(f);
   return row;
 }
 function renderDialog() {
@@ -1103,12 +1217,50 @@ function renderLinks() {
     box.append(row);
   }
 }
+// Tous les liens d'un flux : adresses du flux et liste complète des articles qu'il contient.
+async function showFeedLinks(f) {
+  $("#fl-title").textContent = f.name;
+  $("#fl-urls").innerHTML = "";
+  [f.url, ...(f.more || [])].forEach(u => { const c = document.createElement("code"); c.textContent = u; $("#fl-urls").append(c); });
+  const list = $("#fl-list");
+  list.innerHTML = "";
+  $("#fl-sub").textContent = "Chargement…";
+  $("#feedlinks").showModal();
+  if (!results[f.id]) {
+    try {
+      const urls = [f.url, ...(f.more || [])];
+      const got = await Promise.allSettled(urls.map(async u => parseFeed(await fetchText(f, u), f)));
+      results[f.id] = { items: got.filter(g => g.status === "fulfilled").flatMap(g => g.value) };
+    } catch (e) { results[f.id] = { items: [], error: String(e.message || e) }; }
+  }
+  const r = results[f.id];
+  const items = [...(r.items || [])].sort((a, b) => (b.date || 0) - (a.date || 0));
+  $("#fl-sub").textContent = items.length ? items.length + " articles dans ce flux" + (items.some(i => i.ad) ? ", dont " + items.filter(i => i.ad).length + " sponsorisés ou bons plans" : "") : "Aucun article (" + (r.error || "flux vide") + ").";
+  for (const i of items) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = i.link; a.target = "_blank"; a.rel = "noopener"; a.textContent = i.title;
+    a.onclick = e => { e.preventDefault(); openArticle(i); };
+    const sm = document.createElement("small");
+    sm.textContent = (i.ad ? "[sponsorisé] " : "") + ago(i.date) + " · " + i.link;
+    if (i.ad) sm.classList.add("adtag");
+    li.append(a, sm);
+    list.append(li);
+  }
+  $("#fl-copy").onclick = async () => {
+    try { await navigator.clipboard.writeText(items.map(i => i.title + "\n" + i.link).join("\n\n")); $("#fl-copy").textContent = "Liens copiés"; }
+    catch { $("#fl-copy").textContent = "Copie impossible"; }
+    setTimeout(() => { $("#fl-copy").textContent = "Copier tous les liens"; }, 2000);
+  };
+}
+$("#fl-close").onclick = () => $("#feedlinks").close();
 $("#addlink").onclick = () => { links.push({ id: "l" + Date.now(), name: "Nouveau lien", tpl: "" }); saveLinks(); renderLinks(); const ins = $("#linkrows").querySelectorAll(".tpl"); ins[ins.length - 1]?.focus(); };
 document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
   document.querySelectorAll(".tabpane").forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
 });
-$("#manage").onclick = () => { renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
+$("#hideads").onchange = () => { hideAds = $("#hideads").checked; store.set("kiosque.hideads", hideAds); renderAll(); };
+$("#manage").onclick = () => { $("#hideads").checked = hideAds; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
 $("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
 $("#close").onclick = () => $("#dlg").close();
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
@@ -1129,6 +1281,7 @@ let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { show
 
 renderAll();
 loadAll();
+syncNotif();
 setInterval(() => { if (!document.hidden) loadAll(); }, REFRESH_MS);
 </script>
 </body>

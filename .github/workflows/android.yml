@@ -26,6 +26,11 @@ jobs:
       - name: Générer le projet Android
         run: |
           npx cap add android
+          # Notifications en arrière-plan (@capacitor/background-runner)
+          sed -i "s#dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'#dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs', '../../node_modules/@capacitor/background-runner/android/src/main/libs'#" android/app/build.gradle
+          grep -q "background-runner/android/src/main/libs" android/app/build.gradle
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n</manifest>#' android/app/src/main/AndroidManifest.xml
+          grep -q POST_NOTIFICATIONS android/app/src/main/AndroidManifest.xml
           npx capacitor-assets generate --android
           npx cap sync android
       - name: Clé de signature fixe (pour pouvoir mettre l'appli à jour sans la désinstaller)
