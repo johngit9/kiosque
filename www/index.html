@@ -38,6 +38,14 @@ header.top {
   padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
 }
+.searchwrap { position: relative; flex: 1 1 220px; min-width: 0; max-width: 460px; }
+.searchwrap svg { position: absolute; left: 11px; top: 50%; width: 17px; height: 17px; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.searchwrap .search { width: 100%; max-width: none; padding-left: 36px; border-radius: 99px; }
+.round { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); cursor: pointer; color: var(--ink); flex: none; }
+.round:hover { border-color: var(--accent); color: var(--accent); }
+.round svg { width: 20px; height: 20px; }
+#refresh:disabled svg { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .brand { display: flex; align-items: center; gap: 10px; margin: 0; font: 700 24px/1 var(--f-head); letter-spacing: -0.01em; }
 .brand svg { width: 34px; height: 34px; flex: none; }
 .search { flex: 1 1 200px; min-width: 0; max-width: 420px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
@@ -47,18 +55,29 @@ header.top {
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .stamp { font: 12px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 
+.menuwrap { position: relative; border-bottom: 1px solid var(--line); }
+.menuwrap::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 28px; background: linear-gradient(to right, transparent, var(--surface)); pointer-events: none; }
 .menubar {
-  display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--line);
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-block: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(28px, env(safe-area-inset-right, 0px));
 }
 .menubar::-webkit-scrollbar { display: none; }
-.menubar button { flex: none; display: flex; align-items: center; gap: 6px; background: none; border: 0; border-bottom: 3px solid transparent; padding: 11px 12px 9px; cursor: pointer; font-weight: 500; color: var(--muted); white-space: nowrap; }
-.menubar button:hover { color: var(--ink); }
-.menubar button[aria-current="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.menubar button { flex: none; display: flex; align-items: center; gap: 7px; background: var(--bg); border: 1px solid var(--line); border-radius: 99px; padding: 7px 13px; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--ink); white-space: nowrap; }
+.menubar button:hover { border-color: var(--accent); }
+.menubar button[aria-current="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.menubar button[aria-current="true"] .n { color: inherit; opacity: 0.7; }
+.menubar button.tel { border-color: var(--accent); }
+.menubar button.tel[aria-current="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.menubar button.empty { opacity: 0.55; }
 .menubar .n { font: 11px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
-.menubar .star { color: var(--accent); }
-.submenu { background: var(--bg); }
-.submenu button { padding: 8px 12px 6px; font-size: 14px; }
+.menubar .star { color: var(--accent); font-size: 10px; }
+.menubar button[aria-current="true"] .star { color: inherit; }
+.submenu { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; background: var(--bg); border-bottom: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.submenu::-webkit-scrollbar { display: none; }
+.submenu button { flex: none; display: flex; align-items: center; gap: 6px; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 12px 8px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.submenu button[aria-current="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.submenu .n { font: 11px var(--f-mono); }
 
 .layout {
   display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; max-width: 1360px; margin: 0 auto;
@@ -98,7 +117,7 @@ article.card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .chip { font: 500 11px/1 var(--f-mono); padding: 4px 7px; border-radius: 99px; background: var(--chip); color: var(--accent); letter-spacing: 0.02em; }
 .chip.fibre { color: var(--fibre); box-shadow: inset 0 0 0 1px var(--fibre); background: none; }
 .chip.regl { color: var(--regl); box-shadow: inset 0 0 0 1px var(--regl); background: none; }
-.actions { display: flex; gap: 4px; margin-top: auto; padding-top: 2px; }
+.actions { display: flex; flex-wrap: wrap; gap: 2px; margin-top: auto; padding-top: 2px; margin-left: -8px; }
 .icon-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid transparent; border-radius: 8px; padding: 5px 8px; cursor: pointer; color: var(--muted); font-size: 13px; }
 .icon-btn:hover { color: var(--ink); border-color: var(--line); }
 .icon-btn svg { width: 17px; height: 17px; }
@@ -111,10 +130,39 @@ article.card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 
 .more { display: block; margin: 32px auto 0; }
 
-dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 20px; }
+dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0 20px 20px; }
+.sheethead { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); padding: 16px 0 10px; }
+.sheethead h2 { margin: 0; }
+.tabs { position: sticky; top: 66px; z-index: 2; display: flex; gap: 4px; background: var(--bg); border-radius: 99px; padding: 4px; margin-bottom: 14px; }
+.tabs button { flex: 1; border: 0; background: none; border-radius: 99px; padding: 8px 6px; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--muted); }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }
+.grouphead { font: 600 12px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 4px; }
+.switch { position: relative; width: 42px; height: 24px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 99px; background: var(--line); transition: background 0.15s; pointer-events: none; }
+.switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform 0.15s; }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.feedrow select, .linkrow input, .field select { padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; font-size: 13px; }
+.feedrow .opts { grid-column: 2 / 4; display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); }
+.feedrow .opts select { flex: 1; }
+.iconx { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 6px; border-radius: 8px; }
+.iconx:hover { color: var(--warn); }
+.iconx svg { width: 18px; height: 18px; display: block; }
+.linkrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 8px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.linkrow .tpl { grid-column: 1 / 2; font-family: var(--f-mono); }
+.linkrow .fixed { font-weight: 600; padding: 7px 0; }
+.field { display: grid; gap: 6px; font-weight: 600; font-size: 14px; margin-top: 4px; }
+.withlist { display: grid; gap: 8px; margin-top: 8px; }
+.withlist button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+.withlist button:hover { border-color: var(--accent); }
+.withlist small { font: 11px var(--f-mono); color: var(--muted); word-break: break-all; }
+.sheet.small { width: min(460px, calc(100vw - 32px)); }
 dialog::backdrop { background: rgb(0 0 0 / 0.45); }
 dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
-.feedrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.feedrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.feedrow .nm { font-weight: 600; }
 .feedrow .url { font: 12px var(--f-mono); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .globalopen { display: grid; gap: 6px; margin-top: 14px; font-weight: 600; font-size: 14px; }
 .globalopen select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-weight: 400; }
@@ -138,8 +186,16 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   .src { width: auto; flex: none; border: 1px solid var(--line); }
   .src .name { overflow: visible; }
   .lead { grid-template-columns: minmax(0, 1fr); }
-  .tools { margin-left: 0; }
+  header.top { gap: 10px; }
+  .actions .icon-btn:not(:first-child) span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .actions .icon-btn { padding: 7px 10px; }
+  .actions .icon-btn svg { width: 19px; height: 19px; }
+  .brand { order: 1; }
+  .tools { order: 2; margin-left: auto; }
+  .searchwrap { order: 3; flex-basis: 100%; max-width: none; }
   .stamp { display: none; }
+  dialog.sheet { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; margin: 0; border-radius: 0; border: 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+  dialog.sheet.small { height: auto; max-height: 85dvh; margin: auto 0 0; border-radius: 16px 16px 0 0; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .card, .lead { animation: fade 0.25s ease both; }
@@ -151,15 +207,15 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 <div class="sticky">
   <header class="top">
     <h1 class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7c7b"/><stop offset="1" stop-color="#173a63"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg)"/><path d="M20 16v32M21 33l15-17M27 27l12 21" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="46" cy="18" r="4" fill="#7cf0c8"/></svg>Kiosque</h1>
-    <input id="q" class="search" type="search" placeholder="Rechercher un titre, un opérateur…" aria-label="Rechercher">
+    <div class="searchwrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="q" class="search" type="search" placeholder="Rechercher un titre, un opérateur…" aria-label="Rechercher"></div>
     <div class="tools">
       <span id="stamp" class="stamp"></span>
-      <button id="refresh" class="btn primary" type="button">Actualiser</button>
-      <button id="manage" class="btn" type="button">Sources</button>
+      <button id="refresh" class="round" type="button" aria-label="Actualiser" title="Actualiser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button id="manage" class="round" type="button" aria-label="Réglages" title="Réglages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
     </div>
   </header>
-  <nav id="menu" class="menubar" aria-label="Rubriques"></nav>
-  <nav id="submenu" class="menubar submenu" aria-label="Sous-rubriques" hidden></nav>
+  <div class="menuwrap"><nav id="menu" class="menubar" aria-label="Rubriques"></nav></div>
+  <nav id="submenu" class="submenu" aria-label="Sous-rubriques" hidden></nav>
 </div>
 
 <div class="layout">
@@ -176,28 +232,51 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </main>
 </div>
 
-<dialog id="dlg">
-  <h2>Sources</h2>
-  <p class="note">Cochez les journaux à afficher, ou ajoutez n'importe quel flux RSS ou Atom. Tous les articles sont ensuite triés automatiquement dans les rubriques.</p>
-  <label class="globalopen" for="openall">Lien d'ouverture, commun à tous les journaux
-    <input id="openall" type="text" placeholder="Vide = article d'origine · ex. https://exemple.fr/?u={url}">
-  </label>
-  <p class="note">Laissez vide pour ouvrir l'article d'origine, ou écrivez une adresse contenant <code>{url}</code> (adresse de l'article), <code>{rawurl}</code> (adresse non encodée) ou <code>{path}</code> (son chemin, sans le domaine).</p>
-  <div id="feedrows"></div>
-  <label class="globalopen" for="tlang">Langue du bouton « Traduire »
-    <select id="tlang">
-      <option value="en">Anglais</option><option value="fr">Français</option><option value="es">Espagnol</option><option value="de">Allemand</option><option value="it">Italien</option><option value="pt">Portugais</option><option value="ar">Arabe</option><option value="zh-CN">Chinois</option>
-    </select>
-  </label>
-  <form id="addform" class="addform">
-    <input id="newname" placeholder="Nom (ex. Le Point)" required>
-    <input id="newurl" type="url" placeholder="Adresse du flux RSS (https://…)" required>
-    <div class="row">
-      <button id="reset" class="btn" type="button">Rétablir les sources par défaut</button>
-      <button class="btn primary" type="submit">Ajouter</button>
-    </div>
-  </form>
-  <div class="row"><button id="close" class="btn" type="button">Fermer</button></div>
+<dialog id="dlg" class="sheet">
+  <div class="sheethead">
+    <h2>Réglages</h2>
+    <button id="close" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="feeds" aria-selected="true">Journaux</button>
+    <button type="button" role="tab" data-tab="links" aria-selected="false">Liens</button>
+    <button type="button" role="tab" data-tab="lang" aria-selected="false">Traduction</button>
+  </div>
+  <section class="tabpane" data-pane="feeds">
+    <p class="note">Activez les journaux à suivre et choisissez, pour chacun, le lien qui s'ouvre quand vous touchez un article. Tous les articles sont triés automatiquement dans les rubriques.</p>
+    <div id="feedrows"></div>
+    <h3 class="grouphead">Ajouter un flux</h3>
+    <form id="addform" class="addform">
+      <input id="newname" placeholder="Nom (ex. Le Point)" required>
+      <input id="newurl" type="url" placeholder="Adresse du flux RSS (https://…)" required>
+      <div class="row">
+        <button id="reset" class="btn" type="button">Rétablir les sources par défaut</button>
+        <button class="btn primary" type="submit">Ajouter</button>
+      </div>
+    </form>
+  </section>
+  <section class="tabpane" data-pane="links" hidden>
+    <p class="note">Ces liens apparaissent dans « Ouvrir avec… » sous chaque article, et peuvent être choisis comme lien par défaut d'un journal. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
+    <div id="linkrows"></div>
+    <div class="row"><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
+  </section>
+  <section class="tabpane" data-pane="lang" hidden>
+    <label class="field" for="tlang">Langue du bouton « Traduire »
+      <select id="tlang">
+        <option value="en">Anglais</option><option value="fr">Français</option><option value="es">Espagnol</option><option value="de">Allemand</option><option value="it">Italien</option><option value="pt">Portugais</option><option value="ar">Arabe</option><option value="zh-CN">Chinois</option>
+      </select>
+    </label>
+    <p class="note">Le bouton « Traduire » passe par Google Traduction. Pour un article réservé aux abonnés, ouvrez l'article puis utilisez « Traduire » dans le menu ⋮ de Chrome : votre connexion d'abonné y est conservée.</p>
+  </section>
+</dialog>
+
+<dialog id="withdlg" class="sheet small">
+  <div class="sheethead">
+    <h2>Ouvrir avec…</h2>
+    <button id="withclose" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <p id="withtitle" class="note"></p>
+  <div id="withlist" class="withlist"></div>
 </dialog>
 
 <dialog id="sharedlg">
@@ -217,7 +296,8 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 
 <script>
 const DEFAULT_FEEDS = [
-  { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-a-la-une.xml", color: "#c8102e", on: true },
+  { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-economie.xml", color: "#c8102e", on: true,
+    more: ["entreprises", "finance-marches", "monde", "politique", "tech-medias", "idees", "start-up", "regions"].map(r => "https://services.lesechos.fr/rss/les-echos-" + r + ".xml") },
   { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true },
   { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true },
   { id: "libe", name: "Libération", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml", color: "#e2001a", on: true },
@@ -234,7 +314,7 @@ const DEFAULT_FEEDS = [
   { id: "clubic", name: "Clubic", url: "https://www.clubic.com/feed/news.rss", color: "#e4002b", on: true },
   { id: "next", name: "Next", url: "https://next.ink/feed/", color: "#7a2ff2", on: true },
   { id: "zdnet", name: "ZDNet France", url: "https://www.zdnet.fr/feeds/rss/actualites/", color: "#d4002b", on: true },
-  { id: "universfreebox", name: "Univers Freebox", url: "https://www.universfreebox.com/backend.php", color: "#cd1e25", on: false },
+  { id: "universfreebox", name: "Univers Freebox", url: "https://www.universfreebox.com/feed", color: "#cd1e25", on: true },
   // Sites télécoms et infrastructures (flux vérifiés le 24/10/2026), à cocher dans « Sources »
   { id: "degroupnews", name: "DegroupNews", url: "https://www.degroupnews.com/rss.xml", color: "#e85d04", on: true },
   { id: "fibreguide", name: "FIBRE.guide", url: "https://fibre.guide/feed", color: "#6a3fd1", on: false },
@@ -307,7 +387,17 @@ function classify(i) {
 // ——— Récupération des flux ———
 // Dans l'appli Android, les requêtes passent par le téléphone (pas de blocage CORS).
 const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-const PLUGINS = (window.Capacitor && window.Capacitor.Plugins) || {};
+// Plugins natifs de l'appli (navigateur intégré, partage, fichiers), enregistrés auprès de Capacitor.
+const CAP = window.Capacitor || {};
+// Le pont natif (nativePromise) est toujours présent dans l'appli, même sans la bibliothèque @capacitor/core.
+function plugin(name) {
+  if (!NATIVE) return null;
+  if (typeof CAP.nativePromise === "function")
+    return new Proxy({}, { get: (_, method) => method === "then" ? undefined : opts => CAP.nativePromise(name, method, opts || {}) });
+  try { return CAP.registerPlugin ? CAP.registerPlugin(name) : (CAP.Plugins || {})[name] || null; }
+  catch { return (CAP.Plugins || {})[name] || null; }
+}
+const PLUGINS = { Browser: plugin("Browser"), Share: plugin("Share"), Filesystem: plugin("Filesystem") };
 const LOCAL_API = !NATIVE && /^https?:$/.test(location.protocol) ? "api/feed?url=" : null; // fourni par kiosque.py
 // Sur GitHub Pages, une tâche planifiée dépose une copie récente de chaque flux dans feeds/.
 let snapshotIndex = null;
@@ -344,14 +434,42 @@ const store = {
 function loadFeeds() {
   const saved = store.get("kiosque.feeds", null);
   if (!saved) return DEFAULT_FEEDS.map(f => ({ ...f }));
-  const list = saved.filter(f => !RETIRED.includes(f.id)).map(({ cat, ...f }) => f);
+  // Les sources par défaut reprennent toujours leurs adresses à jour ; on garde les choix (affichée, lien).
+  const list = saved.filter(f => !RETIRED.includes(f.id)).map(({ cat, ...f }) => {
+    const d = DEFAULT_FEEDS.find(x => x.id === f.id);
+    return d ? { ...d, on: f.on, link: f.link, open: f.open } : f;
+  });
   for (const d of DEFAULT_FEEDS) if (!list.some(f => f.id === d.id)) list.push({ ...d });
   return list;
 }
 let feeds = loadFeeds();
-// Lien d'ouverture commun à tous les journaux (reprend l'ancien réglage par journal s'il existait).
 let transLang = store.get("kiosque.tlang", "en");
-let openTemplate = store.get("kiosque.open", null) ?? (feeds.find(f => f.open)?.open || "");
+// Liens d'ouverture : une liste nommée, utilisable pour chaque journal et dans « Ouvrir avec… ».
+const DEFAULT_LINKS = [
+  { id: "orig", name: "Article d'origine", tpl: "" },
+  { id: "translate", name: "Google Traduction", tpl: "https://translate.google.com/translate?sl=auto&tl={lang}&u={url}" },
+];
+function loadLinks() {
+  let l = store.get("kiosque.links", null);
+  if (l) return l;
+  l = DEFAULT_LINKS.map(x => ({ ...x }));
+  // Reprend l'ancien lien commun (v2) ou les anciens liens par journal (v1).
+  const old = store.get("kiosque.open", "") || "";
+  if (old) { l.push({ id: "perso", name: "Mon lien", tpl: old }); feeds.forEach(f => { if (!f.link) f.link = "perso"; }); }
+  feeds.forEach(f => {
+    if (typeof f.open === "string" && f.open.trim()) {
+      let x = l.find(k => k.tpl === f.open.trim());
+      if (!x) { x = { id: "l" + l.length, name: "Lien " + l.length, tpl: f.open.trim() }; l.push(x); }
+      f.link = x.id;
+    }
+    delete f.open;
+  });
+  return l;
+}
+let links = loadLinks();
+if (!store.get("kiosque.links", null)) { store.set("kiosque.links", links); store.set("kiosque.feeds", feeds); }
+const saveLinks = () => store.set("kiosque.links", links);
+const linkById = id => links.find(l => l.id === id) || links[0];
 let saved = store.get("kiosque.saved", []);
 const VIEWS = ["une", ...RUBRICS.map(r => r.id), "autres", "saved"];
 let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
@@ -413,10 +531,10 @@ function parseFeed(xmlText, feed) {
   }
   return out.filter(i => i.title && /^https?:/i.test(i.link)).map(i => ({ ...i, src: feed.id, ...classify(i) }));
 }
-async function fetchText(f) {
+async function fetchText(f, url = f.url) {
   let lastErr;
-  const snap = (await snapshots())[f.id];
-  const tries = [...(snap && snap.url === f.url ? [() => "feeds/" + f.id + ".xml?v=" + encodeURIComponent(snap.at)] : []), ...PROXIES.map(w => () => w(f.url))];
+  const snap = url === f.url && (await snapshots())[f.id];
+  const tries = [...(snap && snap.url === f.url ? [() => "feeds/" + f.id + ".xml?v=" + encodeURIComponent(snap.at)] : []), ...PROXIES.map(w => () => w(url))];
   for (const target of tries) {
     try {
       const ctrl = new AbortController();
@@ -442,8 +560,13 @@ async function loadAll() {
   const queue = [...active];
   const worker = async () => {
     for (let f; (f = queue.shift()); ) {
-      try { results[f.id] = { items: parseFeed(await fetchText(f), f) }; }
-      catch (e) { results[f.id] = { items: results[f.id]?.items || [], error: String(e.message || e) }; }
+      // Un journal peut avoir plusieurs flux (ses rubriques) : on les réunit sous une seule source.
+      const urls = [f.url, ...(f.more || [])];
+      const got = await Promise.allSettled(urls.map(async u => parseFeed(await fetchText(f, u), f)));
+      const items = got.filter(g => g.status === "fulfilled").flatMap(g => g.value);
+      const failed = got.find(g => g.status === "rejected");
+      if (items.length || !failed) results[f.id] = { items };
+      else results[f.id] = { items: results[f.id]?.items || [], error: String(failed.reason?.message || failed.reason) };
       renderAll();
     }
   };
@@ -502,11 +625,12 @@ function renderMenu() {
     const b = document.createElement("button");
     b.type = "button";
     b.setAttribute("aria-current", String(r.id === view));
-    if (r.star) b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">◆</span>');
+    if (r.star) { b.classList.add("tel"); b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">◆</span>'); }
     b.append(document.createTextNode(r.name));
     const n = document.createElement("span"); n.className = "n";
     n.textContent = r.id === "saved" ? saved.length : (items.length ? count(r.id) : "");
     b.append(n);
+    if (items.length && r.id !== "saved" && r.id !== view && !count(r.id)) b.classList.add("empty");
     b.onclick = () => go(r.id);
     nav.append(b);
   }
@@ -560,30 +684,44 @@ function srcButton(id, name, color, count, error) {
 }
 
 // ——— Ouverture des articles ———
-function openUrl(i) {
-  const tpl = openTemplate.trim();
+function buildUrl(tpl, i) {
+  tpl = (tpl || "").trim();
   if (!tpl) return i.link;
   let path = "";
   try { const u = new URL(i.link); path = u.pathname + u.search; } catch {}
-  const out = tpl.replaceAll("{url}", encodeURIComponent(i.link)).replaceAll("{rawurl}", i.link).replaceAll("{path}", path.replace(/^\//, ""));
+  const out = tpl.replaceAll("{url}", encodeURIComponent(i.link)).replaceAll("{rawurl}", i.link)
+    .replaceAll("{path}", path.replace(/^\//, "")).replaceAll("{lang}", encodeURIComponent(transLang));
   return /^https?:\/\//i.test(out) ? out : i.link;
 }
-// Dans l'appli, l'article s'ouvre dans un navigateur intégré (bouton ✕ pour revenir au Kiosque).
-function openArticle(i) {
-  const url = openUrl(i);
-  if (NATIVE && PLUGINS.Browser) PLUGINS.Browser.open({ url, toolbarColor: "#173a63", presentationStyle: "popover" });
-  else window.open(url, "_blank", "noopener");
+const openUrl = i => buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i);
+// Dans l'appli, la page s'ouvre dans le navigateur intégré (Chrome, avec vos connexions) ; bouton ✕ pour revenir.
+async function openInBrowser(url) {
+  if (NATIVE) {
+    try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#173a63" }); return; } } catch (e) { console.warn(e); }
+    location.href = url; // Repli : Android ouvre alors le navigateur du téléphone.
+    return;
+  }
+  window.open(url, "_blank", "noopener");
 }
-// Traduction par Google Traduction. Pour un article réservé aux abonnés, mieux vaut ouvrir l'article
-// puis utiliser « Traduire » dans le menu de Chrome : la session d'abonné y est conservée.
-function translateUrl(i) {
-  return "https://translate.google.com/translate?sl=auto&tl=" + encodeURIComponent(transLang) + "&u=" + encodeURIComponent(i.link);
+const openArticle = i => openInBrowser(openUrl(i));
+// Traduction : Google Traduction dans la langue choisie dans les réglages.
+const openTranslated = i => openInBrowser(buildUrl(DEFAULT_LINKS[1].tpl, i));
+function openWith(i) {
+  $("#withtitle").textContent = i.title;
+  const box = $("#withlist");
+  box.innerHTML = "";
+  for (const l of links) {
+    const b = document.createElement("button");
+    b.type = "button";
+    const n = document.createElement("span"); n.textContent = l.name;
+    const u = document.createElement("small"); u.textContent = buildUrl(l.tpl, i);
+    b.append(n, u);
+    b.onclick = () => { $("#withdlg").close(); openInBrowser(buildUrl(l.tpl, i)); };
+    box.append(b);
+  }
+  $("#withdlg").showModal();
 }
-function openTranslated(i) {
-  const url = translateUrl(i);
-  if (NATIVE && PLUGINS.Browser) PLUGINS.Browser.open({ url, toolbarColor: "#173a63" });
-  else window.open(url, "_blank", "noopener");
-}
+$("#withclose").onclick = () => $("#withdlg").close();
 function link(i, cls) {
   const a = document.createElement("a");
   a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer";
@@ -617,6 +755,7 @@ function toggleSave(i) {
 // ——— Rendu ———
 const ICON_SAVE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
 const ICON_TRANSLATE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h10M8 3v2M5 5c1 4 4 7 7 8M11 5c-1 4-4 7-7 8M13 21l4-10 4 10M14.5 17.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_WITH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4" stroke="currentColor" stroke-width="1.8"/></svg>';
 
 function meta(i) {
@@ -657,13 +796,17 @@ function actions(i) {
   s.onclick = () => toggleSave(i);
   const p = document.createElement("button");
   p.type = "button"; p.className = "icon-btn";
-  p.innerHTML = ICON_SHARE + "<span>Partager</span>";
+  p.innerHTML = ICON_SHARE + "<span>Partager</span>"; p.title = "Partager";
   p.onclick = () => openShare(i);
   const t = document.createElement("button");
   t.type = "button"; t.className = "icon-btn";
-  t.innerHTML = ICON_TRANSLATE + "<span>Traduire</span>";
+  t.innerHTML = ICON_TRANSLATE + "<span>Traduire</span>"; t.title = "Traduire";
   t.onclick = () => openTranslated(i);
-  box.append(s, t, p);
+  const w = document.createElement("button");
+  w.type = "button"; w.className = "icon-btn";
+  w.innerHTML = ICON_WITH + "<span>Ouvrir avec</span>"; w.title = "Ouvrir avec…";
+  w.onclick = () => openWith(i);
+  box.append(s, w, t, p);
   return box;
 }
 function card(i) {
@@ -851,28 +994,77 @@ $("#sh-copy").onclick = async () => {
 $("#sh-close").onclick = () => { shareState = null; $("#sharedlg").close(); };
 if (!NATIVE) $("#sharehint").textContent = "« Partager l'image » ouvre le menu de partage de l'appareil quand il existe. Sinon, l'image est téléchargée. Elle contient l'adresse d'origine de l'article.";
 
-// ——— Gestion des sources ———
+// ——— Réglages ———
+const GROUPS = [
+  { name: "Presse généraliste", ids: ["lesechos", "lemonde", "figaro", "libe", "franceinfo", "parisien", "20min", "courrier", "latribune", "lepoint", "lexpress"] },
+  { name: "Tech", ids: ["01net", "numerama", "frandroid", "clubic", "next", "zdnet", "silicon", "lmi-telecoms", "dcmag"] },
+  { name: "Télécoms et infra, France", ids: ["degroupnews", "universfreebox", "fibreguide", "lafibreinfo", "alloforfait"] },
+  { name: "Télécoms et infra, international", ids: ["lightreading", "fierce", "totaltele", "mwl", "rcr", "capacity", "fibresystems", "telecomramblings", "developingtelecoms", "insidetowers", "dcd", "mobileeurope", "policytracker", "fastmode", "bbcmag"] },
+];
+const ICON_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function saveFeeds() { store.set("kiosque.feeds", feeds); }
+function feedRow(f) {
+  const row = document.createElement("div");
+  row.className = "feedrow";
+  row.innerHTML = '<label class="switch"><input type="checkbox"><span></span></label><div><div class="nm"></div><div class="url"></div></div><button class="iconx" type="button"></button><div class="opts"><span>Ouvre :</span><select></select></div>';
+  const cb = row.querySelector("input");
+  cb.id = "cb-" + f.id; cb.checked = f.on;
+  cb.setAttribute("aria-label", "Afficher " + f.name);
+  cb.onchange = () => { f.on = cb.checked; saveFeeds(); if (f.on && !results[f.id]) loadAll(); if (!f.on && filter === f.id) filter = "all"; renderAll(); };
+  row.querySelector(".nm").textContent = f.name;
+  row.querySelector(".url").textContent = f.url;
+  const del = row.querySelector(".iconx");
+  del.innerHTML = ICON_X; del.setAttribute("aria-label", "Retirer " + f.name); del.title = "Retirer";
+  del.onclick = () => { feeds = feeds.filter(x => x !== f); delete results[f.id]; if (filter === f.id) filter = "all"; saveFeeds(); renderDialog(); renderAll(); };
+  const sel = row.querySelector("select");
+  sel.id = "link-" + f.id; sel.setAttribute("aria-label", "Lien d'ouverture pour " + f.name);
+  for (const l of links) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.append(o); }
+  sel.value = linkById(f.link || "orig").id;
+  sel.onchange = () => { f.link = sel.value; saveFeeds(); render(); };
+  return row;
+}
 function renderDialog() {
   const box = $("#feedrows");
   box.innerHTML = "";
-  for (const f of feeds) {
+  const known = new Set(GROUPS.flatMap(g => g.ids));
+  const groups = [...GROUPS.map(g => ({ name: g.name, list: g.ids.map(feedById).filter(Boolean) })), { name: "Mes flux", list: feeds.filter(f => !known.has(f.id)) }];
+  for (const g of groups) {
+    if (!g.list.length) continue;
+    const h = document.createElement("h3"); h.className = "grouphead";
+    h.textContent = g.name + " · " + g.list.filter(f => f.on).length + "/" + g.list.length;
+    box.append(h);
+    g.list.forEach(f => box.append(feedRow(f)));
+  }
+  renderLinks();
+}
+function renderLinks() {
+  const box = $("#linkrows");
+  box.innerHTML = "";
+  for (const l of links) {
     const row = document.createElement("div");
-    row.className = "feedrow";
-    row.innerHTML = '<input type="checkbox"><div><div class="nm"></div><div class="url"></div></div><button class="btn" type="button">Retirer</button>';
-    const cb = row.querySelector("input");
-    cb.id = "cb-" + f.id; cb.checked = f.on;
-    cb.setAttribute("aria-label", f.name);
-    cb.onchange = () => { f.on = cb.checked; saveFeeds(); if (f.on && !results[f.id]) loadAll(); if (!f.on && filter === f.id) filter = "all"; renderAll(); };
-    row.querySelector(".nm").textContent = f.name;
-    row.querySelector(".url").textContent = f.url;
-    row.querySelector("button").onclick = () => { feeds = feeds.filter(x => x !== f); delete results[f.id]; if (filter === f.id) filter = "all"; saveFeeds(); renderDialog(); renderAll(); };
+    row.className = "linkrow";
+    if (l.id === "orig") {
+      row.innerHTML = '<div class="fixed">Article d\'origine</div><span></span><div class="note" style="margin:0">Ouvre l\'article sur le site du journal.</div>';
+    } else {
+      row.innerHTML = '<input class="nmi" aria-label="Nom du lien"><button class="iconx" type="button"></button><input class="tpl" aria-label="Adresse du lien" placeholder="https://exemple.fr/?u={url}">';
+      const nm = row.querySelector(".nmi"), tp = row.querySelector(".tpl"), del = row.querySelector(".iconx");
+      nm.id = "ln-" + l.id; tp.id = "lt-" + l.id;
+      nm.value = l.name; tp.value = l.tpl;
+      nm.onchange = () => { l.name = nm.value.trim() || "Lien"; saveLinks(); renderDialog(); };
+      tp.onchange = () => { l.tpl = tp.value.trim(); saveLinks(); render(); };
+      del.innerHTML = ICON_X; del.setAttribute("aria-label", "Supprimer " + l.name);
+      del.onclick = () => { links = links.filter(x => x !== l); feeds.forEach(f => { if (f.link === l.id) f.link = "orig"; }); saveLinks(); saveFeeds(); renderDialog(); render(); };
+    }
     box.append(row);
   }
 }
-$("#manage").onclick = () => { renderDialog(); $("#openall").value = openTemplate; $("#tlang").value = transLang; $("#dlg").showModal(); };
+$("#addlink").onclick = () => { links.push({ id: "l" + Date.now(), name: "Nouveau lien", tpl: "" }); saveLinks(); renderLinks(); const ins = $("#linkrows").querySelectorAll(".tpl"); ins[ins.length - 1]?.focus(); };
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+  document.querySelectorAll(".tabpane").forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
+});
+$("#manage").onclick = () => { renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
 $("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
-$("#openall").onchange = () => { openTemplate = $("#openall").value.trim(); store.set("kiosque.open", openTemplate); render(); };
 $("#close").onclick = () => $("#dlg").close();
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
 $("#addform").onsubmit = e => {
