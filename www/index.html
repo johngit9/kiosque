@@ -117,6 +117,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 .feedrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .feedrow .url { font: 12px var(--f-mono); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .globalopen { display: grid; gap: 6px; margin-top: 14px; font-weight: 600; font-size: 14px; }
+.globalopen select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-weight: 400; }
 .globalopen input { font: 13px var(--f-mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; font-weight: 400; }
 .addform { display: grid; gap: 8px; margin-top: 16px; }
 .addform input { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
@@ -183,6 +184,11 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </label>
   <p class="note">Laissez vide pour ouvrir l'article d'origine, ou écrivez une adresse contenant <code>{url}</code> (adresse de l'article), <code>{rawurl}</code> (adresse non encodée) ou <code>{path}</code> (son chemin, sans le domaine).</p>
   <div id="feedrows"></div>
+  <label class="globalopen" for="tlang">Langue du bouton « Traduire »
+    <select id="tlang">
+      <option value="en">Anglais</option><option value="fr">Français</option><option value="es">Espagnol</option><option value="de">Allemand</option><option value="it">Italien</option><option value="pt">Portugais</option><option value="ar">Arabe</option><option value="zh-CN">Chinois</option>
+    </select>
+  </label>
   <form id="addform" class="addform">
     <input id="newname" placeholder="Nom (ex. Le Point)" required>
     <input id="newurl" type="url" placeholder="Adresse du flux RSS (https://…)" required>
@@ -321,6 +327,7 @@ function loadFeeds() {
 }
 let feeds = loadFeeds();
 // Lien d'ouverture commun à tous les journaux (reprend l'ancien réglage par journal s'il existait).
+let transLang = store.get("kiosque.tlang", "en");
 let openTemplate = store.get("kiosque.open", null) ?? (feeds.find(f => f.open)?.open || "");
 let saved = store.get("kiosque.saved", []);
 const VIEWS = ["une", ...RUBRICS.map(r => r.id), "autres", "saved"];
@@ -544,6 +551,16 @@ function openArticle(i) {
   if (NATIVE && PLUGINS.Browser) PLUGINS.Browser.open({ url, toolbarColor: "#173a63", presentationStyle: "popover" });
   else window.open(url, "_blank", "noopener");
 }
+// Traduction par Google Traduction. Pour un article réservé aux abonnés, mieux vaut ouvrir l'article
+// puis utiliser « Traduire » dans le menu de Chrome : la session d'abonné y est conservée.
+function translateUrl(i) {
+  return "https://translate.google.com/translate?sl=auto&tl=" + encodeURIComponent(transLang) + "&u=" + encodeURIComponent(i.link);
+}
+function openTranslated(i) {
+  const url = translateUrl(i);
+  if (NATIVE && PLUGINS.Browser) PLUGINS.Browser.open({ url, toolbarColor: "#173a63" });
+  else window.open(url, "_blank", "noopener");
+}
 function link(i, cls) {
   const a = document.createElement("a");
   a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer";
@@ -576,6 +593,7 @@ function toggleSave(i) {
 
 // ——— Rendu ———
 const ICON_SAVE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+const ICON_TRANSLATE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h10M8 3v2M5 5c1 4 4 7 7 8M11 5c-1 4-4 7-7 8M13 21l4-10 4 10M14.5 17.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4" stroke="currentColor" stroke-width="1.8"/></svg>';
 
 function meta(i) {
@@ -618,7 +636,11 @@ function actions(i) {
   p.type = "button"; p.className = "icon-btn";
   p.innerHTML = ICON_SHARE + "<span>Partager</span>";
   p.onclick = () => openShare(i);
-  box.append(s, p);
+  const t = document.createElement("button");
+  t.type = "button"; t.className = "icon-btn";
+  t.innerHTML = ICON_TRANSLATE + "<span>Traduire</span>";
+  t.onclick = () => openTranslated(i);
+  box.append(s, t, p);
   return box;
 }
 function card(i) {
@@ -825,7 +847,8 @@ function renderDialog() {
     box.append(row);
   }
 }
-$("#manage").onclick = () => { renderDialog(); $("#openall").value = openTemplate; $("#dlg").showModal(); };
+$("#manage").onclick = () => { renderDialog(); $("#openall").value = openTemplate; $("#tlang").value = transLang; $("#dlg").showModal(); };
+$("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
 $("#openall").onchange = () => { openTemplate = $("#openall").value.trim(); store.set("kiosque.open", openTemplate); render(); };
 $("#close").onclick = () => $("#dlg").close();
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
