@@ -808,6 +808,12 @@ const openUrl = i => buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i);
 // Dans l'appli, la page s'ouvre dans le navigateur intégré (Chrome, avec vos connexions) ; bouton ✕ pour revenir.
 async function openInBrowser(url) {
   if (NATIVE) {
+    // Lecteur intégré à l'appli, sans barre d'adresse (cordova-plugin-inappbrowser), sinon Chrome Custom Tabs.
+    const iab = window.cordova?.InAppBrowser;
+    if (iab) {
+      try { iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#173a63,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=no,hardwareback=yes,footer=no"); return; }
+      catch (e) { console.warn(e); }
+    }
     try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#173a63" }); return; } } catch (e) { console.warn(e); }
     location.href = url; // Repli : Android ouvre alors le navigateur du téléphone.
     return;
