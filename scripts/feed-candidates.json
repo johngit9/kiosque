@@ -1,325 +1,131 @@
 [
  {
-  "name": "Les Echos (variantes)",
+  "name": "LE a-la-une",
   "zone": "-",
-  "urls": [
-   "https://syndication.lesechos.fr/rss/rss_une.xml",
-   "https://services.lesechos.fr/rss/les-echos-a-la-une.xml",
-   "https://www.lesechos.fr/rss/rss_une.xml",
-   "https://syndication.lesechos.fr/rss/rss_une_titres.xml",
-   "https://services.lesechos.fr/rss/les-echos-economie.xml"
-  ]
- },
- {
-  "name": "Les Echos syndication une",
-  "zone": "-",
-  "urls": [
-   "https://syndication.lesechos.fr/rss/rss_une.xml"
-  ]
- },
- {
-  "name": "Les Echos tech-medias",
-  "zone": "-",
-  "urls": [
-   "https://syndication.lesechos.fr/rss/rss_tech_medias.xml"
-  ]
- },
- {
-  "name": "Univers Freebox alt",
-  "zone": "-",
-  "urls": [
-   "https://www.universfreebox.com/feed",
-   "https://www.universfreebox.com/rss.xml",
-   "https://www.universfreebox.com/backend.php?type=rss"
-  ]
- },
- {
-  "name": "La Tribune alt",
-  "zone": "-",
-  "urls": [
-   "https://www.latribune.fr/feed.xml",
-   "https://www.latribune.fr/rss/rubriques/actualite.html",
-   "https://www.latribune.fr/rss/a-la-une.html"
-  ]
- },
- {
-  "name": "Les Echos",
-  "zone": "defaut",
   "urls": [
    "https://services.lesechos.fr/rss/les-echos-a-la-une.xml"
   ]
  },
  {
-  "name": "Le Monde",
-  "zone": "defaut",
+  "name": "LE une",
+  "zone": "-",
   "urls": [
-   "https://www.lemonde.fr/rss/une.xml"
+   "https://services.lesechos.fr/rss/les-echos-une.xml"
   ]
  },
  {
-  "name": "Le Figaro",
-  "zone": "defaut",
+  "name": "LE economie",
+  "zone": "-",
   "urls": [
-   "https://www.lefigaro.fr/rss/figaro_actualites.xml"
+   "https://services.lesechos.fr/rss/les-echos-economie.xml"
   ]
  },
  {
-  "name": "Libération",
-  "zone": "defaut",
+  "name": "LE entreprises",
+  "zone": "-",
   "urls": [
-   "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml"
+   "https://services.lesechos.fr/rss/les-echos-entreprises.xml"
   ]
  },
  {
-  "name": "franceinfo",
-  "zone": "defaut",
+  "name": "LE finance-marches",
+  "zone": "-",
   "urls": [
-   "https://www.francetvinfo.fr/titres.rss"
+   "https://services.lesechos.fr/rss/les-echos-finance-marches.xml"
   ]
  },
  {
-  "name": "Le Parisien",
-  "zone": "defaut",
+  "name": "LE monde",
+  "zone": "-",
   "urls": [
-   "https://feeds.leparisien.fr/leparisien/rss"
+   "https://services.lesechos.fr/rss/les-echos-monde.xml"
   ]
  },
  {
-  "name": "20 Minutes",
-  "zone": "defaut",
+  "name": "LE politique",
+  "zone": "-",
   "urls": [
-   "https://www.20minutes.fr/feeds/rss-une.xml"
+   "https://services.lesechos.fr/rss/les-echos-politique.xml"
   ]
  },
  {
-  "name": "Courrier international",
-  "zone": "defaut",
+  "name": "LE tech-medias",
+  "zone": "-",
   "urls": [
-   "https://www.courrierinternational.com/feed/all/rss.xml"
+   "https://services.lesechos.fr/rss/les-echos-tech-medias.xml"
   ]
  },
  {
-  "name": "La Tribune",
-  "zone": "defaut",
+  "name": "LE idees",
+  "zone": "-",
   "urls": [
-   "https://www.latribune.fr/feed.xml"
+   "https://services.lesechos.fr/rss/les-echos-idees.xml"
   ]
  },
  {
-  "name": "Le Point",
-  "zone": "defaut",
+  "name": "LE patrimoine",
+  "zone": "-",
   "urls": [
-   "https://www.lepoint.fr/rss.xml"
+   "https://services.lesechos.fr/rss/les-echos-patrimoine.xml"
   ]
  },
  {
-  "name": "L'Express",
-  "zone": "defaut",
+  "name": "LE start-up",
+  "zone": "-",
   "urls": [
-   "https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml"
+   "https://services.lesechos.fr/rss/les-echos-start-up.xml"
   ]
  },
  {
-  "name": "01net",
-  "zone": "defaut",
+  "name": "LE industrie-services",
+  "zone": "-",
   "urls": [
-   "https://www.01net.com/actualites/feed/"
+   "https://services.lesechos.fr/rss/les-echos-industrie-services.xml"
   ]
  },
  {
-  "name": "Numerama",
-  "zone": "defaut",
+  "name": "LE energie-environnement",
+  "zone": "-",
   "urls": [
-   "https://www.numerama.com/feed/"
+   "https://services.lesechos.fr/rss/les-echos-energie-environnement.xml"
   ]
  },
  {
-  "name": "Frandroid",
-  "zone": "defaut",
+  "name": "LE regions",
+  "zone": "-",
   "urls": [
-   "https://www.frandroid.com/feed"
+   "https://services.lesechos.fr/rss/les-echos-regions.xml"
   ]
  },
  {
-  "name": "Clubic",
-  "zone": "defaut",
+  "name": "LE sport-business",
+  "zone": "-",
   "urls": [
-   "https://www.clubic.com/feed/news.rss"
+   "https://services.lesechos.fr/rss/les-echos-sport-business.xml"
   ]
  },
  {
-  "name": "Next",
-  "zone": "defaut",
+  "name": "LE week-end",
+  "zone": "-",
   "urls": [
-   "https://next.ink/feed/"
+   "https://services.lesechos.fr/rss/les-echos-week-end.xml"
   ]
  },
  {
-  "name": "ZDNet France",
-  "zone": "defaut",
+  "name": "LE le-mag",
+  "zone": "-",
   "urls": [
-   "https://www.zdnet.fr/feeds/rss/actualites/"
+   "https://services.lesechos.fr/rss/les-echos-le-mag.xml"
   ]
  },
  {
-  "name": "Univers Freebox",
-  "zone": "defaut",
+  "name": "Le Point alt",
+  "zone": "-",
   "urls": [
-   "https://www.universfreebox.com/backend.php"
-  ]
- },
- {
-  "name": "DegroupNews",
-  "zone": "defaut",
-  "urls": [
-   "https://www.degroupnews.com/rss.xml"
-  ]
- },
- {
-  "name": "FIBRE.guide",
-  "zone": "defaut",
-  "urls": [
-   "https://fibre.guide/feed"
-  ]
- },
- {
-  "name": "Forum lafibre.info",
-  "zone": "defaut",
-  "urls": [
-   "https://lafibre.info/index.php?action=.xml;type=rss"
-  ]
- },
- {
-  "name": "Le Monde Informatique Télécoms",
-  "zone": "defaut",
-  "urls": [
-   "https://www.lemondeinformatique.fr/flux-rss/thematique/telecoms/rss.xml"
-  ]
- },
- {
-  "name": "Silicon.fr",
-  "zone": "defaut",
-  "urls": [
-   "https://www.silicon.fr/feed"
-  ]
- },
- {
-  "name": "DCmag",
-  "zone": "defaut",
-  "urls": [
-   "https://dcmag.fr/feed/"
-  ]
- },
- {
-  "name": "Alloforfait",
-  "zone": "defaut",
-  "urls": [
-   "https://www.alloforfait.fr/feed/"
-  ]
- },
- {
-  "name": "Light Reading",
-  "zone": "defaut",
-  "urls": [
-   "https://www.lightreading.com/rss.xml"
-  ]
- },
- {
-  "name": "Fierce Network",
-  "zone": "defaut",
-  "urls": [
-   "https://www.fierce-network.com/rss/xml"
-  ]
- },
- {
-  "name": "Total Telecom",
-  "zone": "defaut",
-  "urls": [
-   "https://totaltele.com/feed/"
-  ]
- },
- {
-  "name": "Mobile World Live",
-  "zone": "defaut",
-  "urls": [
-   "https://www.mobileworldlive.com/feed/"
-  ]
- },
- {
-  "name": "RCR Wireless",
-  "zone": "defaut",
-  "urls": [
-   "https://www.rcrwireless.com/feed"
-  ]
- },
- {
-  "name": "Capacity Media",
-  "zone": "defaut",
-  "urls": [
-   "https://www.capacitymedia.com/rss"
-  ]
- },
- {
-  "name": "Fibre Systems",
-  "zone": "defaut",
-  "urls": [
-   "https://www.fibre-systems.com/rss.xml"
-  ]
- },
- {
-  "name": "Telecom Ramblings",
-  "zone": "defaut",
-  "urls": [
-   "https://www.telecomramblings.com/feed/"
-  ]
- },
- {
-  "name": "Developing Telecoms",
-  "zone": "defaut",
-  "urls": [
-   "https://developingtelecoms.com/?format=feed&type=rss"
-  ]
- },
- {
-  "name": "Inside Towers",
-  "zone": "defaut",
-  "urls": [
-   "https://insidetowers.com/feed/"
-  ]
- },
- {
-  "name": "DatacenterDynamics",
-  "zone": "defaut",
-  "urls": [
-   "https://www.datacenterdynamics.com/en/rss/"
-  ]
- },
- {
-  "name": "Mobile Europe",
-  "zone": "defaut",
-  "urls": [
-   "https://www.mobileeurope.co.uk/feed/"
-  ]
- },
- {
-  "name": "PolicyTracker",
-  "zone": "defaut",
-  "urls": [
-   "https://www.policytracker.com/feed/"
-  ]
- },
- {
-  "name": "The Fast Mode",
-  "zone": "defaut",
-  "urls": [
-   "https://www.thefastmode.com/?format=feed&type=rss"
-  ]
- },
- {
-  "name": "Broadband Communities",
-  "zone": "defaut",
-  "urls": [
-   "https://bbcmag.com/feed/"
+   "https://www.lepoint.fr/24h-infos/rss.xml",
+   "https://www.lepoint.fr/rss/",
+   "https://www.lepoint.fr/politique/rss.xml",
+   "https://www.lepoint.fr/economie/rss.xml"
   ]
  }
 ]
