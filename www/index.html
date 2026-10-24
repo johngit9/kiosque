@@ -115,9 +115,9 @@ dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--s
 dialog::backdrop { background: rgb(0 0 0 / 0.45); }
 dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 .feedrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.feedrow label.open { grid-column: 2 / 4; display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
-.feedrow label.open input { font: 12px var(--f-mono); padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); min-width: 0; }
 .feedrow .url { font: 12px var(--f-mono); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.globalopen { display: grid; gap: 6px; margin-top: 14px; font-weight: 600; font-size: 14px; }
+.globalopen input { font: 13px var(--f-mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; font-weight: 400; }
 .addform { display: grid; gap: 8px; margin-top: 16px; }
 .addform input { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
 .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 12px; }
@@ -177,7 +177,11 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 
 <dialog id="dlg">
   <h2>Sources</h2>
-  <p class="note">Cochez les journaux à afficher, ou ajoutez n'importe quel flux RSS ou Atom. Tous les articles sont ensuite triés automatiquement dans les rubriques. Pour chaque flux, « Lien d'ouverture » décide où mène un clic sur un article : laissez vide pour ouvrir l'article d'origine, ou écrivez une adresse contenant <code>{url}</code> (adresse de l'article) ou <code>{path}</code> (son chemin, sans le domaine).</p>
+  <p class="note">Cochez les journaux à afficher, ou ajoutez n'importe quel flux RSS ou Atom. Tous les articles sont ensuite triés automatiquement dans les rubriques.</p>
+  <label class="globalopen" for="openall">Lien d'ouverture, commun à tous les journaux
+    <input id="openall" type="text" placeholder="Vide = article d'origine · ex. https://exemple.fr/?u={url}">
+  </label>
+  <p class="note">Laissez vide pour ouvrir l'article d'origine, ou écrivez une adresse contenant <code>{url}</code> (adresse de l'article), <code>{rawurl}</code> (adresse non encodée) ou <code>{path}</code> (son chemin, sans le domaine).</p>
   <div id="feedrows"></div>
   <form id="addform" class="addform">
     <input id="newname" placeholder="Nom (ex. Le Point)" required>
@@ -316,6 +320,8 @@ function loadFeeds() {
   return list;
 }
 let feeds = loadFeeds();
+// Lien d'ouverture commun à tous les journaux (reprend l'ancien réglage par journal s'il existait).
+let openTemplate = store.get("kiosque.open", null) ?? (feeds.find(f => f.open)?.open || "");
 let saved = store.get("kiosque.saved", []);
 const VIEWS = ["une", ...RUBRICS.map(r => r.id), "autres", "saved"];
 let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
@@ -525,7 +531,7 @@ function srcButton(id, name, color, count, error) {
 
 // ——— Ouverture des articles ———
 function openUrl(i) {
-  const tpl = (feedById(i.src)?.open || "").trim();
+  const tpl = openTemplate.trim();
   if (!tpl) return i.link;
   let path = "";
   try { const u = new URL(i.link); path = u.pathname + u.search; } catch {}
@@ -808,21 +814,19 @@ function renderDialog() {
   for (const f of feeds) {
     const row = document.createElement("div");
     row.className = "feedrow";
-    row.innerHTML = '<input type="checkbox"><div><div class="nm"></div><div class="url"></div></div><button class="btn" type="button">Retirer</button><label class="open">Lien d\'ouverture<input type="text" placeholder="Vide = article d\'origine · ex. https://exemple.fr/?u={url}"></label>';
+    row.innerHTML = '<input type="checkbox"><div><div class="nm"></div><div class="url"></div></div><button class="btn" type="button">Retirer</button>';
     const cb = row.querySelector("input");
     cb.id = "cb-" + f.id; cb.checked = f.on;
     cb.setAttribute("aria-label", f.name);
     cb.onchange = () => { f.on = cb.checked; saveFeeds(); if (f.on && !results[f.id]) loadAll(); if (!f.on && filter === f.id) filter = "all"; renderAll(); };
     row.querySelector(".nm").textContent = f.name;
     row.querySelector(".url").textContent = f.url;
-    const op = row.querySelector("label.open input");
-    op.id = "open-" + f.id; op.value = f.open || "";
-    op.onchange = () => { f.open = op.value.trim(); saveFeeds(); render(); };
     row.querySelector("button").onclick = () => { feeds = feeds.filter(x => x !== f); delete results[f.id]; if (filter === f.id) filter = "all"; saveFeeds(); renderDialog(); renderAll(); };
     box.append(row);
   }
 }
-$("#manage").onclick = () => { renderDialog(); $("#dlg").showModal(); };
+$("#manage").onclick = () => { renderDialog(); $("#openall").value = openTemplate; $("#dlg").showModal(); };
+$("#openall").onchange = () => { openTemplate = $("#openall").value.trim(); store.set("kiosque.open", openTemplate); render(); };
 $("#close").onclick = () => $("#dlg").close();
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
 $("#addform").onsubmit = e => {
