@@ -3,7 +3,7 @@ name: Appli Android (APK)
 on:
   push:
     branches: [main]
-    paths: ["www/**", "capacitor.config.json", "package.json", ".github/workflows/android.yml"]
+    paths: ["www/**", "assets/**", "ci/**", "capacitor.config.json", "package.json", ".github/workflows/android.yml"]
   workflow_dispatch:
 
 permissions:
@@ -26,7 +26,10 @@ jobs:
       - name: Générer le projet Android
         run: |
           npx cap add android
+          npx capacitor-assets generate --android
           npx cap sync android
+      - name: Clé de signature fixe (pour pouvoir mettre l'appli à jour sans la désinstaller)
+        run: mkdir -p ~/.android && cp ci/debug.keystore ~/.android/debug.keystore
       - name: Construire l'APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon

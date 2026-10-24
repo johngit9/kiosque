@@ -4,62 +4,69 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kiosque</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230e7c7b'/%3E%3Cstop offset='1' stop-color='%23173a63'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M20 16v32M21 33l15-17M27 27l12 21' stroke='%23fff' stroke-width='6' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='46' cy='18' r='4' fill='%237cf0c8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: barre des sources à gauche (en haut sur mobile), fil d'articles en grille à droite */
+/* Layout: menu des rubriques en haut, sources à gauche (en ligne sur mobile), fil d'articles en grille */
 :root {
   --bg: #f6f7f8; --surface: #ffffff; --ink: #14202b; --muted: #5d6b78; --line: #dde2e7;
-  --accent: #0b6e6e; --accent-ink: #ffffff; --warn: #b4441c;
+  --accent: #0b6e6e; --accent-ink: #ffffff; --warn: #b4441c; --chip: #e6f2f1; --fibre: #6a3fd1; --regl: #a35a00;
   --f-head: "Source Serif 4", Georgia, "Times New Roman", serif;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #0f151b; --surface: #17202a; --ink: #e8edf1; --muted: #93a1ae; --line: #26323e; --accent: #4fb7b3; --accent-ink: #0f151b; --warn: #f08a60; color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #0f151b; --surface: #17202a; --ink: #e8edf1; --muted: #93a1ae; --line: #26323e; --accent: #4fb7b3; --accent-ink: #0f151b; --warn: #f08a60; --chip: #1d3434; --fibre: #b39cff; --regl: #f0b45c; color-scheme: dark; }
 }
-:root[data-theme="dark"] { --bg: #0f151b; --surface: #17202a; --ink: #e8edf1; --muted: #93a1ae; --line: #26323e; --accent: #4fb7b3; --accent-ink: #0f151b; --warn: #f08a60; color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #0f151b; --surface: #17202a; --ink: #e8edf1; --muted: #93a1ae; --line: #26323e; --accent: #4fb7b3; --accent-ink: #0f151b; --warn: #f08a60; --chip: #1d3434; --fibre: #b39cff; --regl: #f0b45c; color-scheme: dark; }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
 a { color: inherit; }
-button, input { font: inherit; color: inherit; }
+button, input, select { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
+.sticky { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); }
 header.top {
-  position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line);
-  padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
 }
-.brand { font: 700 26px/1 var(--f-head); letter-spacing: -0.01em; margin: 0; }
-.brand small { display: block; font: 500 11px/1.4 var(--f-mono); color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
-.search { flex: 1 1 220px; min-width: 0; max-width: 420px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.brand { display: flex; align-items: center; gap: 10px; margin: 0; font: 700 24px/1 var(--f-head); letter-spacing: -0.01em; }
+.brand svg { width: 34px; height: 34px; flex: none; }
+.search { flex: 1 1 200px; min-width: 0; max-width: 420px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
 .tools { display: flex; gap: 8px; align-items: center; margin-left: auto; }
 .btn { border: 1px solid var(--line); background: var(--surface); padding: 8px 12px; border-radius: 8px; cursor: pointer; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .stamp { font: 12px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 
-.rubrics {
-  display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); background: var(--surface);
+.menubar {
+  display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--line);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.rubrics button { flex: none; background: none; border: 0; border-bottom: 3px solid transparent; padding: 12px 14px 10px; cursor: pointer; font-weight: 500; color: var(--muted); }
-.rubrics button:hover { color: var(--ink); }
-.rubrics button[aria-current="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.rubhead { font: 600 12px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 18px 0 2px; }
-.addform select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.menubar::-webkit-scrollbar { display: none; }
+.menubar button { flex: none; display: flex; align-items: center; gap: 6px; background: none; border: 0; border-bottom: 3px solid transparent; padding: 11px 12px 9px; cursor: pointer; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.menubar button:hover { color: var(--ink); }
+.menubar button[aria-current="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.menubar .n { font: 11px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.menubar .star { color: var(--accent); }
+.submenu { background: var(--bg); }
+.submenu button { padding: 8px 12px 6px; font-size: 14px; }
+
 .layout {
-  display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 28px; max-width: 1360px; margin: 0 auto;
-  padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; max-width: 1360px; margin: 0 auto;
+  padding-block: 22px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-nav.sources { position: sticky; top: 90px; align-self: start; display: flex; flex-direction: column; gap: 2px; }
+nav.sources { position: sticky; top: 140px; align-self: start; display: flex; flex-direction: column; gap: 2px; }
 .navlabel { font: 500 11px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px 10px; }
-.src { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: 0; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.src { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: 0; padding: 7px 10px; border-radius: 8px; cursor: pointer; }
 .src:hover { background: var(--surface); }
 .src[aria-pressed="true"] { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-weight: 600; }
 .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
@@ -70,11 +77,13 @@ nav.sources { position: sticky; top: 90px; align-self: start; display: flex; fle
 main { min-width: 0; }
 .status { color: var(--muted); font-size: 14px; margin: 0 0 16px; }
 .status.err { color: var(--warn); }
+.intro { margin: 0 0 18px; color: var(--muted); font-size: 14px; max-width: 70ch; }
 
 .lead { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; margin-bottom: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
 .lead .thumb { aspect-ratio: 16 / 10; }
 .lead h2 { font: 700 clamp(24px, 3vw, 34px)/1.15 var(--f-head); margin: 8px 0 12px; text-wrap: balance; }
 .lead p.sum { font-size: 16px; color: var(--muted); margin: 0; }
+.lead .body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 28px 24px; }
 article.card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
@@ -85,10 +94,24 @@ article.card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .card h3 a, .lead h2 a { text-decoration: none; }
 .card h3 a:hover, .lead h2 a:hover { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 .card p.sum { margin: 0; color: var(--muted); font-size: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font: 500 11px/1 var(--f-mono); padding: 4px 7px; border-radius: 99px; background: var(--chip); color: var(--accent); letter-spacing: 0.02em; }
+.chip.fibre { color: var(--fibre); box-shadow: inset 0 0 0 1px var(--fibre); background: none; }
+.chip.regl { color: var(--regl); box-shadow: inset 0 0 0 1px var(--regl); background: none; }
+.actions { display: flex; gap: 4px; margin-top: auto; padding-top: 2px; }
+.icon-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid transparent; border-radius: 8px; padding: 5px 8px; cursor: pointer; color: var(--muted); font-size: 13px; }
+.icon-btn:hover { color: var(--ink); border-color: var(--line); }
+.icon-btn svg { width: 17px; height: 17px; }
+.icon-btn[aria-pressed="true"] { color: var(--accent); }
+.icon-btn[aria-pressed="true"] svg path { fill: currentColor; }
+
+.savedgroup { margin-bottom: 36px; }
+.savedgroup h2 { font: 700 22px var(--f-head); margin: 0 0 14px; display: flex; align-items: baseline; gap: 10px; }
+.savedgroup h2 .n { font: 12px var(--f-mono); color: var(--muted); }
 
 .more { display: block; margin: 32px auto 0; }
 
-dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); width: min(560px, calc(100vw - 32px)); padding: 20px; }
+dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 20px; }
 dialog::backdrop { background: rgb(0 0 0 / 0.45); }
 dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 .feedrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
@@ -100,14 +123,22 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 12px; }
 .note { font-size: 13px; color: var(--muted); }
 
+.shot { position: relative; margin: 14px 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg); min-height: 120px; display: grid; place-items: center; }
+.shot img { display: block; width: 100%; height: auto; }
+.shot .wait { color: var(--muted); font-size: 14px; padding: 24px; text-align: center; }
+.sharebtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.sharebtns .btn { text-align: center; text-decoration: none; }
+.sharelink { font: 12px var(--f-mono); color: var(--muted); word-break: break-all; margin: 6px 0 0; }
+
 @media (max-width: 820px) {
-  .layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 14px; padding-top: 14px; }
   nav.sources { position: static; flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
   .navlabel { display: none; }
   .src { width: auto; flex: none; border: 1px solid var(--line); }
   .src .name { overflow: visible; }
   .lead { grid-template-columns: minmax(0, 1fr); }
   .tools { margin-left: 0; }
+  .stamp { display: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .card, .lead { animation: fade 0.25s ease both; }
@@ -116,17 +147,19 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 </style>
 </head>
 <body>
-<header class="top">
-  <h1 class="brand">Kiosque<small>La presse française en flux RSS</small></h1>
-  <input id="q" class="search" type="search" placeholder="Rechercher un titre, un sujet…" aria-label="Rechercher">
-  <div class="tools">
-    <span id="stamp" class="stamp"></span>
-    <button id="refresh" class="btn primary" type="button">Actualiser</button>
-    <button id="manage" class="btn" type="button">Sources</button>
-  </div>
-</header>
-
-<nav id="rubrics" class="rubrics" aria-label="Rubriques"></nav>
+<div class="sticky">
+  <header class="top">
+    <h1 class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7c7b"/><stop offset="1" stop-color="#173a63"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg)"/><path d="M20 16v32M21 33l15-17M27 27l12 21" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="46" cy="18" r="4" fill="#7cf0c8"/></svg>Kiosque</h1>
+    <input id="q" class="search" type="search" placeholder="Rechercher un titre, un opérateur…" aria-label="Rechercher">
+    <div class="tools">
+      <span id="stamp" class="stamp"></span>
+      <button id="refresh" class="btn primary" type="button">Actualiser</button>
+      <button id="manage" class="btn" type="button">Sources</button>
+    </div>
+  </header>
+  <nav id="menu" class="menubar" aria-label="Rubriques"></nav>
+  <nav id="submenu" class="menubar submenu" aria-label="Sous-rubriques" hidden></nav>
+</div>
 
 <div class="layout">
   <nav class="sources" aria-label="Journaux">
@@ -134,6 +167,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <div id="srclist" style="display:contents"></div>
   </nav>
   <main>
+    <p id="intro" class="intro" hidden></p>
     <p id="status" class="status">Chargement des flux…</p>
     <section id="lead"></section>
     <section id="grid" class="grid"></section>
@@ -143,12 +177,11 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 
 <dialog id="dlg">
   <h2>Sources</h2>
-  <p class="note">Cochez les journaux à afficher, ou ajoutez n'importe quel flux RSS ou Atom. Pour chaque flux, « Lien d'ouverture » décide où mène un clic sur un article : laissez vide pour ouvrir l'article d'origine, ou écrivez une adresse contenant <code>{url}</code> (remplacé par l'adresse de l'article) ou <code>{path}</code> (son chemin, sans le domaine).</p>
+  <p class="note">Cochez les journaux à afficher, ou ajoutez n'importe quel flux RSS ou Atom. Tous les articles sont ensuite triés automatiquement dans les rubriques. Pour chaque flux, « Lien d'ouverture » décide où mène un clic sur un article : laissez vide pour ouvrir l'article d'origine, ou écrivez une adresse contenant <code>{url}</code> (adresse de l'article) ou <code>{path}</code> (son chemin, sans le domaine).</p>
   <div id="feedrows"></div>
   <form id="addform" class="addform">
     <input id="newname" placeholder="Nom (ex. Le Point)" required>
     <input id="newurl" type="url" placeholder="Adresse du flux RSS (https://…)" required>
-    <select id="newcat" aria-label="Rubrique"></select>
     <div class="row">
       <button id="reset" class="btn" type="button">Rétablir les sources par défaut</button>
       <button class="btn primary" type="submit">Ajouter</button>
@@ -157,45 +190,91 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <div class="row"><button id="close" class="btn" type="button">Fermer</button></div>
 </dialog>
 
+<dialog id="sharedlg">
+  <h2>Partager l'article</h2>
+  <p id="sharetitle" class="note"></p>
+  <div class="shot" id="shot"><p class="wait">Capture de la version ordinateur en cours…</p></div>
+  <div class="sharebtns">
+    <button id="sh-native" class="btn primary" type="button">Partager l'image…</button>
+    <a id="sh-wa" class="btn" target="_blank" rel="noopener">WhatsApp</a>
+    <a id="sh-sms" class="btn">SMS</a>
+    <a id="sh-mail" class="btn">E-mail</a>
+    <button id="sh-copy" class="btn" type="button">Copier le lien</button>
+  </div>
+  <p class="note" id="sharehint">« Partager l'image » ouvre le menu du téléphone : Element, WhatsApp, Messages, Gmail… L'image contient l'adresse d'origine de l'article.</p>
+  <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
+</dialog>
+
 <script>
 const DEFAULT_FEEDS = [
-  { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-a-la-une.xml", color: "#c8102e", on: true, cat: "une" },
-  { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true, cat: "une" },
-  { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true, cat: "une" },
-  { id: "libe", name: "Libération", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml", color: "#e2001a", on: true, cat: "une" },
-  { id: "franceinfo", name: "franceinfo", url: "https://www.francetvinfo.fr/titres.rss", color: "#f5a000", on: true, cat: "une" },
-  { id: "parisien", name: "Le Parisien", url: "https://feeds.leparisien.fr/leparisien/rss", color: "#0f6fb7", on: true, cat: "une" },
-  { id: "20min", name: "20 Minutes", url: "https://www.20minutes.fr/feeds/rss-une.xml", color: "#0072bc", on: true, cat: "une" },
-  { id: "courrier", name: "Courrier international", url: "https://www.courrierinternational.com/feed/all/rss.xml", color: "#d7262c", on: true, cat: "une" },
-  { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true, cat: "une" },
-  { id: "lepoint", name: "Le Point", url: "https://www.lepoint.fr/rss.xml", color: "#b31b1b", on: false, cat: "une" },
-  { id: "lexpress", name: "L'Express", url: "https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml", color: "#e30613", on: false, cat: "une" },
-
-  { id: "echos-tech", name: "Les Echos Tech & Médias", url: "https://services.lesechos.fr/rss/les-echos-tech-medias.xml", color: "#c8102e", on: true, cat: "tech" },
-  { id: "pixels", name: "Le Monde Pixels", url: "https://www.lemonde.fr/pixels/rss_full.xml", color: "#1a1a1a", on: true, cat: "tech" },
-  { id: "01net", name: "01net", url: "https://www.01net.com/actualites/feed/", color: "#ff6600", on: true, cat: "tech" },
-  { id: "numerama", name: "Numerama", url: "https://www.numerama.com/feed/", color: "#1f2bf2", on: true, cat: "tech" },
-  { id: "frandroid", name: "Frandroid", url: "https://www.frandroid.com/feed", color: "#2bb24c", on: true, cat: "tech" },
-  { id: "clubic", name: "Clubic", url: "https://www.clubic.com/feed/news.rss", color: "#e4002b", on: true, cat: "tech" },
-  { id: "next", name: "Next", url: "https://next.ink/feed/", color: "#7a2ff2", on: true, cat: "tech" },
-  { id: "zdnet", name: "ZDNet France", url: "https://www.zdnet.fr/feeds/rss/actualites/", color: "#d4002b", on: true, cat: "tech" },
-  { id: "universfreebox", name: "Univers Freebox (télécoms)", url: "https://www.universfreebox.com/backend.php", color: "#cd1e25", on: true, cat: "tech" },
-
-  { id: "lemonde-medias", name: "Le Monde Médias", url: "https://www.lemonde.fr/actualite-medias/rss_full.xml", color: "#1a1a1a", on: true, cat: "medias" },
-  { id: "figaro-medias", name: "Le Figaro Médias", url: "https://www.lefigaro.fr/rss/figaro_medias.xml", color: "#163860", on: true, cat: "medias" },
-  { id: "echos-medias", name: "Les Echos Tech & Médias", url: "https://services.lesechos.fr/rss/les-echos-tech-medias.xml", color: "#c8102e", on: true, cat: "medias" },
-  { id: "franceinfo-medias", name: "franceinfo Culture", url: "https://www.francetvinfo.fr/culture.rss", color: "#f5a000", on: true, cat: "medias" },
-  { id: "liberation-medias", name: "Libération Culture", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/category/culture/?outputType=xml", color: "#e2001a", on: true, cat: "medias" },
+  { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-a-la-une.xml", color: "#c8102e", on: true },
+  { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true },
+  { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true },
+  { id: "libe", name: "Libération", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml", color: "#e2001a", on: true },
+  { id: "franceinfo", name: "franceinfo", url: "https://www.francetvinfo.fr/titres.rss", color: "#f5a000", on: true },
+  { id: "parisien", name: "Le Parisien", url: "https://feeds.leparisien.fr/leparisien/rss", color: "#0f6fb7", on: true },
+  { id: "20min", name: "20 Minutes", url: "https://www.20minutes.fr/feeds/rss-une.xml", color: "#0072bc", on: true },
+  { id: "courrier", name: "Courrier international", url: "https://www.courrierinternational.com/feed/all/rss.xml", color: "#d7262c", on: true },
+  { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true },
+  { id: "lepoint", name: "Le Point", url: "https://www.lepoint.fr/rss.xml", color: "#b31b1b", on: false },
+  { id: "lexpress", name: "L'Express", url: "https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml", color: "#e30613", on: false },
+  { id: "01net", name: "01net", url: "https://www.01net.com/actualites/feed/", color: "#ff6600", on: true },
+  { id: "numerama", name: "Numerama", url: "https://www.numerama.com/feed/", color: "#1f2bf2", on: true },
+  { id: "frandroid", name: "Frandroid", url: "https://www.frandroid.com/feed", color: "#2bb24c", on: true },
+  { id: "clubic", name: "Clubic", url: "https://www.clubic.com/feed/news.rss", color: "#e4002b", on: true },
+  { id: "next", name: "Next", url: "https://next.ink/feed/", color: "#7a2ff2", on: true },
+  { id: "zdnet", name: "ZDNet France", url: "https://www.zdnet.fr/feeds/rss/actualites/", color: "#d4002b", on: true },
+  { id: "universfreebox", name: "Univers Freebox", url: "https://www.universfreebox.com/backend.php", color: "#cd1e25", on: true },
 ];
+// Anciennes sources propres à une rubrique, retirées : les rubriques sont désormais calculées.
+const RETIRED = ["echos-tech", "pixels", "lemonde-medias", "figaro-medias", "echos-medias", "franceinfo-medias", "liberation-medias"];
+
+// ——— Tri automatique ———
+// Chaque article est rangé dans une ou plusieurs rubriques selon les mots de son titre, de son résumé et de ses catégories RSS.
+// L'ordre compte : la première rubrique trouvée sert à classer les articles enregistrés.
 const RUBRICS = [
-  { id: "une", name: "À la une" },
-  { id: "tech", name: "High-tech & télécoms" },
-  { id: "medias", name: "Médias" },
+  { id: "telecoms", name: "Télécoms", star: true, re: /\b(telecoms?|telecommunications?|operateurs? (telecom|mobile|de reseau|d.infrastructure)|fibre optique|la fibre|ftth|fttx|ftto|[456]g\b|tres haut debit|haut debit|arcep|berec|orece|xpfibre|axione|altitude infra|covage|orange concessions|tdf\b|cellnex|totem\b|kosc|iliad|freebox|free mobile|sfr\b|bouygues telecom|altice|orange (business|france|telecom)|vodafone|deutsche telekom|telefonica|telecom italia|swisscom|proximus|openreach|cityfibre|open fiber|fibercop|verizon|at&t|t-mobile|starlink|eutelsat|oneweb|cable sous-marin|cables sous-marins|reseau mobile|antennes? relais|pylones?|degroupage|reseau cuivre|fin du cuivre|fermeture du cuivre|reseaux? d.initiative publique|zones? (tres )?denses|roaming|itinerance|forfaits? mobiles?|frequences|spectre radio|towerco)\b/ },
+  { id: "politique", name: "Politique", re: /\b(gouvernement|premier ministre|ministre|elysee|assemblee nationale|senat|deputes?|senateurs?|elections?|electoral|presidentielle|legislatives|municipales|partis? politiques?|macron|rassemblement national|\brn\b|lfi|insoumis|renaissance|les republicains|socialiste|ecologistes|motion de censure|49\.3|remaniement)\b/ },
+  { id: "international", name: "International", re: /\b(ukraine|russie|poutine|zelensky|israel|gaza|hamas|iran|liban|syrie|chine|pekin|xi jinping|etats-unis|washington|trump|maison blanche|onu|otan|union europeenne|bruxelles|allemagne|royaume-uni|londres|italie|espagne|afrique|inde|japon|bresil|mexique|canada|turquie|diplomati\w*|guerre|cessez-le-feu|sommet)\b/ },
+  { id: "economie", name: "Économie", re: /\b(economie|economique|croissance|inflation|pib|bce|fed\b|taux d.interet|budget|deficit|dette|impots?|fiscalite|emploi|chomage|salaires?|retraites?|bourse|cac 40|marches financiers|pouvoir d.achat|consommation|banque centrale|immobilier)\b/ },
+  { id: "entreprises", name: "Entreprises", re: /\b(entreprises?|pdg|directeur general|rachat|acquisition|fusion|resultats (annuels|semestriels|trimestriels)|chiffre d.affaires|benefice|startups?|start-up|levee de fonds|leve \d|industriels?|usine|plan social|licenciements|actionnaires?|introduction en bourse)\b/ },
+  { id: "tech", name: "Tech", re: /\b(intelligence artificielle|\bia\b|chatgpt|openai|numerique|smartphones?|iphone|android|apple|google|microsoft|meta\b|amazon|nvidia|semi-conducteurs?|puces?|cyber\w*|piratage|logiciels?|applications?|tech|high-tech|jeux? video|cloud|data ?centers?|robot\w*|quantique)\b/ },
+  { id: "medias", name: "Médias", re: /\b(medias?|television|tele\b|tf1|france televisions|m6|canal\+|bfm\w*|cnews|radio|radio france|presse|journalistes?|redaction|audiences?|streaming|netflix|arcom|editeurs? de presse|animateurs?|emission)\b/ },
+  { id: "sante", name: "Santé", re: /\b(sante|hopital|hopitaux|medecins?|maladies?|virus|epidemie|vaccins?|cancer|soins|patients?|medicaments?|securite sociale)\b/ },
+  { id: "environnement", name: "Environnement & sciences", re: /\b(climat\w*|rechauffement|environnement|biodiversite|pollution|energie|nucleaire|renouvelables?|eolien\w*|solaire|secheresse|inondations?|meteo|canicule|science\w*|espace|nasa|astronom\w*|chercheurs?)\b/ },
+  { id: "culture", name: "Culture", re: /\b(culture\w*|cinema|films?|series?|musique|concerts?|festival|livres?|romans?|ecrivains?|expositions?|musees?|theatre|artistes?|album)\b/ },
+  { id: "sport", name: "Sport", re: /\b(sports?|football|ligue 1|ligue des champions|psg|om\b|rugby|tennis|cyclisme|tour de france|jeux olympiques|\bjo\b|formule 1|f1|basket|nba|handball|athletisme|match|championnat|coupe du monde)\b/ },
+  { id: "societe", name: "Société", re: /\b(societe|justice|proces|tribunal|police|gendarmerie|faits? divers|education|ecoles?|enseignants?|universites?|logement|transports?|greve|manifestation|immigration|securite)\b/ },
 ];
-// Les navigateurs bloquent la lecture directe des flux d'autres sites (CORS) :
-// on tente d'abord en direct, puis via des relais publics, dans l'ordre.
+// Focus Télécoms
+const TEL_FIBRE = /\b(xpfibre|axione|altitude infra\w*|covage|orange concessions|tdf\b|cellnex|totem\b|kosc|vauban|operateurs? d.infrastructures?|infrastructures? (de )?(fibre|telecoms?|numeriques?)|reseaux? d.initiative publique|\brip\b|ftth|fttx|ftto|deploiement de la fibre|raccordements?|prises? (fibre|ftth|raccordables)|fibre noire|fin du cuivre|fermeture du cuivre|decommissionnement|zones? (tres )?denses|zones? amii|amel|openreach|cityfibre|open fiber|fibercop|deutsche glasfaser|vantage towers|american tower|crown castle|towercos?|neutral host|pylones?|wholesale|opérateur neutre|operateur neutre)\b/;
+const TEL_REGL = /\b(arcep|berec|orece|regulat\w*|reglement\w*|reglementaire|ofcom|fcc\b|bundesnetzagentur|bnetza|agcom|cnmc|commission europeenne|gigabit infrastructure act|digital networks act|autorite de la concurrence|amendes?|sanctions?|mise en demeure|consultation publique|decret|projet de loi|loi\b|attribution des frequences|encheres|licences?|service universel|neutralite du net|tarifs? (de gros|regules?)|obligations? de (deploiement|couverture)|cadre reglementaire|new deal mobile|plan france tres haut debit|zones? amii|amel)\b/;
+const TEL_INTL = /\b(vodafone|deutsche telekom|telefonica|telecom italia|tim\b|bt group|openreach|cityfibre|open fiber|fibercop|deutsche glasfaser|swisscom|proximus|kpn|telenor|telia|verizon|at&t|t-mobile|comcast|starlink|ofcom|fcc\b|bundesnetzagentur|agcom|cnmc|etats-unis|allemagne|royaume-uni|italie|espagne|belgique|suisse|chine|huawei|inde|afrique|maroc|senegal|cote d.ivoire|japon|canada|bresil|international|monde)\b/;
+const TEL_FR = /\b(arcep|xpfibre|axione|altitude infra\w*|covage|orange concessions|kosc|iliad|free\b|freebox|free mobile|sfr|bouygues telecom|orange|france|francais\w*|territoires?|departements?|communes?|regions?|\brip\b|zones? amii|amel|new deal mobile|plan france tres haut debit)\b/;
+const TEL_SUBS = [
+  { id: "all", name: "Toute l'actualité télécoms" },
+  { id: "fibre", name: "Focus infra fibre", intro: "Opérateurs d'infrastructure (Xpfibre, Axione, Altitude, Orange Concessions, TDF, Cellnex, Totem…), réseaux d'initiative publique, déploiement FTTH et fin du cuivre." },
+  { id: "france", name: "France" },
+  { id: "intl", name: "International" },
+  { id: "regl", name: "Réglementaire", intro: "Arcep, BEREC, Commission européenne, fréquences, amendes, obligations de déploiement et textes de loi." },
+];
+
+function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+function classify(i) {
+  const t = norm(i.title + " " + i.summary + " " + (i.cats || []).join(" "));
+  const rubrics = RUBRICS.filter(r => r.re.test(t)).map(r => r.id);
+  let tel = null;
+  if (rubrics.includes("telecoms")) {
+    const intl = TEL_INTL.test(t), fr = TEL_FR.test(t);
+    tel = { fibre: TEL_FIBRE.test(t), regl: TEL_REGL.test(t), intl, france: fr || !intl };
+  }
+  return { rubrics: rubrics.length ? rubrics : ["autres"], tel };
+}
+
+// ——— Récupération des flux ———
 // Dans l'appli Android, les requêtes passent par le téléphone (pas de blocage CORS).
 const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const PLUGINS = (window.Capacitor && window.Capacitor.Plugins) || {};
 const LOCAL_API = !NATIVE && /^https?:$/.test(location.protocol) ? "api/feed?url=" : null; // fourni par kiosque.py
 // Sur GitHub Pages, une tâche planifiée dépose une copie récente de chaque flux dans feeds/.
 let snapshotIndex = null;
@@ -205,18 +284,21 @@ async function snapshots() {
   catch { snapshotIndex = {}; }
   return snapshotIndex;
 }
+// Hors appli, les navigateurs bloquent la lecture directe des flux (CORS) : on essaie des relais publics, dans l'ordre.
 const PROXIES = [
   ...(LOCAL_API ? [u => LOCAL_API + encodeURIComponent(u)] : []),
   u => u,
-  u => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
-  u => "https://corsproxy.io/?url=" + encodeURIComponent(u),
-  u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
-  u => "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(u),
+  ...(NATIVE ? [] : [
+    u => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+    u => "https://corsproxy.io/?url=" + encodeURIComponent(u),
+    u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
+    u => "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(u),
+  ]),
 ];
 // rss2json renvoie du JSON : on le reconvertit en petit flux RSS pour réutiliser le même analyseur.
 function jsonToRss(j) {
   const esc = t => String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const items = (j.items || []).map(i => `<item><title>${esc(i.title)}</title><link>${esc(i.link)}</link><pubDate>${esc(i.pubDate && i.pubDate.replace(" ", "T") + "Z")}</pubDate><description>${esc(i.description)}</description>${i.thumbnail || i.enclosure?.link ? `<enclosure type="image/jpeg" url="${esc(i.thumbnail || i.enclosure.link)}"/>` : ""}</item>`).join("");
+  const items = (j.items || []).map(i => `<item><title>${esc(i.title)}</title><link>${esc(i.link)}</link><pubDate>${esc(i.pubDate && i.pubDate.replace(" ", "T") + "Z")}</pubDate><description>${esc(i.description)}</description>${(i.categories || []).map(c => `<category>${esc(c)}</category>`).join("")}${i.thumbnail || i.enclosure?.link ? `<enclosure type="image/jpeg" url="${esc(i.thumbnail || i.enclosure.link)}"/>` : ""}</item>`).join("");
   return `<rss><channel>${items}</channel></rss>`;
 }
 const PAGE = 30;
@@ -229,17 +311,19 @@ const store = {
 function loadFeeds() {
   const saved = store.get("kiosque.feeds", null);
   if (!saved) return DEFAULT_FEEDS.map(f => ({ ...f }));
-  // Anciennes listes sans rubrique : on les range dans « À la une » et on ajoute les nouvelles sources.
-  saved.forEach(f => { if (!f.cat) f.cat = "une"; });
-  for (const d of DEFAULT_FEEDS) if (!saved.some(f => f.id === d.id)) saved.push({ ...d });
-  return saved;
+  const list = saved.filter(f => !RETIRED.includes(f.id)).map(({ cat, ...f }) => f);
+  for (const d of DEFAULT_FEEDS) if (!list.some(f => f.id === d.id)) list.push({ ...d });
+  return list;
 }
 let feeds = loadFeeds();
-let rubric = (RUBRICS.find(r => r.id === location.hash.slice(1)) || RUBRICS[0]).id;
+let saved = store.get("kiosque.saved", []);
+const VIEWS = ["une", ...RUBRICS.map(r => r.id), "autres", "saved"];
+let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
+let telSub = "all";
 let filter = "all";
-const activeFeeds = () => feeds.filter(f => f.on && f.cat === rubric);
 let shown = PAGE;
 let results = {}; // id -> { items, error }
+const activeFeeds = () => feeds.filter(f => f.on);
 
 const $ = s => document.querySelector(s);
 
@@ -276,6 +360,7 @@ function parseFeed(xmlText, feed) {
       date: new Date(textOf(el, "pubDate") || [...el.getElementsByTagName("*")].find(n => n.localName === "date")?.textContent || 0),
       summary: stripHtml(rawDesc).slice(0, 400),
       image: findImage(el, rawDesc + (encoded ? encoded.textContent : "")),
+      cats: [...el.querySelectorAll("category")].map(c => c.textContent.trim()),
     });
   }
   for (const el of atom) {
@@ -287,9 +372,10 @@ function parseFeed(xmlText, feed) {
       date: new Date(textOf(el, "published") || textOf(el, "updated") || 0),
       summary: stripHtml(rawDesc).slice(0, 400),
       image: findImage(el, rawDesc),
+      cats: [...el.querySelectorAll("category")].map(c => c.getAttribute("term") || c.textContent.trim()),
     });
   }
-  return out.filter(i => i.title && /^https?:/i.test(i.link)).map(i => ({ ...i, src: feed.id }));
+  return out.filter(i => i.title && /^https?:/i.test(i.link)).map(i => ({ ...i, src: feed.id, ...classify(i) }));
 }
 async function fetchText(f) {
   let lastErr;
@@ -316,29 +402,31 @@ async function loadAll() {
   $("#status").className = "status";
   $("#status").textContent = "Chargement de " + active.length + " flux…";
   $("#refresh").disabled = true;
-  // Trois flux à la fois au maximum : les relais publics refusent les rafales de requêtes.
+  // Hors appli, trois flux à la fois au maximum : les relais publics refusent les rafales de requêtes.
   const queue = [...active];
   const worker = async () => {
     for (let f; (f = queue.shift()); ) {
       try { results[f.id] = { items: parseFeed(await fetchText(f), f) }; }
       catch (e) { results[f.id] = { items: results[f.id]?.items || [], error: String(e.message || e) }; }
-      renderSources(); render();
+      renderAll();
     }
   };
-  await Promise.all([worker(), worker(), worker()]);
+  await Promise.all(Array.from({ length: NATIVE ? 6 : 3 }, worker));
   $("#refresh").disabled = false;
   $("#stamp").textContent = "Mis à jour à " + new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  render();
+  renderAll();
 }
 
 function NO_NET_HINT() {
   const sample = activeFeeds().find(f => results[f.id]?.error);
   const why = sample ? " (" + sample.name + " : " + results[sample.id].error + ")" : "";
-  const where = /^(https?|file):$/.test(location.protocol) ? "" : " Cette page semble ouverte dans un aperçu qui bloque Internet : enregistrez le fichier et ouvrez-le avec Chrome, Safari, Firefox ou Edge.";
-  return "Aucun article n'a pu être chargé" + why + "." + where + " Le plus fiable est de lancer kiosque.py (voir LISEZMOI).";
+  const where = /^(https?|file|capacitor):$/.test(location.protocol) ? "" : " Cette page semble ouverte dans un aperçu qui bloque Internet : ouvrez-la avec Chrome, Safari, Firefox ou Edge.";
+  return "Aucun article n'a pu être chargé" + why + "." + where;
 }
 function feedById(id) { return feeds.find(f => f.id === id); }
+function rubricName(id) { return id === "autres" ? "Autres" : (RUBRICS.find(r => r.id === id) || {}).name || id; }
 function ago(d) {
+  d = d instanceof Date ? d : new Date(d);
   if (!d || isNaN(d) || d.getTime() === 0) return "";
   const m = Math.round((Date.now() - d) / 60000);
   if (m < 1) return "à l'instant";
@@ -347,15 +435,78 @@ function ago(d) {
   return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
 }
 
+// ——— Articles visibles ———
+function allItems() {
+  let items = activeFeeds().flatMap(f => results[f.id]?.items || []);
+  const seen = new Set();
+  return items.filter(i => !seen.has(i.link) && seen.add(i.link));
+}
+function inView(i) {
+  if (view === "une") return true;
+  if (!i.rubrics.includes(view)) return false;
+  if (view === "telecoms" && telSub !== "all") return !!i.tel?.[telSub];
+  return true;
+}
+function currentItems() {
+  let items = allItems().filter(inView);
+  if (filter !== "all") items = items.filter(i => i.src === filter);
+  const q = norm($("#q").value.trim());
+  if (q) items = items.filter(i => norm(i.title + " " + i.summary).includes(q));
+  return items.sort((a, b) => (b.date || 0) - (a.date || 0));
+}
+
+// ——— Menus ———
+function renderMenu() {
+  const items = allItems();
+  const count = id => id === "une" ? items.length : items.filter(i => i.rubrics.includes(id)).length;
+  const entries = [{ id: "une", name: "À la une" }, ...RUBRICS, { id: "autres", name: "Autres" }, { id: "saved", name: "Enregistrés" }];
+  const nav = $("#menu");
+  nav.innerHTML = "";
+  for (const r of entries) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-current", String(r.id === view));
+    if (r.star) b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">◆</span>');
+    b.append(document.createTextNode(r.name));
+    const n = document.createElement("span"); n.className = "n";
+    n.textContent = r.id === "saved" ? saved.length : (items.length ? count(r.id) : "");
+    b.append(n);
+    b.onclick = () => go(r.id);
+    nav.append(b);
+  }
+  const sub = $("#submenu");
+  sub.hidden = view !== "telecoms";
+  if (view === "telecoms") {
+    sub.innerHTML = "";
+    const tel = items.filter(i => i.tel);
+    for (const s of TEL_SUBS) {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = s.name;
+      b.setAttribute("aria-current", String(s.id === telSub));
+      const n = document.createElement("span"); n.className = "n";
+      n.textContent = tel.length ? (s.id === "all" ? tel.length : tel.filter(i => i.tel[s.id]).length) : "";
+      b.append(n);
+      b.onclick = () => { telSub = s.id; shown = PAGE; renderAll(); window.scrollTo({ top: 0 }); };
+      sub.append(b);
+    }
+  }
+}
+function go(id) {
+  view = id; filter = "all"; shown = PAGE; telSub = "all";
+  try { history.replaceState(null, "", "#" + id); } catch {}
+  renderAll(); window.scrollTo({ top: 0 });
+  const cur = $("#menu [aria-current='true']"); if (cur) cur.scrollIntoView({ inline: "center", block: "nearest" });
+}
+
 function renderSources() {
   const list = $("#srclist");
   list.innerHTML = "";
-  const active = activeFeeds();
-  const total = active.reduce((n, f) => n + (results[f.id]?.items.length || 0), 0);
-  list.append(srcButton("all", "Toute la rubrique", "var(--accent)", total, null));
-  for (const f of active) {
+  $(".sources").hidden = view === "saved";
+  const visible = allItems().filter(inView);
+  list.append(srcButton("all", "Tous les journaux", "var(--accent)", visible.length, null));
+  for (const f of activeFeeds()) {
     const r = results[f.id];
-    list.append(srcButton(f.id, f.name, f.color, r ? r.items.length : "…", r?.error));
+    list.append(srcButton(f.id, f.name, f.color, r ? visible.filter(i => i.src === f.id).length : "…", r?.error));
   }
 }
 function srcButton(id, name, color, count, error) {
@@ -368,31 +519,11 @@ function srcButton(id, name, color, count, error) {
   const c = b.querySelector(".count");
   c.textContent = error && !count ? "!" : count;
   if (error) { c.classList.add("err"); b.title = "Erreur : " + error; }
-  b.onclick = () => { filter = id; shown = PAGE; renderSources(); render(); window.scrollTo({ top: 0 }); };
+  b.onclick = () => { filter = id; shown = PAGE; renderAll(); window.scrollTo({ top: 0 }); };
   return b;
 }
 
-function currentItems() {
-  const ids = filter === "all" ? activeFeeds().map(f => f.id) : [filter];
-  let items = ids.flatMap(id => results[id]?.items || []);
-  const seen = new Set();
-  items = items.filter(i => !seen.has(i.link) && seen.add(i.link));
-  const q = $("#q").value.trim().toLowerCase();
-  if (q) items = items.filter(i => (i.title + " " + i.summary).toLowerCase().includes(q));
-  return items.sort((a, b) => (b.date || 0) - (a.date || 0));
-}
-
-function meta(i) {
-  const f = feedById(i.src) || { name: i.src, color: "var(--muted)" };
-  const m = document.createElement("div");
-  m.className = "meta";
-  m.innerHTML = '<span class="dot"></span><span class="who"></span><span>·</span><time></time>';
-  m.querySelector(".dot").style.background = f.color;
-  m.querySelector(".who").textContent = f.name;
-  m.querySelector("time").textContent = ago(i.date);
-  if (i.date && !isNaN(i.date)) m.querySelector("time").dateTime = i.date.toISOString();
-  return m;
-}
+// ——— Ouverture des articles ———
 function openUrl(i) {
   const tpl = (feedById(i.src)?.open || "").trim();
   if (!tpl) return i.link;
@@ -401,11 +532,18 @@ function openUrl(i) {
   const out = tpl.replaceAll("{url}", encodeURIComponent(i.link)).replaceAll("{rawurl}", i.link).replaceAll("{path}", path.replace(/^\//, ""));
   return /^https?:\/\//i.test(out) ? out : i.link;
 }
+// Dans l'appli, l'article s'ouvre dans un navigateur intégré (bouton ✕ pour revenir au Kiosque).
+function openArticle(i) {
+  const url = openUrl(i);
+  if (NATIVE && PLUGINS.Browser) PLUGINS.Browser.open({ url, toolbarColor: "#173a63", presentationStyle: "popover" });
+  else window.open(url, "_blank", "noopener");
+}
 function link(i, cls) {
   const a = document.createElement("a");
   a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer";
   a.textContent = i.title;
   if (cls) a.className = cls;
+  a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
   return a;
 }
 function img(i) {
@@ -416,115 +554,293 @@ function img(i) {
   im.onerror = () => im.remove();
   const a = document.createElement("a");
   a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer"; a.tabIndex = -1;
+  a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
   a.append(im);
   return a;
 }
 
+// ——— Articles enregistrés ———
+const isSaved = i => saved.some(s => s.link === i.link);
+function toggleSave(i) {
+  if (isSaved(i)) saved = saved.filter(s => s.link !== i.link);
+  else saved.unshift({ title: i.title, link: i.link, src: i.src, srcName: feedById(i.src)?.name || i.src, date: i.date, summary: i.summary, image: i.image, rubrics: i.rubrics, tel: i.tel, savedAt: new Date().toISOString() });
+  store.set("kiosque.saved", saved);
+  renderAll();
+}
+
+// ——— Rendu ———
+const ICON_SAVE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+const ICON_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4" stroke="currentColor" stroke-width="1.8"/></svg>';
+
+function meta(i) {
+  const f = feedById(i.src) || { name: i.srcName || i.src, color: "var(--muted)" };
+  const m = document.createElement("div");
+  m.className = "meta";
+  m.innerHTML = '<span class="dot"></span><span class="who"></span><span>·</span><time></time>';
+  m.querySelector(".dot").style.background = f.color;
+  m.querySelector(".who").textContent = f.name;
+  const d = new Date(i.date);
+  m.querySelector("time").textContent = ago(d);
+  if (!isNaN(d)) m.querySelector("time").dateTime = d.toISOString();
+  return m;
+}
+function chips(i) {
+  const box = document.createElement("div");
+  box.className = "chips";
+  const add = (txt, cls) => { const s = document.createElement("span"); s.className = "chip" + (cls ? " " + cls : ""); s.textContent = txt; box.append(s); };
+  if (i.tel) {
+    if (i.tel.fibre) add("Infra fibre", "fibre");
+    if (i.tel.regl) add("Réglementaire", "regl");
+    if (view !== "telecoms") add("Télécoms");
+    else { if (i.tel.intl) add("International"); else add("France"); }
+  } else if (view === "une" || view === "saved") {
+    const r = i.rubrics.find(x => x !== "autres");
+    if (r) add(rubricName(r));
+  }
+  return box.childElementCount ? box : null;
+}
+function actions(i) {
+  const box = document.createElement("div");
+  box.className = "actions";
+  const s = document.createElement("button");
+  s.type = "button"; s.className = "icon-btn";
+  const on = isSaved(i);
+  s.setAttribute("aria-pressed", String(on));
+  s.innerHTML = ICON_SAVE + "<span>" + (on ? "Enregistré" : "Enregistrer") + "</span>";
+  s.onclick = () => toggleSave(i);
+  const p = document.createElement("button");
+  p.type = "button"; p.className = "icon-btn";
+  p.innerHTML = ICON_SHARE + "<span>Partager</span>";
+  p.onclick = () => openShare(i);
+  box.append(s, p);
+  return box;
+}
+function card(i) {
+  const c = document.createElement("article");
+  c.className = "card";
+  const pic = img(i); if (pic) c.append(pic);
+  const h3 = document.createElement("h3"); h3.append(link(i));
+  c.append(meta(i));
+  const ch = chips(i); if (ch) c.append(ch);
+  c.append(h3);
+  if (i.summary) { const s = document.createElement("p"); s.className = "sum"; s.textContent = i.summary; c.append(s); }
+  c.append(actions(i));
+  return c;
+}
+
+function renderAll() { renderMenu(); renderSources(); render(); }
+
 function render() {
-  const items = currentItems();
-  const lead = $("#lead"), grid = $("#grid");
+  const lead = $("#lead"), grid = $("#grid"), status = $("#status"), intro = $("#intro");
   lead.innerHTML = ""; grid.innerHTML = "";
+  const sub = view === "telecoms" && TEL_SUBS.find(s => s.id === telSub);
+  intro.hidden = !(sub && sub.intro);
+  if (sub && sub.intro) intro.textContent = sub.intro;
+
+  if (view === "saved") return renderSaved();
+
+  const items = currentItems();
   const errs = activeFeeds().filter(f => results[f.id]?.error);
-  const status = $("#status");
   const pending = activeFeeds().filter(f => !results[f.id]).length;
   if (!items.length) {
-    status.className = pending ? "status" : "status err";
-    status.textContent = pending ? "Chargement des flux…" : ($("#q").value ? "Aucun article ne correspond à cette recherche." : NO_NET_HINT());
+    status.className = pending || allItems().length ? "status" : "status err";
+    status.textContent = pending ? "Chargement des flux…"
+      : $("#q").value ? "Aucun article ne correspond à cette recherche."
+      : allItems().length ? "Aucun article dans cette rubrique pour l'instant."
+      : NO_NET_HINT();
     $("#more").hidden = true;
     return;
   }
-  status.className = errs.length ? "status err" : "status";
+  status.className = "status";
   status.textContent = items.length + " articles" + (errs.length ? " · indisponible pour l'instant : " + errs.map(f => f.name).join(", ") : "");
 
   const [first, ...rest] = items;
   const wrap = document.createElement("article");
   wrap.className = "lead";
   const left = img(first) || document.createElement("div");
-  const right = document.createElement("div");
+  const right = document.createElement("div"); right.className = "body";
   const h = document.createElement("h2"); h.append(link(first));
-  const p = document.createElement("p"); p.className = "sum"; p.textContent = first.summary;
-  right.append(meta(first), h, p);
+  right.append(meta(first));
+  const ch = chips(first); if (ch) right.append(ch);
+  right.append(h);
+  if (first.summary) { const p = document.createElement("p"); p.className = "sum"; p.textContent = first.summary; right.append(p); }
+  right.append(actions(first));
   wrap.append(left, right);
   if (!first.image) wrap.style.gridTemplateColumns = "minmax(0,1fr)";
   lead.append(wrap);
 
-  for (const i of rest.slice(0, shown)) {
-    const c = document.createElement("article");
-    c.className = "card";
-    const pic = img(i); if (pic) c.append(pic);
-    const h3 = document.createElement("h3"); h3.append(link(i));
-    const s = document.createElement("p"); s.className = "sum"; s.textContent = i.summary;
-    c.append(meta(i), h3);
-    if (i.summary) c.append(s);
-    grid.append(c);
-  }
+  for (const i of rest.slice(0, shown)) grid.append(card(i));
   $("#more").hidden = rest.length <= shown;
 }
 
-// Gestion des sources
+function renderSaved() {
+  const status = $("#status"), lead = $("#lead");
+  $("#more").hidden = true;
+  const q = norm($("#q").value.trim());
+  const list = q ? saved.filter(i => norm(i.title + " " + i.summary).includes(q)) : saved;
+  if (!list.length) {
+    status.className = "status";
+    status.textContent = saved.length ? "Aucun article enregistré ne correspond à cette recherche." : "Aucun article enregistré. Touchez « Enregistrer » sous un article pour le retrouver ici, classé par rubrique.";
+    return;
+  }
+  status.className = "status";
+  status.textContent = list.length + " articles enregistrés, classés par rubrique";
+  const order = [...RUBRICS.map(r => r.id), "autres"];
+  for (const rid of order) {
+    const group = list.filter(i => (i.rubrics.find(x => x !== "autres") || "autres") === rid);
+    if (!group.length) continue;
+    const sec = document.createElement("section");
+    sec.className = "savedgroup";
+    const h = document.createElement("h2");
+    h.textContent = rubricName(rid);
+    const n = document.createElement("span"); n.className = "n"; n.textContent = group.length; h.append(n);
+    const g = document.createElement("div"); g.className = "grid";
+    group.forEach(i => g.append(card(i)));
+    sec.append(h, g);
+    lead.append(sec);
+  }
+}
+
+// ——— Partage avec capture d'écran ———
+// La capture de la version ordinateur est faite par le service Microlink (bloqueur de pubs et de bandeaux cookies activé).
+function screenshotUrl(link) {
+  return "https://api.microlink.io/?url=" + encodeURIComponent(link) +
+    "&screenshot=true&meta=false&embed=screenshot.url&adblock=true&viewport.width=1366&viewport.height=1024&viewport.deviceScaleFactor=1&waitForTimeout=1500";
+}
+let shareState = null;
+function shareText(i) { return i.title + " (" + (feedById(i.src)?.name || i.srcName || "") + ")\n" + i.link; }
+function loadImage(src) {
+  return new Promise((res, rej) => { const im = new Image(); im.crossOrigin = "anonymous"; im.onload = () => res(im); im.onerror = () => rej(new Error("capture indisponible")); im.src = src; });
+}
+function wrapText(ctx, text, maxW) {
+  const words = text.split(/\s+/), lines = []; let line = "";
+  for (const w of words) { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+  if (line) lines.push(line);
+  return lines;
+}
+async function buildShareImage(i) {
+  const shot = await loadImage(screenshotUrl(i.link));
+  const W = 1366, pad = 40;
+  const c = document.createElement("canvas");
+  const ctx = c.getContext("2d");
+  ctx.font = "700 34px Georgia, serif";
+  const lines = wrapText(ctx, i.title, W - pad * 2).slice(0, 3);
+  const headH = 70 + lines.length * 44 + 20, footH = 72;
+  const shotH = Math.round(shot.naturalHeight * (W / shot.naturalWidth));
+  c.width = W; c.height = headH + shotH + footH;
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, c.height);
+  ctx.fillStyle = "#173a63"; ctx.fillRect(0, 0, W, headH);
+  ctx.fillStyle = "#7cf0c8"; ctx.font = "600 20px 'IBM Plex Mono', monospace";
+  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, 46);
+  ctx.fillStyle = "#ffffff"; ctx.font = "700 34px Georgia, serif";
+  lines.forEach((l, k) => ctx.fillText(l, pad, 96 + k * 44));
+  ctx.drawImage(shot, 0, headH, W, shotH);
+  ctx.fillStyle = "#14202b"; ctx.fillRect(0, headH + shotH, W, footH);
+  ctx.fillStyle = "#ffffff"; ctx.font = "500 22px 'IBM Plex Mono', monospace";
+  let url = i.link; while (ctx.measureText("Source : " + url).width > W - pad * 2 && url.length > 20) url = url.slice(0, -2);
+  ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45);
+  return c;
+}
+async function openShare(i) {
+  const dlg = $("#sharedlg");
+  shareState = { item: i, canvas: null };
+  $("#sharetitle").textContent = i.title;
+  const box = $("#shot");
+  box.innerHTML = '<p class="wait">Capture de la version ordinateur en cours (environ 10 secondes)…</p>';
+  const txt = shareText(i);
+  $("#sh-wa").href = "https://wa.me/?text=" + encodeURIComponent(txt);
+  $("#sh-sms").href = "sms:?&body=" + encodeURIComponent(txt);
+  $("#sh-mail").href = "mailto:?subject=" + encodeURIComponent(i.title) + "&body=" + encodeURIComponent(txt);
+  $("#sh-native").textContent = "Partager l'image…";
+  dlg.showModal();
+  try {
+    const canvas = await buildShareImage(i);
+    if (shareState?.item !== i) return;
+    shareState.canvas = canvas;
+    const prev = document.createElement("img");
+    prev.alt = "Aperçu de la capture partagée";
+    prev.src = canvas.toDataURL("image/jpeg", 0.85);
+    box.innerHTML = ""; box.append(prev);
+  } catch (e) {
+    if (shareState?.item !== i) return;
+    box.innerHTML = '<p class="wait">La capture n\'a pas pu être faite (' + (e.message || e) + '). Vous pouvez quand même partager le titre et le lien.</p>';
+    $("#sh-native").textContent = "Partager le lien…";
+  }
+}
+async function shareNative() {
+  if (!shareState) return;
+  const i = shareState.item, c = shareState.canvas, txt = shareText(i);
+  try {
+    if (NATIVE && PLUGINS.Share) {
+      const opts = { title: i.title, text: txt, dialogTitle: "Partager l'article" };
+      if (c && PLUGINS.Filesystem) {
+        const data = c.toDataURL("image/jpeg", 0.88).split(",")[1];
+        const f = await PLUGINS.Filesystem.writeFile({ path: "kiosque-partage.jpg", data, directory: "CACHE" });
+        opts.files = [f.uri];
+      }
+      await PLUGINS.Share.share(opts);
+      return;
+    }
+    if (c && navigator.canShare) {
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.88));
+      const file = new File([blob], "kiosque-partage.jpg", { type: "image/jpeg" });
+      if (navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: i.title, text: txt }); return; }
+    }
+    if (navigator.share) { await navigator.share({ title: i.title, text: txt, url: i.link }); return; }
+    if (c) { const a = document.createElement("a"); a.href = c.toDataURL("image/jpeg", 0.88); a.download = "kiosque-partage.jpg"; a.click(); }
+  } catch (e) { /* partage annulé */ }
+}
+$("#sh-native").onclick = shareNative;
+$("#sh-copy").onclick = async () => {
+  if (!shareState) return;
+  try { await navigator.clipboard.writeText(shareState.item.link); $("#sh-copy").textContent = "Lien copié"; }
+  catch { $("#sh-copy").textContent = "Copie impossible"; }
+  setTimeout(() => { $("#sh-copy").textContent = "Copier le lien"; }, 2000);
+};
+$("#sh-close").onclick = () => { shareState = null; $("#sharedlg").close(); };
+if (!NATIVE) $("#sharehint").textContent = "« Partager l'image » ouvre le menu de partage de l'appareil quand il existe. Sinon, l'image est téléchargée. Elle contient l'adresse d'origine de l'article.";
+
+// ——— Gestion des sources ———
 function saveFeeds() { store.set("kiosque.feeds", feeds); }
 function renderDialog() {
   const box = $("#feedrows");
   box.innerHTML = "";
-  for (const r of RUBRICS) {
-  const h = document.createElement("h3"); h.className = "rubhead"; h.textContent = r.name; box.append(h);
-  for (const f of feeds.filter(x => x.cat === r.id)) {
+  for (const f of feeds) {
     const row = document.createElement("div");
     row.className = "feedrow";
     row.innerHTML = '<input type="checkbox"><div><div class="nm"></div><div class="url"></div></div><button class="btn" type="button">Retirer</button><label class="open">Lien d\'ouverture<input type="text" placeholder="Vide = article d\'origine · ex. https://exemple.fr/?u={url}"></label>';
     const cb = row.querySelector("input");
     cb.id = "cb-" + f.id; cb.checked = f.on;
     cb.setAttribute("aria-label", f.name);
-    cb.onchange = () => { f.on = cb.checked; saveFeeds(); if (f.on && !results[f.id]) loadAll(); if (!f.on && filter === f.id) filter = "all"; renderSources(); render(); };
+    cb.onchange = () => { f.on = cb.checked; saveFeeds(); if (f.on && !results[f.id]) loadAll(); if (!f.on && filter === f.id) filter = "all"; renderAll(); };
     row.querySelector(".nm").textContent = f.name;
     row.querySelector(".url").textContent = f.url;
     const op = row.querySelector("label.open input");
     op.id = "open-" + f.id; op.value = f.open || "";
     op.onchange = () => { f.open = op.value.trim(); saveFeeds(); render(); };
-    row.querySelector("button").onclick = () => { feeds = feeds.filter(x => x !== f); delete results[f.id]; if (filter === f.id) filter = "all"; saveFeeds(); renderDialog(); renderSources(); render(); };
+    row.querySelector("button").onclick = () => { feeds = feeds.filter(x => x !== f); delete results[f.id]; if (filter === f.id) filter = "all"; saveFeeds(); renderDialog(); renderAll(); };
     box.append(row);
-  }
   }
 }
 $("#manage").onclick = () => { renderDialog(); $("#dlg").showModal(); };
 $("#close").onclick = () => $("#dlg").close();
-$("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderSources(); loadAll(); };
+$("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
 $("#addform").onsubmit = e => {
   e.preventDefault();
   const name = $("#newname").value.trim(), url = $("#newurl").value.trim();
   if (!name || !url) return;
   const palette = ["#6a4c93", "#1982c4", "#8ac926", "#ff595e", "#2a9d8f", "#e76f51"];
-  const f = { id: "u" + Date.now(), name, url, color: palette[feeds.length % palette.length], on: true, cat: $("#newcat").value };
+  const f = { id: "u" + Date.now(), name, url, color: palette[feeds.length % palette.length], on: true };
   feeds.push(f); saveFeeds();
   $("#newname").value = ""; $("#newurl").value = "";
-  renderDialog(); renderSources(); loadAll();
+  renderDialog(); renderAll(); loadAll();
 };
 
 $("#refresh").onclick = loadAll;
 $("#more").onclick = () => { shown += PAGE; render(); };
 let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { shown = PAGE; render(); }, 150); };
 
-function renderRubrics() {
-  const nav = $("#rubrics");
-  nav.innerHTML = "";
-  for (const r of RUBRICS) {
-    const b = document.createElement("button");
-    b.type = "button"; b.textContent = r.name;
-    b.setAttribute("aria-current", String(r.id === rubric));
-    b.onclick = () => {
-      rubric = r.id; filter = "all"; shown = PAGE;
-      try { history.replaceState(null, "", "#" + r.id); } catch {}
-      renderRubrics(); renderSources(); render();
-      if (activeFeeds().some(f => !results[f.id])) loadAll();
-    };
-    nav.append(b);
-  }
-  $("#newcat").innerHTML = RUBRICS.map(r => `<option value="${r.id}">${r.name}</option>`).join("");
-  $("#newcat").value = rubric;
-}
-
-renderRubrics();
-renderSources();
+renderAll();
 loadAll();
 setInterval(() => { if (!document.hidden) loadAll(); }, REFRESH_MS);
 </script>
