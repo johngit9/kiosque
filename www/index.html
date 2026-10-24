@@ -134,8 +134,8 @@ article.card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0 20px 20px; }
 .sheethead { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); padding: 16px 0 10px; }
 .sheethead h2 { margin: 0; }
-.tabs { position: sticky; top: 66px; z-index: 2; display: flex; gap: 4px; background: var(--bg); border-radius: 99px; padding: 4px; margin-bottom: 14px; }
-.tabs button { flex: 1; border: 0; background: none; border-radius: 99px; padding: 8px 6px; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--muted); }
+.tabs { position: sticky; top: 66px; z-index: 2; display: flex; gap: 4px; background: var(--bg); border-radius: 99px; padding: 4px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
+.tabs button { flex: 1 0 auto; border: 0; background: none; border-radius: 99px; padding: 8px 10px; white-space: nowrap; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--muted); }
 .tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }
 .toggle-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); cursor: pointer; margin: 6px 0; }
 .toggle-line > span:first-child { display: grid; gap: 2px; }
@@ -172,6 +172,12 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .withlist button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
 .withlist button:hover { border-color: var(--accent); }
 .withlist small { font: 11px var(--f-mono); color: var(--muted); word-break: break-all; }
+.updbar { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 30; max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; background: var(--ink); color: var(--surface); border-radius: 14px; padding: 10px 10px 10px 16px; box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); font-size: 14px; }
+.updbar[hidden] { display: none; }
+.updbar span { flex: 1; }
+.updbar button { border: 0; border-radius: 99px; padding: 7px 14px; font: inherit; cursor: pointer; background: var(--surface); color: var(--ink); font-weight: 600; }
+.updbar #updx { background: none; color: inherit; padding: 7px 9px; }
+input[type="range"] { width: 100%; margin-top: 8px; accent-color: var(--accent); }
 .altlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
 .altlinks button { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 99px; padding: 4px 11px; font: inherit; font-size: 12.5px; cursor: pointer; }
 .altlinks button:hover { color: var(--accent); border-color: var(--accent); }
@@ -278,6 +284,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <button type="button" role="tab" data-tab="links" aria-selected="false">Liens</button>
     <button type="button" role="tab" data-tab="notif" aria-selected="false">Alertes</button>
     <button type="button" role="tab" data-tab="lang" aria-selected="false">Traduction</button>
+    <button type="button" role="tab" data-tab="app" aria-selected="false">Appli</button>
   </div>
   <section class="tabpane" data-pane="feeds">
     <p class="note">Activez les journaux à suivre et choisissez, pour chacun, le lien qui s'ouvre quand vous touchez un article. Tous les articles sont triés automatiquement dans les rubriques.</p>
@@ -294,7 +301,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     </form>
   </section>
   <section class="tabpane" data-pane="links" hidden>
-    <p class="note">Chaque journal ouvre ses articles avec le lien choisi dans l'onglet Journaux. Au retour d'un article, une barre propose de le rouvrir avec un autre de ces liens. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
+    <p class="note">Chaque journal ouvre ses articles avec le lien choisi dans l'onglet Journaux. Les autres liens apparaissent en petits boutons sous le titre de chaque article. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
     <div id="linkrows"></div>
     <div class="row"><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
   </section>
@@ -324,7 +331,32 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     </label>
     <p class="note">Le bouton « Traduire » passe par Google Traduction. Pour un article réservé aux abonnés, ouvrez l'article puis utilisez « Traduire » dans le menu ⋮ de Chrome : votre connexion d'abonné y est conservée.</p>
   </section>
+  <section class="tabpane" data-pane="app" hidden>
+    <h3 class="grouphead">Lecture</h3>
+    <label class="toggle-line" for="inapp"><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
+    <label class="field" for="zoom">Taille du texte de l'appli : <b id="zoomval"></b>
+      <input id="zoom" type="range" min="85" max="150" step="5">
+    </label>
+    <h3 class="grouphead">Sauvegarde des réglages</h3>
+    <p class="note">Vos journaux, liens, alertes et articles enregistrés sont conservés quand vous installez une nouvelle version par-dessus. Une sauvegarde sert en cas de désinstallation ou de changement de téléphone.</p>
+    <div class="row">
+      <button id="export" class="btn" type="button">Sauvegarder</button>
+      <label class="btn" for="import">Restaurer</label>
+      <input id="import" type="file" accept=".json,application/json" hidden>
+    </div>
+    <p id="backup-status" class="note" role="status"></p>
+    <h3 class="grouphead">Mise à jour</h3>
+    <p class="note">Version installée : <b id="build"></b></p>
+    <div class="row"><button id="checkupd" class="btn primary" type="button">Rechercher une mise à jour</button></div>
+    <p id="upd-status" class="note" role="status"></p>
+  </section>
 </dialog>
+
+<div id="updbar" class="updbar" hidden>
+  <span>Une nouvelle version de Kiosque est disponible.</span>
+  <button id="updgo" type="button">Installer</button>
+  <button id="updx" type="button" aria-label="Plus tard">✕</button>
+</div>
 
 <dialog id="feedlinks" class="sheet">
   <div class="sheethead">
@@ -806,12 +838,13 @@ function buildUrl(tpl, i) {
 }
 const openUrl = i => buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i);
 // Dans l'appli, la page s'ouvre dans le navigateur intégré (Chrome, avec vos connexions) ; bouton ✕ pour revenir.
+let inApp = store.get("kiosque.inapp", true);
 async function openInBrowser(url) {
   if (NATIVE) {
     // Lecteur intégré à l'appli, sans barre d'adresse (cordova-plugin-inappbrowser), sinon Chrome Custom Tabs.
     const iab = window.cordova?.InAppBrowser;
-    if (iab) {
-      try { iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#173a63,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=no,hardwareback=yes,footer=no"); return; }
+    if (iab && inApp) {
+      try { iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#13233d,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=yes,hardwareback=yes,footer=no,clearcache=no,clearsessioncache=no,useWideViewPort=yes"); return; }
       catch (e) { console.warn(e); }
     }
     try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#173a63" }); return; } } catch (e) { console.warn(e); }
@@ -1298,6 +1331,83 @@ $("#hideads").onchange = () => { hideAds = $("#hideads").checked; store.set("kio
 $("#manage").onclick = () => { $("#hideads").checked = hideAds; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
 $("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
 $("#close").onclick = () => $("#dlg").close();
+
+// ——— Onglet Appli : lecture, taille du texte, sauvegarde, mise à jour ———
+let zoom = store.get("kiosque.zoom", 100);
+// Le zoom s'applique aux articles ; les fenêtres de réglages gardent leur taille.
+const applyZoom = () => {
+  document.body.style.zoom = zoom / 100;
+  document.querySelectorAll("dialog, .updbar").forEach(d => d.style.zoom = 100 / zoom);
+  $("#zoomval").textContent = zoom + " %";
+};
+applyZoom();
+$("#zoom").value = zoom;
+$("#zoom").oninput = () => { zoom = +$("#zoom").value; store.set("kiosque.zoom", zoom); applyZoom(); };
+$("#inapp").checked = inApp;
+$("#inapp").onchange = () => { inApp = $("#inapp").checked; store.set("kiosque.inapp", inApp); };
+
+$("#export").onclick = async () => {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith("kiosque.")) data[k] = localStorage.getItem(k); }
+  const json = JSON.stringify({ app: "kiosque", date: new Date().toISOString(), data }, null, 1);
+  const name = "kiosque-reglages-" + new Date().toISOString().slice(0, 10) + ".json";
+  try {
+    if (NATIVE && PLUGINS.Filesystem && PLUGINS.Share) {
+      const f = await PLUGINS.Filesystem.writeFile({ path: name, data: json, directory: "CACHE", encoding: "utf8" });
+      await PLUGINS.Share.share({ title: "Sauvegarde Kiosque", files: [f.uri], dialogTitle: "Enregistrer la sauvegarde (Drive, Fichiers, e-mail…)" });
+    } else {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([json], { type: "application/json" })); a.download = name; a.click();
+    }
+    $("#backup-status").textContent = "Sauvegarde prête : gardez le fichier " + name + " dans Drive ou Fichiers.";
+  } catch (e) { if (!/cancel/i.test(e.message || "")) $("#backup-status").textContent = "Sauvegarde impossible : " + (e.message || e); }
+};
+$("#import").onchange = async () => {
+  const file = $("#import").files[0]; if (!file) return;
+  try {
+    const j = JSON.parse(await file.text());
+    if (j.app !== "kiosque" || !j.data) throw new Error("ce fichier n'est pas une sauvegarde Kiosque");
+    for (const [k, v] of Object.entries(j.data)) if (k.startsWith("kiosque.")) localStorage.setItem(k, v);
+    $("#backup-status").textContent = "Réglages restaurés, redémarrage…";
+    setTimeout(() => location.reload(), 600);
+  } catch (e) { $("#backup-status").textContent = "Restauration impossible : " + (e.message || e); }
+  $("#import").value = "";
+};
+
+// Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
+const BUILD = "__BUILD__";
+const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
+$("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
+let updUrl = null;
+async function checkUpdate(manual) {
+  const say = t => { if (manual) $("#upd-status").textContent = t; };
+  say("Recherche…");
+  try {
+    const r = await fetch(RELEASE_API, { headers: { Accept: "application/vnd.github+json" }, cache: "no-store" });
+    if (r.status === 404) return say("La recherche automatique n'est pas possible tant que le dépôt GitHub est privé. Installez la nouvelle APK depuis le lien envoyé.");
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const rel = await r.json();
+    const latest = (rel.body || "").match(/\b[0-9a-f]{7}\b/)?.[0];
+    const asset = (rel.assets || []).find(a => a.name.endsWith(".apk"));
+    store.set("kiosque.updcheck", Date.now());
+    if (!latest || !asset) return say("Aucune version publiée trouvée.");
+    if (latest === BUILD) return say("Vous avez la dernière version.");
+    updUrl = asset.browser_download_url;
+    say("Nouvelle version disponible (" + latest + ").");
+    $("#updbar").hidden = false;
+  } catch (e) { say("Recherche impossible : " + (e.message || e)); }
+}
+function installUpdate() {
+  if (!updUrl) return;
+  // Le navigateur du téléphone télécharge l'APK ; Android propose ensuite de l'installer par-dessus.
+  const iab = window.cordova?.InAppBrowser;
+  if (iab) iab.open(updUrl, "_system"); else location.href = updUrl;
+  $("#updbar").hidden = true;
+}
+$("#checkupd").onclick = () => checkUpdate(true);
+$("#updgo").onclick = installUpdate;
+$("#updx").onclick = () => { $("#updbar").hidden = true; };
+if (NATIVE && !BUILD.startsWith("__") && Date.now() - store.get("kiosque.updcheck", 0) > 12 * 3600e3) setTimeout(() => checkUpdate(false), 4000);
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
 $("#addform").onsubmit = e => {
   e.preventDefault();
