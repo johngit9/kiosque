@@ -4,11 +4,14 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Microlink
+      - name: Services de capture
         run: |
           U='https://www.lesechos.fr/tech-medias/hightech/la-tendance-va-probablement-se-poursuivre-pourquoi-les-operateurs-telecoms-augmentent-tous-le-prix-de-leurs-forfaits-2259540'
-          E=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=''))" "$U")
-          for q in "screenshot=true&meta=false" "screenshot=true&screenshot.fullPage=true&screenshot.type=jpeg&meta=false&adblock=true&viewport.width=1366&viewport.height=900&waitForTimeout=2500"; do
-            echo "== $q"; curl -s -m 90 -w "\nHTTP %{http_code} %{time_total}s\n" "https://api.microlink.io/?url=$E&$q" | head -c 1500; echo
-            curl -s -m 90 -o /dev/null -D - "https://api.microlink.io/?url=$E&$q&embed=screenshot.url" | grep -i "^HTTP\|^location\|x-rate\|access-control" ; echo
+          for s in "https://image.thum.io/get/width/1366/fullpage/noanimate/$U" "https://image.thum.io/get/width/1366/$U" "https://s.wordpress.com/mshots/v1/$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=''))" "$U")?w=1366&h=4000"; do
+            echo "== $s"
+            curl -s -m 90 -L -o out.img -D hdr.txt -w "HTTP %{http_code} %{time_total}s %{size_download}B %{content_type}\n" "$s"; grep -i "^access-control\|^x-\|rate" hdr.txt | head -5; file out.img; python3 -c "
+          import struct,sys
+          d=open('out.img','rb').read()
+          print('bytes',len(d))
+          " ; echo
           done
