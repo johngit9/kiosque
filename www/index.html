@@ -395,7 +395,8 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     </button>
   </div>
   <p class="note" id="sharehint">Les boutons ouvrent le menu de partage du téléphone : choisissez Element, WhatsApp, Messages, Gmail ou une autre appli.</p>
-  <div class="row"><button id="sh-copy" class="btn" type="button">Copier le lien</button></div>
+  <div class="row"><button id="sh-save" class="btn" type="button" disabled>Enregistrer l'image sur le téléphone</button><button id="sh-copy" class="btn" type="button">Copier le lien</button></div>
+  <p id="sh-save-status" class="note" role="status"></p>
   <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
 </dialog>
 
@@ -1229,6 +1230,8 @@ async function openShare(i) {
   const box = $("#shot");
   box.innerHTML = '<p class="wait">Capture de la page entière, version ordinateur, en cours (10 à 20 secondes)…</p>';
   $("#sh-image").disabled = true;
+  $("#sh-save").disabled = true;
+  $("#sh-save-status").textContent = "";
   $("#sh-image-sub").textContent = "Capture de la page en cours…";
   dlg.showModal();
   try {
@@ -1240,6 +1243,7 @@ async function openShare(i) {
     prev.src = canvas.toDataURL("image/jpeg", 0.85);
     box.innerHTML = ""; box.append(prev);
     $("#sh-image").disabled = false;
+    $("#sh-save").disabled = false;
     $("#sh-image-sub").textContent = "Capture de la page entière, avec l'adresse d'origine";
   } catch (e) {
     if (shareState?.item !== i) return;
@@ -1272,6 +1276,21 @@ async function shareNative(withImage) {
 }
 $("#sh-image").onclick = () => shareNative(true);
 $("#sh-link").onclick = () => shareNative(false);
+// Enregistre la capture dans Documents/Kiosque du téléphone (ou la télécharge hors appli).
+$("#sh-save").onclick = async () => {
+  const c = shareState?.canvas; if (!c) return;
+  const name = "kiosque-" + new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-") + ".jpg";
+  const data = c.toDataURL("image/jpeg", 0.9);
+  try {
+    if (NATIVE && PLUGINS.Filesystem) {
+      await PLUGINS.Filesystem.writeFile({ path: "Kiosque/" + name, data: data.split(",")[1], directory: "DOCUMENTS", recursive: true });
+      $("#sh-save-status").textContent = "Image enregistrée dans Documents › Kiosque › " + name;
+    } else {
+      const a = document.createElement("a"); a.href = data; a.download = name; a.click();
+      $("#sh-save-status").textContent = "Image téléchargée : " + name;
+    }
+  } catch (e) { $("#sh-save-status").textContent = "Enregistrement impossible : " + (e.message || e); }
+};
 $("#sh-copy").onclick = async () => {
   if (!shareState) return;
   try { await navigator.clipboard.writeText(shareState.item.link); $("#sh-copy").textContent = "Lien copié"; }
