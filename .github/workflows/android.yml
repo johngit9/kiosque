@@ -31,7 +31,7 @@ jobs:
           # Notifications en arrière-plan (@capacitor/background-runner)
           sed -i "s#dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'#dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs', '../../node_modules/@capacitor/background-runner/android/src/main/libs'#" android/app/build.gradle
           grep -q "background-runner/android/src/main/libs" android/app/build.gradle
-          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />\n</manifest>#' android/app/src/main/AndroidManifest.xml
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n</manifest>#' android/app/src/main/AndroidManifest.xml
           grep -q POST_NOTIFICATIONS android/app/src/main/AndroidManifest.xml
           echo "kotlin.jvm.target.validation.mode=warning" >> android/gradle.properties
           npx capacitor-assets generate --android
