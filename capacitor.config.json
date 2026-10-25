@@ -13,6 +13,13 @@
       "repeat": true,
       "interval": 15,
       "autoStart": true
+    },
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "launchFadeOutDuration": 250,
+      "backgroundColor": "#13233d",
+      "showSpinner": false
     }
-  }
+  },
+  "backgroundColor": "#13233d"
 }

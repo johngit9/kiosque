@@ -509,7 +509,11 @@ function plugin(name) {
   try { return CAP.registerPlugin ? CAP.registerPlugin(name) : (CAP.Plugins || {})[name] || null; }
   catch { return (CAP.Plugins || {})[name] || null; }
 }
-const PLUGINS = { Browser: plugin("Browser"), Share: plugin("Share"), Filesystem: plugin("Filesystem") };
+const PLUGINS = { Browser: plugin("Browser"), Share: plugin("Share"), Filesystem: plugin("Filesystem"), SplashScreen: plugin("SplashScreen") };
+// L'écran de démarrage reste affiché jusqu'au premier affichage complet des articles (évite le scintillement).
+let splashDone = false;
+function hideSplash() { if (splashDone) return; splashDone = true; try { PLUGINS.SplashScreen?.hide({ fadeOutDuration: 250 }); } catch {} }
+setTimeout(hideSplash, 4000);
 const LOCAL_API = !NATIVE && /^https?:$/.test(location.protocol) ? "api/feed?url=" : null; // fourni par kiosque.py
 // Sur GitHub Pages, une tâche planifiée dépose une copie récente de chaque flux dans feeds/.
 let snapshotIndex = null;
@@ -665,10 +669,29 @@ async function fetchText(f, url = f.url) {
   throw lastErr || new Error("injoignable");
 }
 
+// Derniers articles gardés sur le téléphone : l'appli les affiche aussitôt au démarrage, puis les remplace d'un coup.
+const CACHE_KEY = "kiosque.cache";
+function restoreCache() {
+  const c = store.get(CACHE_KEY, null);
+  if (!c) return;
+  for (const f of activeFeeds()) if (c[f.id]) results[f.id] = { items: c[f.id].map(i => ({ ...i, date: new Date(i.date || 0) })), cached: true };
+}
+function saveCache() {
+  const out = {};
+  for (const f of activeFeeds()) {
+    const items = results[f.id]?.items;
+    if (items?.length) out[f.id] = items.slice(0, 80).map(i => ({ title: i.title, link: i.link, src: i.src, date: +i.date || 0, summary: (i.summary || "").slice(0, 300), image: i.image, cats: i.cats, rubrics: i.rubrics, tel: i.tel, ad: i.ad }));
+  }
+  store.set(CACHE_KEY, out);
+}
 async function loadAll() {
   const active = activeFeeds();
+  // Articles déjà à l'écran : on ne redessine qu'une fois tout reçu. Sinon, au plus deux fois par seconde.
+  const quiet = allItems().length > 0;
+  let rt = null;
+  const soon = () => { if (!quiet && !rt) rt = setTimeout(() => { rt = null; renderAll(); hideSplash(); }, 500); };
   $("#status").className = "status";
-  $("#status").textContent = "Chargement de " + active.length + " flux…";
+  if (!quiet) $("#status").textContent = "Chargement de " + active.length + " flux…";
   $("#refresh").disabled = true;
   // Hors appli, trois flux à la fois au maximum : les relais publics refusent les rafales de requêtes.
   const queue = [...active];
@@ -681,13 +704,16 @@ async function loadAll() {
       const failed = got.find(g => g.status === "rejected");
       if (items.length || !failed) results[f.id] = { items };
       else results[f.id] = { items: results[f.id]?.items || [], error: String(failed.reason?.message || failed.reason) };
-      renderAll();
+      soon();
     }
   };
   await Promise.all(Array.from({ length: NATIVE ? 6 : 3 }, worker));
   $("#refresh").disabled = false;
   $("#stamp").textContent = "Mis à jour à " + new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  clearTimeout(rt);
   renderAll();
+  hideSplash();
+  saveCache();
 }
 
 function NO_NET_HINT() {
@@ -1567,7 +1593,9 @@ $("#refresh").onclick = loadAll;
 $("#more").onclick = () => { shown += PAGE; render(); };
 let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { shown = PAGE; render(); }, 150); };
 
+restoreCache();
 renderAll();
+if (allItems().length) requestAnimationFrame(() => setTimeout(hideSplash, 50));
 loadAll();
 syncNotif();
 setInterval(() => { if (!document.hidden) loadAll(); }, REFRESH_MS);
