@@ -1,0 +1,11 @@
+name: Test flux La Tribune (temporaire)
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="Mozilla/5.0 (Linux; Android 14) Chrome/124 Mobile"
+          curl -s -A "$UA" https://www.latribune.fr/feed.xml -o main.xml; echo "feed.xml: $(grep -o '<item' main.xml | wc -l) items, starlink: $(grep -ci 'starlink' main.xml)"; grep -o '<link>[^<]*' main.xml | head -5
+          for p in / /tech /tech/telecoms /article/tech/telecoms; do echo "== page $p"; curl -s -A "$UA" "https://www.latribune.fr$p" | grep -oi '<link[^>]*\(rss\|atom\|feed\)[^>]*>' | head -5; done
+          for f in feed/tech.xml feed/tech/telecoms.xml tech/feed.xml tech/telecoms/feed.xml feed.xml?section=tech rss/tech.xml feeds/tech.xml feed/telecoms.xml sitemap-news.xml; do printf "%-28s " "$f"; curl -s -A "$UA" -o t.xml -w "%{http_code} %{content_type} " "https://www.latribune.fr/$f"; echo "items=$(grep -o '<item\|<url>' t.xml | wc -l) starlink=$(grep -ci starlink t.xml)"; done
