@@ -35,8 +35,11 @@ jobs:
           grep -q POST_NOTIFICATIONS android/app/src/main/AndroidManifest.xml
           echo "kotlin.jvm.target.validation.mode=warning" >> android/gradle.properties
           npx capacitor-assets generate --android
-          sed -i "s/__BUILD__/${GITHUB_SHA::7}/" www/index.html
+          sed -i "s/__BUILD__/1.${GITHUB_RUN_NUMBER}/; s/__COMMIT__/${GITHUB_SHA::7}/" www/index.html
           npx cap sync android
+          # Numéro de version visible dans Android (Paramètres → Applis → Kiosque)
+          sed -i "s/versionCode 1$/versionCode ${GITHUB_RUN_NUMBER}/; s/versionName \"1.0\"/versionName \"1.${GITHUB_RUN_NUMBER}\"/" android/app/build.gradle
+          grep -q "versionName \"1.${GITHUB_RUN_NUMBER}\"" android/app/build.gradle
       - name: Clé de signature fixe (pour pouvoir mettre l'appli à jour sans la désinstaller)
         run: mkdir -p ~/.android && cp ci/debug.keystore ~/.android/debug.keystore
       - name: Construire l'APK
@@ -53,4 +56,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete android --yes --cleanup-tag || true
-          gh release create android kiosque.apk --title "Kiosque pour Android" --notes "APK construit automatiquement depuis le commit ${GITHUB_SHA::7}. Téléchargez kiosque.apk sur votre téléphone puis ouvrez-le pour l'installer." --latest
+          gh release create android kiosque.apk --title "Kiosque 1.${GITHUB_RUN_NUMBER}" --notes "${GITHUB_SHA::7} · Version 1.${GITHUB_RUN_NUMBER} de Kiosque, construite automatiquement. Téléchargez kiosque.apk sur votre téléphone puis ouvrez-le pour l'installer." --latest
