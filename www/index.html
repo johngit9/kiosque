@@ -364,7 +364,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <p id="backup-status" class="note" role="status"></p>
     <h3 class="grouphead">Mise à jour</h3>
     <p class="note">Version installée : <b id="build"></b></p>
-    <div class="row"><button id="checkupd" class="btn primary" type="button">Rechercher une mise à jour</button></div>
+    <div class="row"><button id="checkupd" class="btn" type="button">Rechercher une mise à jour</button><button id="updinstall" class="btn primary" type="button" hidden>Installer la mise à jour</button></div>
     <p id="upd-status" class="note" role="status"></p>
   </section>
 </dialog>
@@ -515,7 +515,7 @@ function plugin(name) {
   try { return CAP.registerPlugin ? CAP.registerPlugin(name) : (CAP.Plugins || {})[name] || null; }
   catch { return (CAP.Plugins || {})[name] || null; }
 }
-const PLUGINS = { Browser: plugin("Browser"), Share: plugin("Share"), Filesystem: plugin("Filesystem"), SplashScreen: plugin("SplashScreen") };
+const PLUGINS = { Browser: plugin("Browser"), Share: plugin("Share"), Filesystem: plugin("Filesystem"), SplashScreen: plugin("SplashScreen"), FileOpener: plugin("FileOpener") };
 // L'écran de démarrage reste affiché jusqu'au premier affichage complet des articles (évite le scintillement).
 let splashDone = false;
 function hideSplash() { if (splashDone) return; splashDone = true; try { PLUGINS.SplashScreen?.hide({ fadeOutDuration: 250 }); } catch {} }
@@ -1558,18 +1558,34 @@ async function checkUpdate(manual) {
     if (latest === BUILD) return say("Vous avez la dernière version.");
     updUrl = asset.browser_download_url;
     say("Nouvelle version disponible (" + latest + ").");
+    $("#updinstall").hidden = false;
     $("#updbar").hidden = false;
   } catch (e) { say("Recherche impossible : " + (e.message || e)); }
 }
-function installUpdate() {
-  if (!updUrl) return;
-  // Le navigateur du téléphone télécharge l'APK ; Android propose ensuite de l'installer par-dessus.
-  const iab = window.cordova?.InAppBrowser;
-  if (iab) iab.open(updUrl, "_system"); else location.href = updUrl;
-  $("#updbar").hidden = true;
+// Télécharge l'APK dans l'appli puis ouvre l'installateur d'Android (il demande seulement de confirmer).
+let installing = false;
+async function installUpdate() {
+  if (!updUrl || installing) return;
+  installing = true;
+  const say = t => { $("#upd-status").textContent = t; $("#updbar span").textContent = t; };
+  try {
+    if (!NATIVE || !PLUGINS.Filesystem || !PLUGINS.FileOpener) throw new Error("hors appli");
+    say("Téléchargement de la mise à jour…");
+    $("#updbar").hidden = false;
+    const r = await PLUGINS.Filesystem.downloadFile({ url: updUrl, path: "kiosque-maj.apk", directory: "CACHE" });
+    say("Ouverture de l'installateur…");
+    await PLUGINS.FileOpener.open({ filePath: r.path, contentType: "application/vnd.android.package-archive" });
+    say("Touchez « Mettre à jour » pour terminer.");
+  } catch (e) {
+    // Repli : le navigateur du téléphone télécharge l'APK, à ouvrir depuis la notification.
+    say("Téléchargement par le navigateur : ouvrez ensuite la notification.");
+    const iab = window.cordova?.InAppBrowser;
+    if (iab) iab.open(updUrl, "_system"); else location.href = updUrl;
+  } finally { installing = false; }
 }
 $("#checkupd").onclick = () => checkUpdate(true);
 $("#updgo").onclick = installUpdate;
+$("#updinstall").onclick = installUpdate;
 $("#updx").onclick = () => { $("#updbar").hidden = true; };
 if (NATIVE && !BUILD.startsWith("__") && Date.now() - store.get("kiosque.updcheck", 0) > 12 * 3600e3) setTimeout(() => checkUpdate(false), 4000);
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
