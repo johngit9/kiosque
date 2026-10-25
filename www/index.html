@@ -316,7 +316,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <section class="tabpane" data-pane="links" hidden>
     <p class="note">Chaque journal ouvre ses articles avec le lien choisi dans l'onglet Journaux. Les autres liens apparaissent en petits boutons sous le titre de chaque article. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
     <div id="linkrows"></div>
-    <div class="row"><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
+    <div class="row"><button id="resetlinks" class="btn" type="button">Rétablir les liens par défaut</button><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
   </section>
   <section class="tabpane" data-pane="notif" hidden>
     <div class="notifcard">
@@ -1496,6 +1496,14 @@ async function showFeedLinks(f) {
   };
 }
 $("#fl-close").onclick = () => $("#feedlinks").close();
+// Supprime tous les liens ajoutés : il ne reste que « Article d'origine » et « Google Traduction ».
+$("#resetlinks").onclick = () => {
+  if (!confirm("Supprimer tous vos liens ajoutés et revenir à « Article d'origine » et « Google Traduction » ?")) return;
+  links = DEFAULT_LINKS.map(l => ({ ...l }));
+  feeds.forEach(f => { if (!links.some(l => l.id === f.link)) f.link = "orig"; });
+  if (!links.some(l => l.id === transLink)) { transLink = "translate"; store.set("kiosque.tlink", transLink); }
+  saveLinks(); saveFeeds(); renderDialog(); render();
+};
 $("#addlink").onclick = () => { links.push({ id: "l" + Date.now(), name: "Nouveau lien", tpl: "" }); saveLinks(); renderLinks(); const ins = $("#linkrows").querySelectorAll(".tpl"); ins[ins.length - 1]?.focus(); };
 document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
