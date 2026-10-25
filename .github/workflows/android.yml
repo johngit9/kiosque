@@ -41,12 +41,30 @@ jobs:
           sed -i "s/versionCode 1$/versionCode ${GITHUB_RUN_NUMBER}/; s/versionName \"1.0\"/versionName \"1.${GITHUB_RUN_NUMBER}\"/" android/app/build.gradle
           grep -q "versionName \"1.${GITHUB_RUN_NUMBER}\"" android/app/build.gradle
       - name: Clé de signature fixe (pour pouvoir mettre l'appli à jour sans la désinstaller)
-        run: mkdir -p ~/.android && cp ci/debug.keystore ~/.android/debug.keystore
+        run: |
+          mkdir -p ~/.android && cp ci/debug.keystore ~/.android/debug.keystore
+          # Signature explicite avec la clé du dépôt, quel que soit le dossier Android du serveur
+          cat >> android/app/build.gradle <<'GRADLE'
+
+          android {
+              signingConfigs {
+                  debug {
+                      storeFile rootProject.file('../ci/debug.keystore')
+                      storePassword 'android'
+                      keyAlias 'androiddebugkey'
+                      keyPassword 'android'
+                  }
+              }
+          }
+          GRADLE
       - name: Construire l'APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
-      - name: Renommer
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk kiosque.apk
+      - name: Renommer et vérifier la signature
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk kiosque.apk
+          "$ANDROID_HOME"/build-tools/$(ls "$ANDROID_HOME"/build-tools | sort -V | tail -1)/apksigner verify --print-certs kiosque.apk | tee cert.txt
+          grep -qi "fd959ac0c7a6ac3684e386acd910e8819f945a5b9d9bc42c5408ef718f4e8e18" cert.txt
       - uses: actions/upload-artifact@v4
         with:
           name: kiosque-apk

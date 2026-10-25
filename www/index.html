@@ -1206,8 +1206,27 @@ const langName = () => $("#tlang").selectedOptions[0]?.textContent || transLang;
 let shotMode = "orig";
 function screenshotUrl(link) {
   return "https://api.microlink.io/?url=" + encodeURIComponent(link) +
-    "&screenshot=true&screenshot.fullPage=true&screenshot.type=jpeg&meta=false&embed=screenshot.url&adblock=true" +
+    "&screenshot=true&screenshot.fullPage=true&screenshot.type=jpeg&meta=false&adblock=true" +
     "&viewport.width=1366&viewport.height=900&viewport.deviceScaleFactor=1&waitForTimeout=2500&styles=" + encodeURIComponent(SHOT_CSS);
+}
+// Capture : Microlink (sans pubs, mais 5 captures gratuites par jour), sinon thum.io (pubs visibles).
+// Chaque capture est gardée en mémoire pour ne pas user le quota en rouvrant le partage.
+const shotCache = new Map();
+async function capturePage(link) {
+  if (shotCache.has(link)) return shotCache.get(link);
+  let img = null, why = "";
+  try {
+    const r = await fetch(screenshotUrl(link));
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.status === "success" && j.data?.screenshot?.url) img = await loadImage(j.data.screenshot.url);
+    else why = r.status === 429 ? "quota" : (j.message || "HTTP " + r.status);
+  } catch (e) { why = e.message || String(e); }
+  if (!img) {
+    try { img = await loadImage("https://image.thum.io/get/width/1366/fullpage/noanimate/" + link); }
+    catch { throw new Error(why === "quota" ? "limite de 5 captures gratuites par jour atteinte, réessayez demain" : "service de capture injoignable"); }
+  }
+  shotCache.set(link, img);
+  return img;
 }
 let shareState = null;
 function shareText(i) { return i.title + " (" + (feedById(i.src)?.name || i.srcName || "") + ")\n" + i.link; }
@@ -1222,7 +1241,7 @@ function wrapText(ctx, text, maxW) {
 }
 async function buildShareImage(i) {
   const tr = shotMode === "tr";
-  const shot = await loadImage(screenshotUrl(tr ? translatedUrl(i.link) : i.link));
+  const shot = await capturePage(tr ? translatedUrl(i.link) : i.link);
   // Les téléphones limitent la hauteur d'une image : au-delà de 14 000 px, on réduit l'ensemble proportionnellement.
   const MAXH = 14000;
   const W = Math.round(Math.min(1366, 1366 * MAXH / (shot.naturalHeight * 1366 / shot.naturalWidth + 300))), pad = Math.round(40 * W / 1366);
