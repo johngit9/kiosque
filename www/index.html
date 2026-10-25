@@ -342,7 +342,10 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
         <option value="en">Anglais</option><option value="fr">Français</option><option value="es">Espagnol</option><option value="de">Allemand</option><option value="it">Italien</option><option value="pt">Portugais</option><option value="ar">Arabe</option><option value="zh-CN">Chinois</option>
       </select>
     </label>
-    <p class="note">Le bouton « Traduire » passe par Google Traduction. Pour un article réservé aux abonnés, ouvrez l'article puis utilisez « Traduire » dans le menu ⋮ de Chrome : votre connexion d'abonné y est conservée.</p>
+    <label class="field" for="tlink">Service du bouton « Traduire »
+      <select id="tlink"></select>
+    </label>
+    <p class="note">La liste reprend vos liens de l'onglet Liens : modifiez l'adresse de « Google Traduction » ou ajoutez un lien vers un autre service (DeepL, Reverso, Yandex…). La capture traduite du partage reste faite par Google Traduction.</p>
   </section>
   <section class="tabpane" data-pane="app" hidden>
     <h3 class="grouphead">Lecture</h3>
@@ -997,7 +1000,9 @@ function altLinks(i) {
   return box;
 }
 // Traduction : Google Traduction dans la langue choisie dans les réglages.
-const openTranslated = i => openInBrowser(buildUrl(DEFAULT_LINKS[1].tpl, i));
+// Le bouton « Traduire » ouvre le lien choisi dans Réglages → Traduction (modifiable dans l'onglet Liens).
+let transLink = store.get("kiosque.tlink", "translate");
+const openTranslated = i => openInBrowser(buildUrl((links.find(l => l.id === transLink) || DEFAULT_LINKS[1]).tpl, i));
 
 function link(i, cls) {
   const a = document.createElement("a");
@@ -1475,10 +1480,17 @@ $("#addlink").onclick = () => { links.push({ id: "l" + Date.now(), name: "Nouvea
 document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
   document.querySelectorAll(".tabpane").forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
+  if (b.dataset.tab === "lang") renderTlink();
 });
 $("#grouping").onchange = () => { grouping = $("#grouping").checked; store.set("kiosque.group", grouping); shown = PAGE; renderAll(); };
 $("#hideads").onchange = () => { hideAds = $("#hideads").checked; store.set("kiosque.hideads", hideAds); renderAll(); };
-$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
+$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; renderTlink(); $("#dlg").showModal(); };
+function renderTlink() {
+  const sel = $("#tlink"); sel.innerHTML = "";
+  for (const l of links.filter(l => l.tpl)) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.append(o); }
+  sel.value = links.some(l => l.id === transLink && l.tpl) ? transLink : "translate";
+}
+$("#tlink").onchange = () => { transLink = $("#tlink").value; store.set("kiosque.tlink", transLink); };
 $("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
 $("#close").onclick = () => $("#dlg").close();
 
