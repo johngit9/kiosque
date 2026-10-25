@@ -926,6 +926,8 @@ const openUrl = i => buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i);
 // Dans l'appli, la page s'ouvre dans le navigateur intégré (Chrome, avec vos connexions) ; bouton ✕ pour revenir.
 let inApp = store.get("kiosque.inapp", true);
 let clean = store.get("kiosque.clean", true);
+// La page reste à la largeur de l'écran : pas de glissement sur le côté (bande blanche).
+const FIT_CSS = "html,body{overflow-x:hidden!important;max-width:100vw!important;overscroll-behavior-x:none!important}";
 // Emplacements publicitaires et recommandations sponsorisées, masqués dans le lecteur intégré.
 const READER_CSS = `[id^="google_ads"],[id^="div-gpt-ad"],ins.adsbygoogle,.adsbygoogle,[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],.OUTBRAIN,
 [class^="ad-"],[class*=" ad-"],[class$="-ad"],[class*="-ad "],.ad,.ads,.advert,.advertisement,.publicite,[class*="publicite"],[class*="dfp"],[id*="dfp"],
@@ -958,8 +960,13 @@ async function openInBrowser(url) {
     const iab = window.cordova?.InAppBrowser;
     if (iab && inApp) {
       try {
-        const ref = iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#13233d,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=yes,hardwareback=yes,footer=no,clearcache=no,clearsessioncache=no,useWideViewPort=yes");
-        if (clean) ref.addEventListener("loadstop", () => { try { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); } catch (e) {} });
+        const ref = iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#13233d,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=yes,hardwareback=yes,footer=no,clearcache=no,clearsessioncache=no");
+        ref.addEventListener("loadstop", () => {
+          try {
+            ref.insertCSS({ code: FIT_CSS });
+            if (clean) { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); }
+          } catch (e) {}
+        });
         return;
       }
       catch (e) { console.warn(e); }
