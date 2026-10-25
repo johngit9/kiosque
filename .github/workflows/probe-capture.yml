@@ -6,7 +6,5 @@ jobs:
     steps:
       - run: |
           UA="Mozilla/5.0 (Linux; Android 14) Chrome/124 Mobile"
-          curl -sL -A "$UA" -w "feed.xml -> %{http_code} %{url_effective}\n" https://www.latribune.fr/feed.xml -o main.xml; echo "items: $(grep -o '<item' main.xml | wc -l), starlink: $(grep -ci 'starlink' main.xml)"; grep -o '<link>[^<]*' main.xml | sed -n '2,40p' | sed 's#https://www.latribune.fr##' | cut -c1-60
-          curl -sL -A "$UA" https://www.latribune.fr/robots.txt | grep -i sitemap
-          for p in / /tech/telecoms; do echo "== page $p"; curl -sL -A "$UA" "https://www.latribune.fr$p" | grep -oi '<link[^>]*\(rss\|atom\|feed\|xml\)[^>]*>' | head -8; done
-          for f in feed/tech.xml feed/tech/telecoms.xml feed.xml?rubrique=tech rss/rubriques/technos-medias.html; do printf "%-36s " "$f"; curl -sL -A "$UA" -o t.xml -w "%{http_code} %{url_effective} " "https://www.latribune.fr/$f"; echo "items=$(grep -o '<item' t.xml | wc -l) starlink=$(grep -ci starlink t.xml)"; done
+          for f in rss/actualites rss/tech rss/tech/telecoms rss/telecoms rss/economie rss/entreprises-finance rss/latest rss/all rss/derniere-minute sitemaps/sitemap-news.xml; do printf "%-28s " "$f"; curl -sL -A "$UA" -o t.xml -w "%{http_code} %{url_effective} %{content_type} " "https://www.latribune.fr/$f"; echo "items=$(grep -o '<item' t.xml | wc -l) urls=$(grep -o '<url>' t.xml | wc -l) starlink=$(grep -ci starlink t.xml)"; done
+          curl -sL -A "$UA" https://www.latribune.fr/sitemaps/sitemap-news.xml | head -c 1500
