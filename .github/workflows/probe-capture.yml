@@ -1,0 +1,27 @@
+name: Test traduction (temporaire)
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Services de traduction de page
+        run: |
+          U='https://www.lemonde.fr/economie/'
+          E=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=''))" "$U")
+          for s in "https://translated.turbopages.org/proxy_u/fr-en.en/https/www.lemonde.fr/economie/" \
+                   "https://translate.yandex.com/translate?url=$E&lang=fr-en" \
+                   "https://www.translatetheweb.com/?from=fr&to=en&a=$E" \
+                   "https://www.bing.com/translator?to=en&url=$E" \
+                   "https://www-lemonde-fr.translate.goog/economie/?_x_tr_sl=auto&_x_tr_tl=en" \
+                   "https://image.thum.io/get/width/1366/noanimate/https://translated.turbopages.org/proxy_u/fr-en.en/https/www.lemonde.fr/economie/"; do
+            echo "== $s"
+            curl -s -m 60 -L -A "Mozilla/5.0 (X11; Linux x86_64) Chrome/124" -o out -w "HTTP %{http_code} %{url_effective} %{size_download}B %{content_type}\n" "$s"
+            python3 - <<'PY'
+          import re
+          d=open('out','rb').read()
+          t=d.decode('utf-8','ignore')
+          m=re.search(r'<title[^>]*>(.*?)</title>',t,re.S)
+          print('title:', (m.group(1).strip()[:120] if m else None))
+          print('english words:', len(re.findall(r'\b(the|and|of|with)\b', t)), 'french:', len(re.findall(r'\b(les|des|avec|dans)\b', t)))
+          PY
+          done
