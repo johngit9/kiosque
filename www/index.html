@@ -414,7 +414,8 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 const DEFAULT_FEEDS = [
   { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-economie.xml", color: "#c8102e", on: true,
     more: ["entreprises", "finance-marches", "monde", "politique", "tech-medias", "idees", "start-up", "regions"].map(r => "https://services.lesechos.fr/rss/les-echos-" + r + ".xml") },
-  { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true },
+  { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true,
+    more: ["https://www.latribune.fr/sitemaps/sitemap-news.xml"] },
   { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true },
   { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true },
   { id: "libe", name: "Libération", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml", color: "#e2001a", on: true },
@@ -642,6 +643,15 @@ function parseFeed(xmlText, feed) {
       cats: [...el.querySelectorAll("category")].map(c => c.textContent.trim()),
     });
   }
+  // Plan de site « Google Actualités » (<urlset>) : titre et date dans news:*, sinon titre tiré de l'adresse.
+  const urls = nodes.length || atom.length ? [] : [...doc.getElementsByTagName("url")];
+  const kid = (el, name) => [...el.getElementsByTagName("*")].find(n => n.localName === name)?.textContent.trim() || "";
+  for (const el of urls) {
+    const link = kid(el, "loc");
+    const slug = (link.split("/").filter(Boolean).pop() || "").replace(/\.html?$/, "").replace(/-/g, " ");
+    const title = kid(el, "title") || (slug.length > 25 ? slug.charAt(0).toUpperCase() + slug.slice(1) : "");
+    out.push({ title: stripHtml(title), link, date: new Date(kid(el, "publication_date") || kid(el, "lastmod") || 0), summary: "", image: [...el.getElementsByTagName("*")].find(n => n.localName === "image")?.getElementsByTagName("*")[0]?.textContent.trim() || "", cats: (kid(el, "keywords") || "").split(",").map(c => c.trim()).filter(Boolean) });
+  }
   for (const el of atom) {
     const link = el.querySelector("link[rel='alternate']") || el.querySelector("link");
     const rawDesc = textOf(el, "summary") || textOf(el, "content");
@@ -669,7 +679,7 @@ async function fetchText(f, url = f.url) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       let txt = await r.text();
       if (/^\s*\{/.test(txt)) { const j = JSON.parse(txt); if (j.status && j.status !== "ok") throw new Error(j.message || "rss2json"); txt = jsonToRss(j); }
-      if (!/<(rss|feed|rdf)/i.test(txt)) throw new Error("réponse sans flux");
+      if (!/<(rss|feed|rdf|urlset)/i.test(txt)) throw new Error("réponse sans flux");
       return txt;
     } catch (e) { lastErr = e; }
   }
@@ -939,6 +949,8 @@ const FIT_CSS = "html,body{overflow-x:hidden!important;max-width:100vw!important
 const READER_CSS = `[id^="google_ads"],[id^="div-gpt-ad"],ins.adsbygoogle,.adsbygoogle,[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],.OUTBRAIN,
 [class^="ad-"],[class*=" ad-"],[class$="-ad"],[class*="-ad "],.ad,.ads,.advert,.advertisement,.publicite,[class*="publicite"],[class*="dfp"],[id*="dfp"],
 [data-ad],[data-ad-slot],[data-adunit],[id^="sas_"],[class*="sas-"],[id*="teads"],[class*="teads"],[class*="sponsor"],[id*="sponsor"],[class*="native-ad"],
+[class*="ad-slot"],[id*="ad-slot"],[class*="adslot"],[class*="ad_slot"],[class*="adunit"],[class*="banner-ad"],[class*="outstream"],[id*="outstream"],
+[class*="video-ad"],[class*="ima-ad"],[id*="ima-ad"],[class^="pub-"],[class*=" pub-"],[class*="pub_"],[id^="pub-"],[id^="pub_"],[class*="megaban"],[class*="habillage"],
 iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[src*="amazon-adsystem"],iframe[src*="smartadserver"],iframe[id^="google_ads"]
 {display:none!important;height:0!important;min-height:0!important}`;
 // Refuse les bandeaux de consentement : boutons connus des gestionnaires de cookies, sinon par le texte du bouton.
@@ -958,8 +970,26 @@ const READER_JS = `(function () {
     }
     return false;
   }
+  var AD = /^(publicit.|pub|annonce|advertisement|sponsoris.|contenu sponsoris.)$/i;
+  var A2HS = /(installer|ajouter) (sur|.) l..cran d.accueil|installer l.appli(cation)?|add to home screen|install (the )?app/i;
+  function hide(e) { if (e && e !== document.body && e !== document.documentElement) e.style.setProperty("display", "none", "important"); }
+  function sweep() {
+    var labels = document.querySelectorAll("span, div, p, small, strong, b, em, label");
+    for (var i = 0; i < labels.length; i++) {
+      var l = labels[i];
+      if (l.children.length > 1 || (l.textContent || "").length > 30 || !AD.test(l.textContent.replace(/\s+/g, " ").trim())) continue;
+      // L'étiquette et l'emplacement voisin vivent dans le même bloc : on masque ce bloc s'il ne contient pas l'article.
+      var box = l.parentElement;
+      if (box && !box.querySelector("article, h1, h2") && (box.textContent || "").length < 400) hide(box); else hide(l);
+    }
+    var all = document.querySelectorAll("div, section, aside, dialog, [role=dialog]");
+    for (var j = 0; j < all.length; j++) {
+      var d = all[j], st = getComputedStyle(d);
+      if ((st.position === "fixed" || st.position === "sticky") && (d.textContent || "").length < 300 && A2HS.test(d.textContent)) hide(d);
+    }
+  }
   var n = 0, done = false;
-  var timer = setInterval(function () { if (done || ++n > 30) return clearInterval(timer); done = tryClick(); }, 500);
+  var timer = setInterval(function () { sweep(); if (!done) done = tryClick(); if (++n > 40) clearInterval(timer); }, 500);
 })();`;
 async function openInBrowser(url) {
   if (NATIVE) {

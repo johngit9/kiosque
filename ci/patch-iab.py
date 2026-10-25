@@ -25,6 +25,9 @@ analytics.tiktok.com ads.linkedin.com px.ads.linkedin.com snap.licdn.com adsyste
 smilewanted.com richaudience.com adyoulike.com onetag-sys.com 33across.com districtm.io e-planning.net
 quantcast.com tapad.com crwdcntrl.net exelator.com agkn.com bidswitch.net contextweb.com yieldmo.com
 adkernel.com media.net servenobid.com sonobi.com undertone.com zemanta.com powerlinks.com
+imasdk.googleapis.com pagead2.googlesyndication.com securepubads.g.doubleclick.net ad.doubleclick.net
+viously.com ayads.co ogury.io presage.io teads.net invibes.com dailymotion-ads.com sublime.xyz ayads.io
+adsafety.net admanmedia.com ividence.com 4wnet.com missena.io optidigital.com adagio.io
 """.split()
 
 PATCH_OLD = """        public WebResourceResponse shouldInterceptRequest(String url, WebResourceResponse response, String method) {
