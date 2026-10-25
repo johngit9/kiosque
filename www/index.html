@@ -389,10 +389,6 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M4 18l5-5 4 4 3-3 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       <span><b>Partager l'image et le lien</b><small id="sh-image-sub">Capture de la page en cours…</small></span>
     </button>
-    <button id="sh-photo" class="sharechoice" type="button" disabled>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-      <span><b>Partager la photo de l'article et le lien</b><small id="sh-photo-sub">Recherche de la photo…</small></span>
-    </button>
     <button id="sh-link" class="sharechoice" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span><b>Partager le lien</b><small>Titre, journal et adresse de l'article</small></span>
@@ -1226,43 +1222,6 @@ async function buildShareImage(i) {
   ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45 * k);
   return c;
 }
-// Photo de l'article : celle du flux RSS, sinon l'image de partage (og:image) de la page.
-async function articlePhoto(i) {
-  let src = i.image;
-  if (!src) {
-    const html = await (await fetch(i.link)).text();
-    const m = html.match(/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]*content=["']([^"']+)/i)
-      || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]*(?:property|name)=["'](?:og:image|twitter:image)["']/i);
-    if (!m) throw new Error("pas de photo");
-    src = m[1].replace(/&amp;/g, "&");
-  }
-  // Téléchargée par l'appli (pas de blocage CORS sur Android) pour pouvoir la dessiner sur l'image partagée.
-  try { const b = await (await fetch(src)).blob(); return await loadImage(URL.createObjectURL(b)); }
-  catch { return await loadImage(src); }
-}
-async function buildPhotoImage(i) {
-  const ph = await articlePhoto(i);
-  const W = 1200, pad = 48;
-  const c = document.createElement("canvas"), ctx = c.getContext("2d");
-  const phH = Math.round(Math.min(ph.naturalHeight * W / ph.naturalWidth, 900));
-  ctx.font = "700 46px Georgia, serif";
-  const lines = wrapText(ctx, i.title, W - pad * 2).slice(0, 4);
-  const textH = 70 + lines.length * 58 + 30, footH = 72;
-  c.width = W; c.height = phH + textH + footH;
-  ctx.fillStyle = "#13233d"; ctx.fillRect(0, 0, W, c.height);
-  // Photo recadrée au centre si elle est très haute.
-  const sh = Math.min(ph.naturalHeight, phH * ph.naturalWidth / W);
-  ctx.drawImage(ph, 0, (ph.naturalHeight - sh) / 2, ph.naturalWidth, sh, 0, 0, W, phH);
-  ctx.fillStyle = "#ff5a3c"; ctx.font = "600 24px 'IBM Plex Mono', monospace";
-  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, phH + 56);
-  ctx.fillStyle = "#ffffff"; ctx.font = "700 46px Georgia, serif";
-  lines.forEach((l, n) => ctx.fillText(l, pad, phH + 116 + n * 58));
-  ctx.fillStyle = "#0b1626"; ctx.fillRect(0, phH + textH, W, footH);
-  ctx.fillStyle = "#ffffff"; ctx.font = "500 22px 'IBM Plex Mono', monospace";
-  let url = i.link; while (ctx.measureText(url).width > W - pad * 2 && url.length > 20) url = url.slice(0, -2);
-  ctx.fillText(url + (url === i.link ? "" : "…"), pad, phH + textH + 45);
-  return c;
-}
 async function openShare(i) {
   const dlg = $("#sharedlg");
   shareState = { item: i, canvas: null };
@@ -1271,15 +1230,7 @@ async function openShare(i) {
   box.innerHTML = '<p class="wait">Capture de la page entière, version ordinateur, en cours (10 à 20 secondes)…</p>';
   $("#sh-image").disabled = true;
   $("#sh-image-sub").textContent = "Capture de la page en cours…";
-  $("#sh-photo").disabled = true;
-  $("#sh-photo-sub").textContent = "Recherche de la photo…";
   dlg.showModal();
-  buildPhotoImage(i).then(c => {
-    if (shareState?.item !== i) return;
-    shareState.photo = c;
-    $("#sh-photo").disabled = false;
-    $("#sh-photo-sub").textContent = "La photo de l'article avec son titre et l'adresse";
-  }).catch(() => { if (shareState?.item === i) $("#sh-photo-sub").textContent = "Pas de photo pour cet article"; });
   try {
     const canvas = await buildShareImage(i);
     if (shareState?.item !== i) return;
@@ -1298,7 +1249,7 @@ async function openShare(i) {
 }
 async function shareNative(withImage) {
   if (!shareState) return;
-  const i = shareState.item, c = withImage === "photo" ? shareState.photo : withImage ? shareState.canvas : null, txt = shareText(i);
+  const i = shareState.item, c = withImage ? shareState.canvas : null, txt = shareText(i);
   try {
     if (NATIVE && PLUGINS.Share) {
       const opts = { title: i.title, text: txt, dialogTitle: "Partager l'article" };
@@ -1321,7 +1272,6 @@ async function shareNative(withImage) {
 }
 $("#sh-image").onclick = () => shareNative(true);
 $("#sh-link").onclick = () => shareNative(false);
-$("#sh-photo").onclick = () => shareNative("photo");
 $("#sh-copy").onclick = async () => {
   if (!shareState) return;
   try { await navigator.clipboard.writeText(shareState.item.link); $("#sh-copy").textContent = "Lien copié"; }
