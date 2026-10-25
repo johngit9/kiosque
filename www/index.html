@@ -365,6 +365,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <h3 class="grouphead">Mise à jour</h3>
     <p class="note">Version installée : <b id="build"></b></p>
     <div class="row"><button id="checkupd" class="btn" type="button">Rechercher une mise à jour</button><button id="updinstall" class="btn primary" type="button" hidden>Installer la mise à jour</button></div>
+    <div class="row"><label class="btn" for="apkfile">Installer un APK depuis mes fichiers</label><input id="apkfile" type="file" accept=".apk,application/vnd.android.package-archive" hidden></div>
     <p id="upd-status" class="note" role="status"></p>
   </section>
 </dialog>
@@ -1586,6 +1587,20 @@ async function installUpdate() {
 $("#checkupd").onclick = () => checkUpdate(true);
 $("#updgo").onclick = installUpdate;
 $("#updinstall").onclick = installUpdate;
+// APK choisi dans les fichiers du téléphone : copié dans l'appli puis ouvert avec l'installateur.
+$("#apkfile").onchange = async () => {
+  const file = $("#apkfile").files[0]; if (!file) return;
+  const say = t => { $("#upd-status").textContent = t; };
+  try {
+    if (!NATIVE || !PLUGINS.Filesystem || !PLUGINS.FileOpener) throw new Error("disponible seulement dans l'appli Android");
+    say("Préparation de l'installation…");
+    const data = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = () => rej(r.error); r.readAsDataURL(file); });
+    const f = await PLUGINS.Filesystem.writeFile({ path: "kiosque-maj.apk", data, directory: "CACHE" });
+    await PLUGINS.FileOpener.open({ filePath: f.uri, contentType: "application/vnd.android.package-archive" });
+    say("Touchez « Mettre à jour » pour terminer.");
+  } catch (e) { say("Installation impossible : " + (e.message || e)); }
+  $("#apkfile").value = "";
+};
 $("#updx").onclick = () => { $("#updbar").hidden = true; };
 if (NATIVE && !BUILD.startsWith("__") && Date.now() - store.get("kiosque.updcheck", 0) > 12 * 3600e3) setTimeout(() => checkUpdate(false), 4000);
 $("#reset").onclick = () => { feeds = DEFAULT_FEEDS.map(f => ({ ...f })); results = {}; filter = "all"; saveFeeds(); renderDialog(); renderAll(); loadAll(); };
