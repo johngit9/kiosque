@@ -187,6 +187,9 @@ input[type="range"] { width: 100%; margin-top: 8px; accent-color: var(--accent);
 .grp li a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14.5px; line-height: 1.3; }
 .grp .gsrc { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
 .grp .gsrc .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.shotmode { display: flex; gap: 6px; margin: 0 0 10px; }
+.shotmode button { flex: 1; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 99px; padding: 7px 10px; font: inherit; font-size: 13.5px; cursor: pointer; }
+.shotmode button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
 .altlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
 .altlinks button { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 99px; padding: 4px 11px; font: inherit; font-size: 12.5px; cursor: pointer; }
 .altlinks button:hover { color: var(--accent); border-color: var(--accent); }
@@ -383,6 +386,10 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 <dialog id="sharedlg">
   <h2>Partager l'article</h2>
   <p id="sharetitle" class="note"></p>
+  <div class="shotmode" role="radiogroup" aria-label="Page capturée">
+    <button type="button" data-mode="orig" aria-pressed="true">Page d'origine</button>
+    <button type="button" data-mode="tr" aria-pressed="false" id="shotmode-tr">Traduction</button>
+  </div>
   <div class="shot" id="shot"><p class="wait">Capture de la version ordinateur en cours…</p></div>
   <div class="sharechoices">
     <button id="sh-image" class="sharechoice primary" type="button" disabled>
@@ -1180,6 +1187,17 @@ function renderSaved() {
 // La capture de la version ordinateur est faite par le service Microlink (bloqueur de pubs et de bandeaux cookies activé).
 // Page entière, avec bloqueur de pubs, et CSS qui masque bandeaux cookies, pop-ups, lettres d'information et blocs publicitaires.
 const SHOT_CSS = '[id*="didomi"],[class*="didomi"],[id*="cookie"],[class*="cookie"],[class*="consent"],[id*="consent"],[id^="sp_message"],[class*="newsletter"],[class*="popup"],[class*="popin"],[id*="popin"],[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],[class^="ad-"],[class*=" ad-"],[id^="ad-"],[class*="advert"],[id*="advert"],[class*="dfp"],[id*="dfp"],[class*="sponsor"],[class*="pub-"],[id^="pub"],[class*="sticky-ad"],[class*="banner"],[class*="interstitial"],iframe{display:none!important}html,body{overflow:visible!important}';
+// Version traduite de l'article par Google (même page, servie par translate.goog).
+function translatedUrl(link) {
+  try {
+    const u = new URL(link);
+    u.hostname = u.hostname.replace(/-/g, "--").replace(/\./g, "-") + ".translate.goog";
+    u.searchParams.set("_x_tr_sl", "auto"); u.searchParams.set("_x_tr_tl", transLang); u.searchParams.set("_x_tr_hl", "fr");
+    return u.toString();
+  } catch { return link; }
+}
+const langName = () => $("#tlang").selectedOptions[0]?.textContent || transLang;
+let shotMode = "orig";
 function screenshotUrl(link) {
   return "https://api.microlink.io/?url=" + encodeURIComponent(link) +
     "&screenshot=true&screenshot.fullPage=true&screenshot.type=jpeg&meta=false&embed=screenshot.url&adblock=true" +
@@ -1197,7 +1215,8 @@ function wrapText(ctx, text, maxW) {
   return lines;
 }
 async function buildShareImage(i) {
-  const shot = await loadImage(screenshotUrl(i.link));
+  const tr = shotMode === "tr";
+  const shot = await loadImage(screenshotUrl(tr ? translatedUrl(i.link) : i.link));
   // Les téléphones limitent la hauteur d'une image : au-delà de 14 000 px, on réduit l'ensemble proportionnellement.
   const MAXH = 14000;
   const W = Math.round(Math.min(1366, 1366 * MAXH / (shot.naturalHeight * 1366 / shot.naturalWidth + 300))), pad = Math.round(40 * W / 1366);
@@ -1212,7 +1231,7 @@ async function buildShareImage(i) {
   ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, c.height);
   ctx.fillStyle = "#13233d"; ctx.fillRect(0, 0, W, headH);
   ctx.fillStyle = "#ff5a3c"; ctx.font = `600 ${20 * k}px 'IBM Plex Mono', monospace`;
-  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, 46 * k);
+  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "") + (tr ? " · TRADUCTION " + langName() : "")).toUpperCase(), pad, 46 * k);
   ctx.fillStyle = "#ffffff"; ctx.font = `700 ${34 * k}px Georgia, serif`;
   lines.forEach((l, n) => ctx.fillText(l, pad, (96 + n * 44) * k));
   ctx.drawImage(shot, 0, headH, W, shotH);
@@ -1222,18 +1241,25 @@ async function buildShareImage(i) {
   ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45 * k);
   return c;
 }
+document.querySelectorAll(".shotmode button").forEach(b => b.onclick = () => {
+  if (!shareState || shotMode === b.dataset.mode) return;
+  shotMode = b.dataset.mode;
+  openShare(shareState.item);
+});
 async function openShare(i) {
   const dlg = $("#sharedlg");
-  shareState = { item: i, canvas: null };
+  document.querySelectorAll(".shotmode button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === shotMode)));
+  $("#shotmode-tr").textContent = "Traduction (" + langName().toLowerCase() + ")";
+  shareState = { item: i, canvas: null, mode: shotMode };
   $("#sharetitle").textContent = i.title;
   const box = $("#shot");
-  box.innerHTML = '<p class="wait">Capture de la page entière, version ordinateur, en cours (10 à 20 secondes)…</p>';
+  box.innerHTML = '<p class="wait">Capture de la page entière' + (shotMode === "tr" ? " traduite" : "") + ', version ordinateur, en cours (10 à 20 secondes)…</p>';
   $("#sh-image").disabled = true;
   $("#sh-image-sub").textContent = "Capture de la page en cours…";
-  dlg.showModal();
+  if (!dlg.open) dlg.showModal();
   try {
     const canvas = await buildShareImage(i);
-    if (shareState?.item !== i) return;
+    if (shareState?.item !== i || shareState.mode !== shotMode) return;
     shareState.canvas = canvas;
     const prev = document.createElement("img");
     prev.alt = "Aperçu de la capture partagée";
@@ -1278,7 +1304,7 @@ $("#sh-copy").onclick = async () => {
   catch { $("#sh-copy").textContent = "Copie impossible"; }
   setTimeout(() => { $("#sh-copy").textContent = "Copier le lien"; }, 2000);
 };
-$("#sh-close").onclick = () => { shareState = null; $("#sharedlg").close(); };
+$("#sh-close").onclick = () => { shareState = null; shotMode = "orig"; $("#sharedlg").close(); };
 if (!NATIVE) $("#sharehint").textContent = "Les boutons ouvrent le menu de partage de l'appareil quand il existe. Sinon, l'image est téléchargée.";
 
 // ——— Alertes (notifications) ———
