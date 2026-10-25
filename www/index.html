@@ -178,6 +178,15 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .updbar button { border: 0; border-radius: 99px; padding: 7px 14px; font: inherit; cursor: pointer; background: var(--surface); color: var(--ink); font-weight: 600; }
 .updbar #updx { background: none; color: inherit; padding: 7px 9px; }
 input[type="range"] { width: 100%; margin-top: 8px; accent-color: var(--accent); }
+.grp { margin: 4px 0 10px; border-left: 3px solid var(--line); padding-left: 10px; }
+.grp summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 600; list-style: none; padding: 4px 0; }
+.grp summary::-webkit-details-marker { display: none; }
+.grp summary::before { content: "＋ "; }
+.grp[open] summary::before { content: "－ "; }
+.grp ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; }
+.grp li a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14.5px; line-height: 1.3; }
+.grp .gsrc { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.grp .gsrc .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
 .altlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
 .altlinks button { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 99px; padding: 4px 11px; font: inherit; font-size: 12.5px; cursor: pointer; }
 .altlinks button:hover { color: var(--accent); border-color: var(--accent); }
@@ -289,6 +298,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <section class="tabpane" data-pane="feeds">
     <p class="note">Activez les journaux à suivre et choisissez, pour chacun, le lien qui s'ouvre quand vous touchez un article. Tous les articles sont triés automatiquement dans les rubriques.</p>
     <label class="toggle-line" for="hideads"><span><b>Masquer les pubs déguisées</b><small>Articles sponsorisés, publi-rédactionnels, bons plans et codes promo</small></span><span class="switch"><input id="hideads" type="checkbox"><span></span></span></label>
+    <label class="toggle-line" for="grouping"><span><b>Regrouper les articles d'un même sujet</b><small>Un seul article par sujet, les autres journaux dans « Autres articles sur ce sujet »</small></span><span class="switch"><input id="grouping" type="checkbox"><span></span></span></label>
     <div id="feedrows"></div>
     <h3 class="grouphead">Ajouter un flux</h3>
     <form id="addform" class="addform">
@@ -334,6 +344,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <section class="tabpane" data-pane="app" hidden>
     <h3 class="grouphead">Lecture</h3>
     <label class="toggle-line" for="inapp"><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
+    <label class="toggle-line" for="clean"><span><b>Nettoyer les pages</b><small>Dans le lecteur intégré : pubs masquées, bandeaux de cookies refusés (« Continuer sans accepter », « Tout refuser »). Les traqueurs connus sont toujours bloqués.</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
     <label class="field" for="zoom">Taille du texte de l'appli : <b id="zoomval"></b>
       <input id="zoom" type="range" min="85" max="150" step="5">
     </label>
@@ -378,12 +389,16 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M4 18l5-5 4 4 3-3 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       <span><b>Partager l'image et le lien</b><small id="sh-image-sub">Capture de la page en cours…</small></span>
     </button>
+    <button id="sh-photo" class="sharechoice" type="button" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+      <span><b>Partager la photo de l'article et le lien</b><small id="sh-photo-sub">Recherche de la photo…</small></span>
+    </button>
     <button id="sh-link" class="sharechoice" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span><b>Partager le lien</b><small>Titre, journal et adresse de l'article</small></span>
     </button>
   </div>
-  <p class="note" id="sharehint">Les deux boutons ouvrent le menu de partage du téléphone : choisissez Element, WhatsApp, Messages, Gmail ou une autre appli.</p>
+  <p class="note" id="sharehint">Les boutons ouvrent le menu de partage du téléphone : choisissez Element, WhatsApp, Messages, Gmail ou une autre appli.</p>
   <div class="row"><button id="sh-copy" class="btn" type="button">Copier le lien</button></div>
   <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
 </dialog>
@@ -756,6 +771,51 @@ function currentItems() {
   return items.sort((a, b) => (b.date || 0) - (a.date || 0));
 }
 
+// ——— Regroupement des articles qui parlent du même sujet ———
+// Deux titres parlent du même sujet quand ils partagent des mots rares (pondérés par leur rareté du jour).
+let grouping = store.get("kiosque.group", true);
+function groupItems(items) {
+  if (!grouping || items.length < 2) { items.forEach(i => i._grp = null); return items; }
+  const df = new Map();
+  for (const i of items) { i._tw = new Set(words(i.title)); for (const w of i._tw) df.set(w, (df.get(w) || 0) + 1); }
+  const idf = w => Math.log(items.length / (df.get(w) || 1));
+  const weight = set => { let t = 0; for (const w of set) t += idf(w); return t; };
+  for (const i of items) i._tww = weight(i._tw);
+  const same = (a, b) => {
+    if (Math.abs((a.date || 0) - (b.date || 0)) > 48 * 3600e3) return false;
+    let n = 0, sh = 0;
+    for (const w of a._tw) if (b._tw.has(w)) { n++; sh += idf(w); }
+    return n >= 2 && sh / Math.min(a._tww, b._tww) >= 0.45;
+  };
+  const heads = [];
+  for (const i of items) {
+    i._grp = null;
+    const h = heads.find(h => same(h, i) || h._grp.slice(0, 4).some(o => same(o, i)));
+    if (h) h._grp.push(i); else { i._grp = []; heads.push(i); }
+  }
+  return heads;
+}
+function groupBox(i) {
+  if (!i._grp?.length) return null;
+  const d = document.createElement("details");
+  d.className = "grp";
+  const sm = document.createElement("summary");
+  const names = [...new Set(i._grp.map(o => feedById(o.src)?.name || o.src))];
+  sm.textContent = i._grp.length + (i._grp.length > 1 ? " autres articles" : " autre article") + " sur ce sujet · " + names.slice(0, 3).join(", ") + (names.length > 3 ? "…" : "");
+  d.append(sm);
+  const ul = document.createElement("ul");
+  for (const o of i._grp) {
+    const li = document.createElement("li");
+    const src = document.createElement("span"); src.className = "gsrc";
+    const dot = document.createElement("span"); dot.className = "dot"; dot.style.background = feedById(o.src)?.color || "var(--muted)";
+    src.append(dot, document.createTextNode((feedById(o.src)?.name || o.src) + " · " + ago(o.date)));
+    li.append(src, link(o));
+    ul.append(li);
+  }
+  d.append(ul);
+  return d;
+}
+
 // ——— Menus ———
 function renderMenu() {
   const items = allItems();
@@ -839,12 +899,43 @@ function buildUrl(tpl, i) {
 const openUrl = i => buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i);
 // Dans l'appli, la page s'ouvre dans le navigateur intégré (Chrome, avec vos connexions) ; bouton ✕ pour revenir.
 let inApp = store.get("kiosque.inapp", true);
+let clean = store.get("kiosque.clean", true);
+// Emplacements publicitaires et recommandations sponsorisées, masqués dans le lecteur intégré.
+const READER_CSS = `[id^="google_ads"],[id^="div-gpt-ad"],ins.adsbygoogle,.adsbygoogle,[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],.OUTBRAIN,
+[class^="ad-"],[class*=" ad-"],[class$="-ad"],[class*="-ad "],.ad,.ads,.advert,.advertisement,.publicite,[class*="publicite"],[class*="dfp"],[id*="dfp"],
+[data-ad],[data-ad-slot],[data-adunit],[id^="sas_"],[class*="sas-"],[id*="teads"],[class*="teads"],[class*="sponsor"],[id*="sponsor"],[class*="native-ad"],
+iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[src*="amazon-adsystem"],iframe[src*="smartadserver"],iframe[id^="google_ads"]
+{display:none!important;height:0!important;min-height:0!important}`;
+// Refuse les bandeaux de consentement : boutons connus des gestionnaires de cookies, sinon par le texte du bouton.
+const READER_JS = `(function () {
+  if (window.__kiosqueClean) return; window.__kiosqueClean = true;
+  var SEL = ["#didomi-notice-disagree-button", ".didomi-continue-without-agreeing", "#onetrust-reject-all-handler", ".ot-pc-refuse-all-handler",
+    "#CybotCookiebotDialogBodyButtonDecline", "[data-testid='uc-deny-all-button']", "#tarteaucitronAllDenied2", ".fc-cta-do-not-consent",
+    "button.sp_choice_type_REJECT_ALL", ".cmpboxbtnno", "#cmpbntnotxt", ".sd-cmp-button-refuse", "[aria-label='Continuer sans accepter']", "[aria-label='Refuser']"];
+  var TXT = /^(continuer sans accepter|tout refuser|refuser tout|refuser et fermer|refuser les cookies|je refuse|refuser|non merci|reject all|decline all|decline|deny all|only necessary|uniquement les cookies (strictement )?n.cessaires)$/i;
+  function visible(e) { return e && (e.offsetParent !== null || getComputedStyle(e).position === "fixed"); }
+  function tryClick() {
+    for (var i = 0; i < SEL.length; i++) { var e = document.querySelector(SEL[i]); if (visible(e)) { e.click(); return true; } }
+    var c = document.querySelectorAll("button, a, [role=button]");
+    for (var j = 0; j < c.length; j++) {
+      var t = (c[j].innerText || c[j].textContent || "").replace(/[\u2192>\u203a\u00d7\u2715]/g, "").replace(/\\s+/g, " ").trim();
+      if (t.length < 45 && TXT.test(t) && visible(c[j])) { c[j].click(); return true; }
+    }
+    return false;
+  }
+  var n = 0, done = false;
+  var timer = setInterval(function () { if (done || ++n > 30) return clearInterval(timer); done = tryClick(); }, 500);
+})();`;
 async function openInBrowser(url) {
   if (NATIVE) {
     // Lecteur intégré à l'appli, sans barre d'adresse (cordova-plugin-inappbrowser), sinon Chrome Custom Tabs.
     const iab = window.cordova?.InAppBrowser;
     if (iab && inApp) {
-      try { iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#13233d,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=yes,hardwareback=yes,footer=no,clearcache=no,clearsessioncache=no,useWideViewPort=yes"); return; }
+      try {
+        const ref = iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#13233d,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=yes,hardwareback=yes,footer=no,clearcache=no,clearsessioncache=no,useWideViewPort=yes");
+        if (clean) ref.addEventListener("loadstop", () => { try { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); } catch (e) {} });
+        return;
+      }
       catch (e) { console.warn(e); }
     }
     try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#173a63" }); return; } } catch (e) { console.warn(e); }
@@ -967,6 +1058,7 @@ function card(i) {
   c.append(h3);
   const alt = altLinks(i); if (alt) c.append(alt);
   if (i.summary) { const s = document.createElement("p"); s.className = "sum"; s.textContent = i.summary; c.append(s); }
+  const g = groupBox(i); if (g) c.append(g);
   c.append(actions(i));
   return c;
 }
@@ -989,7 +1081,8 @@ function render() {
 
   if (view === "saved") return renderSaved();
 
-  const items = currentItems();
+  const all = currentItems();
+  const items = groupItems(all);
   const errs = activeFeeds().filter(f => results[f.id]?.error);
   const pending = activeFeeds().filter(f => !results[f.id]).length;
   if (!items.length) {
@@ -1003,7 +1096,7 @@ function render() {
     return;
   }
   status.className = "status";
-  status.textContent = items.length + " articles" + (errs.length ? " · indisponible pour l'instant : " + errs.map(f => f.name).join(", ") : "");
+  status.textContent = all.length + " articles" + (items.length < all.length ? " · " + items.length + " sujets" : "") + (errs.length ? " · indisponible pour l'instant : " + errs.map(f => f.name).join(", ") : "");
 
   const [first, ...rest] = items;
   const wrap = document.createElement("article");
@@ -1016,6 +1109,7 @@ function render() {
   right.append(h);
   const alt = altLinks(first); if (alt) right.append(alt);
   if (first.summary) { const p = document.createElement("p"); p.className = "sum"; p.textContent = first.summary; right.append(p); }
+  const g0 = groupBox(first); if (g0) right.append(g0);
   right.append(actions(first));
   wrap.append(left, right);
   if (!first.image) wrap.style.gridTemplateColumns = "minmax(0,1fr)";
@@ -1087,8 +1181,8 @@ async function buildShareImage(i) {
   const shotH = Math.round(shot.naturalHeight * (W / shot.naturalWidth));
   c.width = W; c.height = headH + shotH + footH;
   ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, c.height);
-  ctx.fillStyle = "#173a63"; ctx.fillRect(0, 0, W, headH);
-  ctx.fillStyle = "#7cf0c8"; ctx.font = `600 ${20 * k}px 'IBM Plex Mono', monospace`;
+  ctx.fillStyle = "#13233d"; ctx.fillRect(0, 0, W, headH);
+  ctx.fillStyle = "#ff5a3c"; ctx.font = `600 ${20 * k}px 'IBM Plex Mono', monospace`;
   ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, 46 * k);
   ctx.fillStyle = "#ffffff"; ctx.font = `700 ${34 * k}px Georgia, serif`;
   lines.forEach((l, n) => ctx.fillText(l, pad, (96 + n * 44) * k));
@@ -1099,6 +1193,43 @@ async function buildShareImage(i) {
   ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45 * k);
   return c;
 }
+// Photo de l'article : celle du flux RSS, sinon l'image de partage (og:image) de la page.
+async function articlePhoto(i) {
+  let src = i.image;
+  if (!src) {
+    const html = await (await fetch(i.link)).text();
+    const m = html.match(/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]*content=["']([^"']+)/i)
+      || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]*(?:property|name)=["'](?:og:image|twitter:image)["']/i);
+    if (!m) throw new Error("pas de photo");
+    src = m[1].replace(/&amp;/g, "&");
+  }
+  // Téléchargée par l'appli (pas de blocage CORS sur Android) pour pouvoir la dessiner sur l'image partagée.
+  try { const b = await (await fetch(src)).blob(); return await loadImage(URL.createObjectURL(b)); }
+  catch { return await loadImage(src); }
+}
+async function buildPhotoImage(i) {
+  const ph = await articlePhoto(i);
+  const W = 1200, pad = 48;
+  const c = document.createElement("canvas"), ctx = c.getContext("2d");
+  const phH = Math.round(Math.min(ph.naturalHeight * W / ph.naturalWidth, 900));
+  ctx.font = "700 46px Georgia, serif";
+  const lines = wrapText(ctx, i.title, W - pad * 2).slice(0, 4);
+  const textH = 70 + lines.length * 58 + 30, footH = 72;
+  c.width = W; c.height = phH + textH + footH;
+  ctx.fillStyle = "#13233d"; ctx.fillRect(0, 0, W, c.height);
+  // Photo recadrée au centre si elle est très haute.
+  const sh = Math.min(ph.naturalHeight, phH * ph.naturalWidth / W);
+  ctx.drawImage(ph, 0, (ph.naturalHeight - sh) / 2, ph.naturalWidth, sh, 0, 0, W, phH);
+  ctx.fillStyle = "#ff5a3c"; ctx.font = "600 24px 'IBM Plex Mono', monospace";
+  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "")).toUpperCase(), pad, phH + 56);
+  ctx.fillStyle = "#ffffff"; ctx.font = "700 46px Georgia, serif";
+  lines.forEach((l, n) => ctx.fillText(l, pad, phH + 116 + n * 58));
+  ctx.fillStyle = "#0b1626"; ctx.fillRect(0, phH + textH, W, footH);
+  ctx.fillStyle = "#ffffff"; ctx.font = "500 22px 'IBM Plex Mono', monospace";
+  let url = i.link; while (ctx.measureText(url).width > W - pad * 2 && url.length > 20) url = url.slice(0, -2);
+  ctx.fillText(url + (url === i.link ? "" : "…"), pad, phH + textH + 45);
+  return c;
+}
 async function openShare(i) {
   const dlg = $("#sharedlg");
   shareState = { item: i, canvas: null };
@@ -1107,7 +1238,15 @@ async function openShare(i) {
   box.innerHTML = '<p class="wait">Capture de la page entière, version ordinateur, en cours (10 à 20 secondes)…</p>';
   $("#sh-image").disabled = true;
   $("#sh-image-sub").textContent = "Capture de la page en cours…";
+  $("#sh-photo").disabled = true;
+  $("#sh-photo-sub").textContent = "Recherche de la photo…";
   dlg.showModal();
+  buildPhotoImage(i).then(c => {
+    if (shareState?.item !== i) return;
+    shareState.photo = c;
+    $("#sh-photo").disabled = false;
+    $("#sh-photo-sub").textContent = "La photo de l'article avec son titre et l'adresse";
+  }).catch(() => { if (shareState?.item === i) $("#sh-photo-sub").textContent = "Pas de photo pour cet article"; });
   try {
     const canvas = await buildShareImage(i);
     if (shareState?.item !== i) return;
@@ -1126,7 +1265,7 @@ async function openShare(i) {
 }
 async function shareNative(withImage) {
   if (!shareState) return;
-  const i = shareState.item, c = withImage ? shareState.canvas : null, txt = shareText(i);
+  const i = shareState.item, c = withImage === "photo" ? shareState.photo : withImage ? shareState.canvas : null, txt = shareText(i);
   try {
     if (NATIVE && PLUGINS.Share) {
       const opts = { title: i.title, text: txt, dialogTitle: "Partager l'article" };
@@ -1149,6 +1288,7 @@ async function shareNative(withImage) {
 }
 $("#sh-image").onclick = () => shareNative(true);
 $("#sh-link").onclick = () => shareNative(false);
+$("#sh-photo").onclick = () => shareNative("photo");
 $("#sh-copy").onclick = async () => {
   if (!shareState) return;
   try { await navigator.clipboard.writeText(shareState.item.link); $("#sh-copy").textContent = "Lien copié"; }
@@ -1327,8 +1467,9 @@ document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
   document.querySelectorAll(".tabpane").forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
 });
+$("#grouping").onchange = () => { grouping = $("#grouping").checked; store.set("kiosque.group", grouping); shown = PAGE; renderAll(); };
 $("#hideads").onchange = () => { hideAds = $("#hideads").checked; store.set("kiosque.hideads", hideAds); renderAll(); };
-$("#manage").onclick = () => { $("#hideads").checked = hideAds; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
+$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
 $("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
 $("#close").onclick = () => $("#dlg").close();
 
@@ -1344,6 +1485,8 @@ applyZoom();
 $("#zoom").value = zoom;
 $("#zoom").oninput = () => { zoom = +$("#zoom").value; store.set("kiosque.zoom", zoom); applyZoom(); };
 $("#inapp").checked = inApp;
+$("#clean").checked = clean;
+$("#clean").onchange = () => { clean = $("#clean").checked; store.set("kiosque.clean", clean); };
 $("#inapp").onchange = () => { inApp = $("#inapp").checked; store.set("kiosque.inapp", inApp); };
 
 $("#export").onclick = async () => {

@@ -23,6 +23,8 @@ jobs:
           java-version: 17
       - name: Installer Capacitor
         run: npm install
+      - name: Bloqueur de pubs et traqueurs du lecteur intégré
+        run: python3 ci/patch-iab.py && grep -q KiosqueBlock node_modules/cordova-plugin-inappbrowser/src/android/InAppBrowser.java
       - name: Générer le projet Android
         run: |
           npx cap add android
