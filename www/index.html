@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kiosque</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2215%22 fill=%22%2313233d%22/%3E%3Cg transform=%22translate%284.5 4.5%29 scale%280.86%29%22%3E%3Crect x=%2222%22 y=%228%22 width=%2232%22 height=%2242%22 rx=%225%22 fill=%22%23ff5a3c%22/%3E%3Crect x=%2210%22 y=%2214%22 width=%2234%22 height=%2242%22 rx=%225%22 fill=%22%23ffffff%22/%3E%3Crect x=%2215%22 y=%2220%22 width=%2224%22 height=%226%22 rx=%222%22 fill=%22%2313233d%22/%3E%3Crect x=%2215%22 y=%2230%22 width=%2211%22 height=%2211%22 rx=%222%22 fill=%22%23ff5a3c%22/%3E%3Crect x=%2229%22 y=%2231%22 width=%2210%22 height=%223.6%22 rx=%221.8%22 fill=%22%238a96a8%22/%3E%3Crect x=%2229%22 y=%2237.4%22 width=%2210%22 height=%223.6%22 rx=%221.8%22 fill=%22%238a96a8%22/%3E%3Crect x=%2215%22 y=%2245%22 width=%2224%22 height=%223.6%22 rx=%221.8%22 fill=%22%238a96a8%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2215%22 fill=%22%2313233d%22/%3E%3Crect x=%2221%22 y=%2213%22 width=%2229%22 height=%2235%22 rx=%223.5%22 fill=%22%23ff5a3c%22 transform=%22rotate%288 35 30%29%22/%3E%3Crect x=%2214%22 y=%2216%22 width=%2231%22 height=%2237%22 rx=%223.5%22 fill=%22%23fff%22/%3E%3Crect x=%2218.5%22 y=%2221%22 width=%2222%22 height=%224.5%22 rx=%221.2%22 fill=%22%2313233d%22/%3E%3Crect x=%2218.5%22 y=%2229%22 width=%2210%22 height=%229%22 rx=%221.2%22 fill=%22%23ff5a3c%22/%3E%3Crect x=%2231%22 y=%2229%22 width=%229.5%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2231%22 y=%2233%22 width=%229.5%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2231%22 y=%2237%22 width=%227%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2218.5%22 y=%2242%22 width=%2222%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2218.5%22 y=%2246%22 width=%2216%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -46,8 +46,8 @@ header.top {
 .round svg { width: 20px; height: 20px; }
 #refresh:disabled svg { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.brand { display: flex; align-items: center; gap: 10px; margin: 0; font: 700 24px/1 var(--f-head); letter-spacing: -0.01em; }
-.brand svg { width: 34px; height: 34px; flex: none; }
+.brand { display: flex; align-items: center; gap: 12px; margin: 0; font: 700 28px/1 var(--f-head); letter-spacing: -0.01em; }
+.brand svg { width: 46px; height: 46px; flex: none; }
 .search { flex: 1 1 200px; min-width: 0; max-width: 420px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
 .tools { display: flex; gap: 8px; align-items: center; margin-left: auto; }
 .btn { border: 1px solid var(--line); background: var(--surface); padding: 8px 12px; border-radius: 8px; cursor: pointer; }
@@ -71,6 +71,39 @@ header.top {
 .menubar button.empty { opacity: 0.55; }
 .menubar .n { font: 11px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .menubar .star { color: var(--accent); font-size: 10px; }
+.menubar .msep { flex: none; width: 1px; align-self: stretch; margin: 6px 4px; background: var(--line); }
+.menubar button.allrub { background: var(--chip); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.menubar button.allrub svg { flex: none; }
+.rubtiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.rubtile { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink); cursor: pointer; font-size: 15px; }
+.rubtile small { color: var(--muted); font-size: 12px; }
+.rubtile[aria-current="true"] { border-color: var(--accent); background: var(--chip); }
+.rubtile.empty { opacity: 0.55; }
+.rubtile .ico { font-size: 20px; line-height: 1; margin-bottom: 4px; }
+#rubgrid .row { margin-top: 14px; }
+.menubar button.rub .ico { font-size: 15px; line-height: 1; }
+.menubar button.rub { gap: 6px; padding: 7px 12px 7px 10px; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.menubar .n { font-size: 10px; opacity: 0.75; }
+.raacts { display: flex; flex-direction: column; gap: 12px; padding-bottom: 12px; }
+.raacts .field .row { display: flex; gap: 8px; margin-top: 6px; }
+.raacts .field input { flex: 1; }
+.rubrow .kw { grid-column: 3 / -1; color: var(--muted); font-size: 12px; padding: 0 4px 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rubrow .acts button:disabled { opacity: 0.25; cursor: default; }
+.chipsel { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.chipsel label { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 99px; background: var(--bg); font-size: 14px; cursor: pointer; }
+.chipsel label:has(input:checked) { border-color: var(--accent); background: var(--chip); font-weight: 600; }
+.chipsel input { accent-color: var(--accent); margin: 0; }
+.chipsel .none { color: var(--muted); font-size: 13px; }
+.spsearch { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: inherit; margin: 4px 0 8px; box-sizing: border-box; }
+.spteams h4 { font: 600 11px var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; }
+.spteams .chipsel { max-height: none; }
+.foot .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 0 8px; }
+.foot .chips button { flex: none; background: none; border: 1px dashed var(--line); border-radius: 99px; padding: 4px 10px; font-size: 13px; color: var(--ink); cursor: pointer; }
+.foot .chips button[aria-current="true"] { border-style: solid; border-color: var(--ink); font-weight: 600; }
+.foot .m.mine .who { color: var(--accent); }
+.foot .note.small { font-size: 13px; }
+#rubgrid { padding-bottom: 16px; }
+.viewtitle { font: 700 26px/1.15 var(--f-head); margin: 0 0 4px; }
 .menubar button[aria-current="true"] .star { color: inherit; }
 .submenu { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; background: var(--bg); border-bottom: 1px solid var(--line);
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
@@ -92,6 +125,7 @@ nav.sources { position: sticky; top: 140px; align-self: start; display: flex; fl
 .src .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .src .count { font: 12px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 .src .count.err { color: var(--warn); }
+.src.spec .name::after { content: " ★"; color: var(--accent); }
 
 main { min-width: 0; }
 .status { color: var(--muted); font-size: 14px; margin: 0 0 16px; }
@@ -150,6 +184,45 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .notifrules label:has(input:checked) { border-color: var(--accent); background: var(--chip); }
 .notifrules input { accent-color: var(--accent); width: 16px; height: 16px; }
 .field input { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-weight: 400; min-width: 0; }
+.tile { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 14px; border-radius: 6px; background: color-mix(in srgb, var(--fc) 12%, var(--surface)); border-left: 4px solid var(--fc); color: var(--ink); font: 700 16px/1.15 var(--f-head); text-decoration: none; overflow: hidden; }
+.tile img { width: 32px; height: 32px; border-radius: 6px; background: #fff; object-fit: contain; flex: none; }
+.tile span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.foot { margin: 0 0 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; }
+.foot .ftabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 10px; }
+.foot .ftabs button { flex: none; background: var(--bg); border: 1px solid var(--line); border-radius: 99px; padding: 6px 12px; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; }
+.foot .ftabs button[aria-current="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.foot h4 { font: 600 12px var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
+.foot .m { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.foot .m:first-of-type { border-top: 0; }
+.foot .m .when { font: 12px/1.3 var(--f-mono); color: var(--muted); }
+.foot .m .who { font-weight: 600; min-width: 0; }
+.foot .m .who small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+.foot .m .sc { font: 600 15px var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.foot table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.foot th { font: 500 11px var(--f-mono); color: var(--muted); text-align: right; padding: 4px 4px; }
+.foot td { padding: 6px 4px; border-top: 1px solid var(--line); text-align: right; }
+.foot td.c, .foot th.c { text-align: left; }
+.foot td.c img { width: 18px; height: 18px; vertical-align: -4px; margin-right: 6px; object-fit: contain; }
+.foot tr.om td { background: var(--chip); font-weight: 700; }
+.foot .fnote { font-size: 12px; color: var(--muted); margin: 10px 0 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.foot .fnote button { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 3px 9px; font-size: 12px; color: var(--ink); cursor: pointer; }
+.footbar { margin: 0 0 16px; display: flex; flex-direction: column; gap: 6px; }
+.footbar div { border-left: 3px solid var(--accent); background: var(--chip); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 14px; }
+.footbar b { font-weight: 700; }
+.diag { margin: 10px 0 4px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; }
+.diag .note { margin: 0 0 6px; }
+.note.warn { color: var(--warn); }
+.rubrows { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 4px; }
+.rubrow { display: grid; grid-template-columns: 28px 26px minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); touch-action: pan-y; }
+.rubrow.off { opacity: 0.5; }
+.rubrow.drag { border-color: var(--accent); box-shadow: 0 4px 14px rgb(0 0 0 / 0.15); position: relative; z-index: 2; background: var(--surface); }
+.rubrow .handle { cursor: grab; font-size: 20px; color: var(--muted); text-align: center; touch-action: none; user-select: none; padding: 4px 0; }
+.rubrow .ico { font-size: 18px; text-align: center; }
+.rubrow input { width: 100%; min-width: 0; border: 1px solid transparent; background: none; font: inherit; font-weight: 600; color: var(--ink); padding: 6px 4px; border-radius: 6px; }
+.rubrow input:focus { border-color: var(--accent); background: var(--surface); outline: none; }
+.rubrow .acts { display: flex; gap: 2px; }
+.rubrow .acts button { border: 0; background: none; font-size: 16px; padding: 6px; cursor: pointer; color: var(--muted); border-radius: 6px; }
+.rubrow .acts button:hover { color: var(--ink); background: var(--surface); }
 .grouphead { font: 600 12px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 4px; }
 .switch { position: relative; width: 42px; height: 24px; flex: none; }
 .switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
@@ -182,6 +255,8 @@ input[type="range"] { width: 100%; margin-top: 8px; accent-color: var(--accent);
 .grp summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 600; list-style: none; padding: 4px 0; }
 .grp summary::-webkit-details-marker { display: none; }
 .grp summary::before { content: "＋ "; }
+.grp .ghead { margin: 0 0 6px; font: 600 12px var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); }
+.grp .gsrc b { color: var(--ink); font-weight: 600; }
 .grp[open] summary::before { content: "－ "; }
 .grp ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; }
 .grp li a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14.5px; line-height: 1.3; }
@@ -228,7 +303,12 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 .sharechoice.primary { border-color: var(--accent); }
 .sharechoice:disabled { opacity: 0.6; cursor: progress; }
 .sharechoice:not(:disabled):hover { border-color: var(--accent); background: var(--chip); }
-.shot { max-height: 46vh; overflow-y: auto; place-items: start center; }
+.shot { max-height: 46vh; overflow-y: auto; place-items: start center; overscroll-behavior: contain; touch-action: pan-y; }
+.shot img { cursor: zoom-in; }
+#shotview { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; margin: 0; padding: 0; border: 0; background: #000; }
+#shotview .sv-scroll { height: 100%; overflow: auto; overscroll-behavior: contain; }
+#shotview img { display: block; width: 100%; height: auto; }
+#shotview .sv-close { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 12px); right: 12px; z-index: 2; border: 0; border-radius: 99px; padding: 10px 16px; background: rgb(0 0 0 / 0.7); color: #fff; font: inherit; font-weight: 600; }
 .sharebtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
 .sharebtns .btn { text-align: center; text-decoration: none; }
 .sharelink { font: 12px var(--f-mono); color: var(--muted); word-break: break-all; margin: 6px 0 0; }
@@ -236,7 +316,8 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 @media (max-width: 820px) {
   .layout { grid-template-columns: minmax(0, 1fr); gap: 14px; padding-top: 14px; }
   nav.sources { position: static; flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
-  .navlabel { display: none; }
+  .navlabel { display: block; flex: none; align-self: center; margin: 0 2px 0 0; }
+  .src { font-size: 13px; padding: 5px 9px; }
   .src { width: auto; flex: none; border: 1px solid var(--line); }
   .src .name { overflow: visible; }
   .lead { grid-template-columns: minmax(0, 1fr); }
@@ -260,7 +341,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 <body>
 <div class="sticky">
   <header class="top">
-    <h1 class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#13233d"/><g transform="translate(4.5 4.5) scale(0.86)"><rect x="22" y="8" width="32" height="42" rx="5" fill="#ff5a3c"/><rect x="10" y="14" width="34" height="42" rx="5" fill="#ffffff"/><rect x="15" y="20" width="24" height="6" rx="2" fill="#13233d"/><rect x="15" y="30" width="11" height="11" rx="2" fill="#ff5a3c"/><rect x="29" y="31" width="10" height="3.6" rx="1.8" fill="#8a96a8"/><rect x="29" y="37.4" width="10" height="3.6" rx="1.8" fill="#8a96a8"/><rect x="15" y="45" width="24" height="3.6" rx="1.8" fill="#8a96a8"/></g></svg>Kiosque</h1>
+    <h1 class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#13233d"/><g transform="translate(10 9) scale(.8)"><rect x="35" y="9" width="52" height="68" rx="6" fill="#ff5a3c" transform="rotate(9 61 43)"/><rect x="14" y="19" width="56" height="72" rx="6" fill="#fff"/><rect x="21" y="28" width="42" height="10" rx="2.5" fill="#13233d"/><rect x="21" y="44" width="19" height="17" rx="2.5" fill="#ff5a3c"/><rect x="45" y="44.5" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="51" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="57.5" width="12" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="68" width="42" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="77" width="30" height="4.5" rx="2.25" fill="#9aa8ba"/></g></svg>Kiosque</h1>
     <div class="searchwrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="q" class="search" type="search" placeholder="Rechercher un titre, un opérateur…" aria-label="Rechercher"></div>
     <div class="tools">
       <span id="stamp" class="stamp"></span>
@@ -279,6 +360,9 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </nav>
   <main>
     <p id="intro" class="intro" hidden></p>
+    <h2 id="viewtitle" class="viewtitle"></h2>
+    <div id="footbar" class="footbar" hidden></div>
+    <section id="foot" class="foot" hidden></section>
     <p id="status" class="status">Chargement des flux…</p>
     <section id="lead"></section>
     <section id="grid" class="grid"></section>
@@ -293,9 +377,9 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </div>
   <div class="tabs" role="tablist">
     <button type="button" role="tab" data-tab="feeds" aria-selected="true">Journaux</button>
+    <button type="button" role="tab" data-tab="rubs" aria-selected="false">Rubriques</button>
     <button type="button" role="tab" data-tab="links" aria-selected="false">Liens</button>
-    <button type="button" role="tab" data-tab="notif" aria-selected="false">Alertes</button>
-    <button type="button" role="tab" data-tab="lang" aria-selected="false">Traduction</button>
+    <button type="button" role="tab" data-tab="notif" aria-selected="false">Notifications</button>
     <button type="button" role="tab" data-tab="app" aria-selected="false">Appli</button>
   </div>
   <section class="tabpane" data-pane="feeds">
@@ -313,39 +397,53 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
       </div>
     </form>
   </section>
-  <section class="tabpane" data-pane="links" hidden>
-    <p class="note">Chaque journal ouvre ses articles avec le lien choisi dans l'onglet Journaux. Les autres liens apparaissent en petits boutons sous le titre de chaque article. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
-    <div id="linkrows"></div>
-    <div class="row"><button id="resetlinks" class="btn" type="button">Rétablir les liens par défaut</button><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
-  </section>
-  <section class="tabpane" data-pane="notif" hidden>
-    <div class="notifcard">
-      <div class="notifprev" aria-hidden="true">
-        <div class="np-app"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#13233d"/><g transform="translate(4.5 4.5) scale(0.86)"><rect x="22" y="8" width="32" height="42" rx="5" fill="#ff5a3c"/><rect x="10" y="14" width="34" height="42" rx="5" fill="#ffffff"/><rect x="15" y="20" width="24" height="6" rx="2" fill="#13233d"/><rect x="15" y="30" width="11" height="11" rx="2" fill="#ff5a3c"/><rect x="29" y="31" width="10" height="3.6" rx="1.8" fill="#8a96a8"/><rect x="29" y="37.4" width="10" height="3.6" rx="1.8" fill="#8a96a8"/><rect x="15" y="45" width="24" height="3.6" rx="1.8" fill="#8a96a8"/></g></svg>Kiosque · maintenant</div>
-        <b>◆ Infra fibre · DegroupNews</b>
-        <span>Exemple : Xpfibre lance la fermeture du cuivre dans 200 communes</span>
+  <section class="tabpane" data-pane="rubs" hidden>
+    <p class="note">Faites glisser une rubrique par la poignée ⠿ (ou utilisez les flèches) pour changer l'ordre de la barre. Touchez le nom pour le modifier, l'œil pour afficher ou masquer la rubrique. Dans la barre, un appui long sur une rubrique permet aussi de la déplacer.</p>
+    <div id="rubrows" class="rubrows"></div>
+    <h3 class="grouphead">Nouvelle rubrique</h3>
+    <form id="rubadd" class="addform">
+      <input id="rubname" placeholder="Nom (ex. Cybersécurité)" required>
+      <input id="rubkw" placeholder="Mots-clés séparés par des virgules (ex. cyberattaque, rançongiciel, piratage)" required>
+      <div class="row">
+        <button id="rubreset" class="btn" type="button">Ordre d'origine</button>
+        <button class="btn primary" type="submit">Ajouter</button>
       </div>
-      <label class="toggle-line" for="notif-on"><span><b>Recevoir des alertes</b><small>Le téléphone vérifie vos journaux environ toutes les 15 minutes, même appli fermée</small></span><span class="switch"><input id="notif-on" type="checkbox"><span></span></span></label>
-    </div>
-    <h3 class="grouphead">M'alerter pour</h3>
-    <div id="notif-rules" class="notifrules"></div>
-    <label class="field" for="notif-kw">Mots-clés à surveiller <small class="note" style="font-weight:400">séparés par des virgules, ex. Xpfibre, Axione, Arcep</small>
-      <input id="notif-kw" type="text" placeholder="Xpfibre, Axione, Altitude, Arcep">
-    </label>
-    <label class="toggle-line" for="notif-quiet"><span><b>Pas d'alerte la nuit</b><small>Entre 22 h et 7 h, les alertes sont regroupées pour le matin</small></span><span class="switch"><input id="notif-quiet" type="checkbox"><span></span></span></label>
-    <div class="row"><button id="notif-test" class="btn" type="button">Envoyer une alerte de test</button></div>
-    <p id="notif-status" class="note"></p>
+    </form>
   </section>
-  <section class="tabpane" data-pane="lang" hidden>
-    <label class="field" for="tlang">Langue du bouton « Traduire »
+  <section class="tabpane" data-pane="links" hidden>
+    <label class="field" for="tlang">Langue du bouton « Traduire » (Google Traduction)
       <select id="tlang">
         <option value="en">Anglais</option><option value="fr">Français</option><option value="es">Espagnol</option><option value="de">Allemand</option><option value="it">Italien</option><option value="pt">Portugais</option><option value="ar">Arabe</option><option value="zh-CN">Chinois</option>
       </select>
     </label>
-    <label class="field" for="tlink">Service du bouton « Traduire »
-      <select id="tlink"></select>
+    <p class="note">Chaque journal ouvre ses articles avec le lien choisi dans l'onglet Journaux. Les autres liens apparaissent en petits boutons sous le titre de chaque article. Dans l'adresse, <code>{url}</code> est remplacé par l'adresse de l'article (encodée), <code>{rawurl}</code> par l'adresse telle quelle, <code>{path}</code> par son chemin sans le domaine, et <code>{lang}</code> par la langue de traduction.</p>
+    <div id="linkrows"></div>
+    <div class="row"><button id="addlink" class="btn" type="button">Ajouter un lien</button></div>
+  </section>
+  <section class="tabpane" data-pane="notif" hidden>
+    <div class="notifcard">
+      <div class="notifprev" aria-hidden="true">
+        <div class="np-app"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#13233d"/><rect x="21" y="13" width="29" height="35" rx="3.5" fill="#ff5a3c" transform="rotate(8 35 30)"/><rect x="14" y="16" width="31" height="37" rx="3.5" fill="#fff"/><rect x="18.5" y="21" width="22" height="4.5" rx="1.2" fill="#13233d"/><rect x="18.5" y="29" width="10" height="9" rx="1.2" fill="#ff5a3c"/><rect x="31" y="29" width="9.5" height="2.2" rx="1.1" fill="#b9c3d1"/><rect x="31" y="33" width="9.5" height="2.2" rx="1.1" fill="#b9c3d1"/><rect x="31" y="37" width="7" height="2.2" rx="1.1" fill="#b9c3d1"/><rect x="18.5" y="42" width="22" height="2.2" rx="1.1" fill="#b9c3d1"/><rect x="18.5" y="46" width="16" height="2.2" rx="1.1" fill="#b9c3d1"/></svg>Kiosque · maintenant</div>
+        <b>◆ Infra fibre · DegroupNews</b>
+        <span>Exemple : Xpfibre lance la fermeture du cuivre dans 200 communes</span>
+      </div>
+      <label class="toggle-line" for="notif-on"><span><b>Recevoir des notifications</b><small>Le téléphone vérifie vos journaux environ toutes les 15 minutes, même appli fermée</small></span><span class="switch"><input id="notif-on" type="checkbox"><span></span></span></label>
+    </div>
+    <div id="notif-diag" class="diag">
+      <p id="notif-last" class="note">Dernière vérification : …</p>
+      <div class="row"><button id="notif-now" class="btn" type="button">Vérifier maintenant</button><button id="notif-battery" class="btn" type="button" hidden>Désactiver l'économie de batterie</button></div>
+      <p id="notif-battery-note" class="note warn" hidden>Android limite Kiosque pour économiser la batterie : la vérification en arrière-plan peut ne jamais se faire. Touchez le bouton, choisissez « Toutes les applis », Kiosque, puis « Ne pas optimiser » (ou « Aucune restriction »). Sur Xiaomi, autorisez aussi le « Démarrage automatique ».</p>
+    </div>
+    <h3 class="grouphead">Me notifier pour</h3>
+    <div id="notif-rules" class="notifrules"></div>
+    <h3 class="grouphead">Matchs · la veille et le jour même</h3>
+    <label class="toggle-line" for="sp-notify"><span><b>Matchs de mes équipes</b><small id="sp-notify-sub">Une notification la veille vers 18 h et une le jour du match vers 9 h. Équipes à choisir dans Sport → Mes sports.</small></span><span class="switch"><input id="sp-notify" type="checkbox"><span></span></span></label>
+    <label class="field" for="notif-kw">Mots-clés à surveiller <small class="note" style="font-weight:400">séparés par des virgules, ex. Xpfibre, Axione, Arcep</small>
+      <input id="notif-kw" type="text" placeholder="Xpfibre, Axione, Altitude, Arcep">
     </label>
-    <p class="note">La liste reprend vos liens de l'onglet Liens : modifiez l'adresse de « Google Traduction » ou ajoutez un lien vers un autre service (DeepL, Reverso, Yandex…). La capture traduite du partage reste faite par Google Traduction.</p>
+    <label class="toggle-line" for="notif-quiet"><span><b>Pas de notification la nuit</b><small>Entre 22 h et 7 h, les notifications sont regroupées pour le matin</small></span><span class="switch"><input id="notif-quiet" type="checkbox"><span></span></span></label>
+    <div class="row"><button id="notif-test" class="btn" type="button">Envoyer une notification de test</button></div>
+    <p id="notif-status" class="note"></p>
   </section>
   <section class="tabpane" data-pane="app" hidden>
     <h3 class="grouphead">Lecture</h3>
@@ -387,10 +485,52 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <div class="row"><button id="fl-copy" class="btn" type="button">Copier tous les liens</button></div>
 </dialog>
 
-<dialog id="sharedlg">
-  <h2>Partager l'article</h2>
+<dialog id="rubdlg" class="sheet small">
+  <div class="sheethead">
+    <h2>Rubriques</h2>
+    <button id="rub-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <div id="rubgrid"></div>
+</dialog>
+<dialog id="rubact" class="sheet small">
+  <div class="sheethead">
+    <h2 id="ra-title"></h2>
+    <button id="ra-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="raacts">
+    <div class="row"><button id="ra-left" class="btn" type="button">◀ Vers la gauche</button><button id="ra-right" class="btn" type="button">Vers la droite ▶</button></div>
+    <label class="field" for="ra-name">Nom de la rubrique<span class="row"><input id="ra-name" type="text"><button id="ra-ren" class="btn" type="button">Renommer</button></span></label>
+    <div class="row"><button id="ra-hide" class="btn" type="button"></button><button id="ra-all" class="btn" type="button">⚙ Toutes les rubriques</button></div>
+  </div>
+</dialog>
+<dialog id="spdlg" class="sheet">
+  <div class="sheethead">
+    <h2>Mes sports</h2>
+    <button id="sp-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <h3 class="grouphead">Sports</h3>
+  <div id="sp-sports" class="chipsel"></div>
+  <h3 class="grouphead">Pays et compétitions (résultats et classements)</h3>
+  <div id="sp-countries" class="chipsel"></div>
+  <label class="toggle-line" for="sp-eurofr"><span><b>Clubs français en coupe d'Europe</b><small>Tous les matchs des clubs français en Ligue des champions, Ligue Europa et Ligue Conférence</small></span><span class="switch"><input id="sp-eurofr" type="checkbox"><span></span></span></label>
+  <h3 class="grouphead">Équipes suivies</h3>
+  <div id="sp-mine" class="chipsel"></div>
+  <input id="sp-search" class="spsearch" type="search" placeholder="Chercher une équipe (ex. Lyon, Arsenal, Toulouse)">
+  <div id="sp-teams" class="spteams"></div>
+  <p class="note">Tennis, cyclisme et Formule 1 : articles seulement (pas de résultats gratuits disponibles). Résultats : fixturedownload.com.</p>
+  <div class="row"><button id="sp-done" class="btn primary" type="button">Terminé</button></div>
+</dialog>
+<dialog id="shotview" aria-label="Image entière"><div class="sv-scroll"><img id="sv-img" alt="Capture entière"></div><button class="sv-close" id="sv-close" type="button">Fermer</button></dialog>
+<dialog id="sharedlg" class="sheet">
+  <div class="sheethead">
+    <h2>Partager l'article</h2>
+    <button id="sh-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
   <p id="sharetitle" class="note"></p>
-  <div class="shotmode" role="radiogroup" aria-label="Page capturée">
+  <label class="field" for="shotlink">Lien à capturer (onglet Liens)
+    <select id="shotlink"></select>
+  </label>
+  <div class="shotmode" role="radiogroup" aria-label="Page capturée" hidden>
     <button type="button" data-mode="orig" aria-pressed="true">Page d'origine</button>
     <button type="button" data-mode="tr" aria-pressed="false" id="shotmode-tr">Traduction</button>
   </div>
@@ -410,18 +550,26 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
 </dialog>
 
+<script src="lib/readability.js"></script>
+<script src="lib/html2canvas.min.js"></script>
 <script>
 const DEFAULT_FEEDS = [
   { id: "lesechos", name: "Les Echos", url: "https://services.lesechos.fr/rss/les-echos-economie.xml", color: "#c8102e", on: true,
     more: ["entreprises", "finance-marches", "monde", "politique", "tech-medias", "idees", "start-up", "regions"].map(r => "https://services.lesechos.fr/rss/les-echos-" + r + ".xml") },
+  // Flux de rubrique en plus du flux principal (économie, tech, télécoms) : sinon les articles télécoms de ces journaux
+  // n'apparaissent presque jamais. Un flux de rubrique indisponible est simplement ignoré.
   { id: "latribune", name: "La Tribune", url: "https://www.latribune.fr/feed.xml", color: "#0d3b66", on: true,
-    more: ["https://www.latribune.fr/sitemaps/sitemap-news.xml"] },
-  { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true },
-  { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true },
+    more: ["technos-medias/telecoms", "technos-medias", "entreprises-finance", "economie"].map(r => "https://www.latribune.fr/" + r + "/feed.xml") },
+  { id: "lemonde", name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml", color: "#1a1a1a", on: true,
+    more: ["pixels", "economie", "economie-francaise"].map(r => "https://www.lemonde.fr/" + r + "/rss_full.xml") },
+  { id: "figaro", name: "Le Figaro", url: "https://www.lefigaro.fr/rss/figaro_actualites.xml", color: "#163860", on: true,
+    more: ["secteur_high-tech", "economie", "societes"].map(r => "https://www.lefigaro.fr/rss/figaro_" + r + ".xml") },
   { id: "libe", name: "Libération", url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml", color: "#e2001a", on: true },
-  { id: "franceinfo", name: "franceinfo", url: "https://www.francetvinfo.fr/titres.rss", color: "#f5a000", on: true },
+  { id: "franceinfo", name: "franceinfo", url: "https://www.francetvinfo.fr/titres.rss", color: "#f5a000", on: true,
+    more: ["internet", "economie", "economie/entreprises"].map(r => "https://www.francetvinfo.fr/" + r + ".rss") },
   { id: "parisien", name: "Le Parisien", url: "https://feeds.leparisien.fr/leparisien/rss", color: "#0f6fb7", on: true },
-  { id: "20min", name: "20 Minutes", url: "https://www.20minutes.fr/feeds/rss-une.xml", color: "#0072bc", on: true },
+  { id: "20min", name: "20 Minutes", url: "https://www.20minutes.fr/feeds/rss-une.xml", color: "#0072bc", on: true,
+    more: ["high-tech", "economie"].map(r => "https://www.20minutes.fr/feeds/rss-" + r + ".xml") },
   { id: "courrier", name: "Courrier international", url: "https://www.courrierinternational.com/feed/all/rss.xml", color: "#d7262c", on: true },
   { id: "lepoint", name: "Le Point", url: "https://www.lepoint.fr/rss.xml", color: "#b31b1b", on: false },
   { id: "lexpress", name: "L'Express", url: "https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml", color: "#e30613", on: false },
@@ -431,6 +579,9 @@ const DEFAULT_FEEDS = [
   { id: "clubic", name: "Clubic", url: "https://www.clubic.com/feed/news.rss", color: "#e4002b", on: true },
   { id: "next", name: "Next", url: "https://next.ink/feed/", color: "#7a2ff2", on: true },
   { id: "zdnet", name: "ZDNet France", url: "https://www.zdnet.fr/feeds/rss/actualites/", color: "#d4002b", on: true },
+  { id: "usinedigitale", name: "L'Usine Digitale", url: "https://www.usine-digitale.fr/rss", color: "#0a4a8f", on: true },
+  { id: "distributique", name: "Distributique", url: "https://www.distributique.com/flux-rss/rss.php", color: "#d35400", on: true },
+  { id: "channelnews", name: "ChannelNews", url: "https://www.channelnews.fr/feed", color: "#1b998b", on: true },
   { id: "universfreebox", name: "Univers Freebox", url: "https://www.universfreebox.com/feed", color: "#cd1e25", on: true },
   // Sites télécoms et infrastructures (flux vérifiés le 24/10/2026), à cocher dans « Sources »
   { id: "degroupnews", name: "DegroupNews", url: "https://www.degroupnews.com/rss.xml", color: "#e85d04", on: true },
@@ -463,7 +614,7 @@ const RETIRED = ["echos-tech", "pixels", "lemonde-medias", "figaro-medias", "ech
 // Chaque article est rangé dans une ou plusieurs rubriques selon les mots de son titre, de son résumé et de ses catégories RSS.
 // L'ordre compte : la première rubrique trouvée sert à classer les articles enregistrés.
 const RUBRICS = [
-  { id: "telecoms", name: "Télécoms", star: true, re: /\b(telecoms?|telecommunications?|operateurs? (telecom|mobile|de reseau|d.infrastructure)|fibre optique|la fibre|ftth|fttx|ftto|[456]g\b|tres haut debit|haut debit|arcep|berec|orece|xpfibre|axione|altitude infra|covage|orange concessions|tdf\b|cellnex|totem\b|kosc|iliad|freebox|free mobile|sfr\b|bouygues telecom|altice|orange (business|france|telecom)|vodafone|deutsche telekom|telefonica|telecom italia|swisscom|proximus|openreach|cityfibre|open fiber|fibercop|verizon|at&t|t-mobile|starlink|eutelsat|oneweb|cable sous-marin|cables sous-marins|reseau mobile|antennes? relais|pylones?|degroupage|reseau cuivre|fin du cuivre|fermeture du cuivre|reseaux? d.initiative publique|zones? (tres )?denses|roaming|itinerance|forfaits? mobiles?|frequences|spectre radio|towerco)\b/ },
+  { id: "telecoms", name: "Télécoms", star: true, re: /\b(telecoms?|telecommunications?|telephonie|telephone mobile|operateurs? (historique|alternatifs?|telecoms?)|reseaux? (fibre|telecoms?|internet|5g|4g|de telecommunications?)|box internet|abonnes? (mobiles?|fibre|internet|box)|numericable|ericsson|nokia|satellites? de (telecommunication|communication)s?|operateurs? (telecom|mobile|de reseau|d.infrastructure)|fibre optique|la fibre|ftth|fttx|ftto|[456]g\b|tres haut debit|haut debit|arcep|berec|orece|xpfibre|axione|altitude infra|covage|orange concessions|tdf\b|cellnex|totem\b|kosc|iliad|freebox|free mobile|sfr\b|bouygues telecom|altice|orange (business|france|telecom)|vodafone|deutsche telekom|telefonica|telecom italia|swisscom|proximus|openreach|cityfibre|open fiber|fibercop|verizon|at&t|t-mobile|starlink|eutelsat|oneweb|cable sous-marin|cables sous-marins|reseau mobile|antennes? relais|pylones?|degroupage|reseau cuivre|fin du cuivre|fermeture du cuivre|reseaux? d.initiative publique|zones? (tres )?denses|roaming|itinerance|forfaits? mobiles?|frequences|spectre radio|towerco)\b/ },
   { id: "politique", name: "Politique", re: /\b(gouvernement|premier ministre|ministre|elysee|assemblee nationale|senat|deputes?|senateurs?|elections?|electoral|presidentielle|legislatives|municipales|partis? politiques?|macron|rassemblement national|\brn\b|lfi|insoumis|renaissance|les republicains|socialiste|ecologistes|motion de censure|49\.3|remaniement)\b/ },
   { id: "international", name: "International", re: /\b(ukraine|russie|poutine|zelensky|israel|gaza|hamas|iran|liban|syrie|chine|pekin|xi jinping|etats-unis|washington|trump|maison blanche|onu|otan|union europeenne|bruxelles|allemagne|royaume-uni|londres|italie|espagne|afrique|inde|japon|bresil|mexique|canada|turquie|diplomati\w*|guerre|cessez-le-feu|sommet)\b/ },
   { id: "economie", name: "Économie", re: /\b(economie|economique|croissance|inflation|pib|bce|fed\b|taux d.interet|budget|deficit|dette|impots?|fiscalite|emploi|chomage|salaires?|retraites?|bourse|cac 40|marches financiers|pouvoir d.achat|consommation|banque centrale|immobilier)\b/ },
@@ -476,11 +627,36 @@ const RUBRICS = [
   { id: "sport", name: "Sport", re: /\b(sports?|football|ligue 1|ligue des champions|psg|om\b|rugby|tennis|cyclisme|tour de france|jeux olympiques|\bjo\b|formule 1|f1|basket|nba|handball|athletisme|match|championnat|coupe du monde)\b/ },
   { id: "societe", name: "Société", re: /\b(societe|justice|proces|tribunal|police|gendarmerie|faits? divers|education|ecoles?|enseignants?|universites?|logement|transports?|greve|manifestation|immigration|securite)\b/ },
 ];
+// ——— Rubriques réglables (onglet Rubriques des réglages) ———
+// order : ordre de la barre ; hidden : rubriques masquées ; names : noms modifiés ; custom : rubriques créées avec des mots-clés.
+const ENTRY_NAMES = { une: "À la une", moi: "Pour moi", saved: "Enregistrés", autres: "Autres" };
+const RUB_DEFAULT_ORDER = ["une", "moi", "saved", "telecoms", "politique", "international", "societe", "economie", "entreprises", "tech", "medias", "sport", "culture", "sante", "environnement", "autres"];
+const RUB_ICONS = { une: "📰", moi: "⭐", saved: "🔖", telecoms: "📡", politique: "🏛️", international: "🌍", societe: "👥", economie: "📈", entreprises: "🏢", tech: "💻", medias: "📺", sport: "🏅", culture: "🎭", sante: "🩺", environnement: "🌱", autres: "📂" };
+const rubIcon = id => RUB_ICONS[id] || "🏷️";
+let rubPrefs = (() => {
+  const d = { order: [], hidden: [], names: {}, custom: [] };
+  try { return { ...d, ...JSON.parse(localStorage.getItem("kiosque.rubs") || "{}") }; } catch { return d; }
+})();
+function kwRe(kw) {
+  const k = String(kw || "").split(",").map(x => norm(x.trim())).filter(Boolean).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+"));
+  return k.length ? new RegExp("\\b(" + k.join("|") + ")") : /(?!)/;
+}
+for (const c of rubPrefs.custom) RUBRICS.push({ id: c.id, name: c.name, custom: true, kw: c.kw, re: kwRe(c.kw) });
+function saveRubs() { try { localStorage.setItem("kiosque.rubs", JSON.stringify(rubPrefs)); } catch {} }
+function userOrder() {
+  const all = [...RUB_DEFAULT_ORDER, ...RUBRICS.filter(r => r.custom).map(r => r.id)];
+  const out = rubPrefs.order.filter((id, k, a) => all.includes(id) && a.indexOf(id) === k);
+  for (const id of all) if (!out.includes(id)) { const k = out.indexOf("autres"); if (id !== "autres" && k >= 0) out.splice(k, 0, id); else out.push(id); }
+  return out;
+}
+const rubHidden = id => id !== "une" && rubPrefs.hidden.includes(id);
 // Focus Télécoms
 const TEL_FIBRE = /\b(xpfibre|axione|altitude infra\w*|covage|orange concessions|tdf\b|cellnex|totem\b|kosc|vauban|operateurs? d.infrastructures?|infrastructures? (de )?(fibre|telecoms?|numeriques?)|reseaux? d.initiative publique|\brip\b|ftth|fttx|ftto|deploiement de la fibre|raccordements?|prises? (fibre|ftth|raccordables)|fibre noire|fin du cuivre|fermeture du cuivre|decommissionnement|zones? (tres )?denses|zones? amii|amel|openreach|cityfibre|open fiber|fibercop|deutsche glasfaser|vantage towers|american tower|crown castle|towercos?|neutral host|pylones?|wholesale|opérateur neutre|operateur neutre)\b/;
 const TEL_REGL = /\b(arcep|berec|orece|regulat\w*|reglement\w*|reglementaire|ofcom|fcc\b|bundesnetzagentur|bnetza|agcom|cnmc|commission europeenne|gigabit infrastructure act|digital networks act|autorite de la concurrence|amendes?|sanctions?|mise en demeure|consultation publique|decret|projet de loi|loi\b|attribution des frequences|encheres|licences?|service universel|neutralite du net|tarifs? (de gros|regules?)|obligations? de (deploiement|couverture)|cadre reglementaire|new deal mobile|plan france tres haut debit|zones? amii|amel)\b/;
 const TEL_INTL = /\b(vodafone|deutsche telekom|telefonica|telecom italia|tim\b|bt group|openreach|cityfibre|open fiber|fibercop|deutsche glasfaser|swisscom|proximus|kpn|telenor|telia|verizon|at&t|t-mobile|comcast|starlink|ofcom|fcc\b|bundesnetzagentur|agcom|cnmc|etats-unis|allemagne|royaume-uni|italie|espagne|belgique|suisse|chine|huawei|inde|afrique|maroc|senegal|cote d.ivoire|japon|canada|bresil|international|monde)\b/;
 const TEL_FR = /\b(arcep|xpfibre|axione|altitude infra\w*|covage|orange concessions|kosc|iliad|free\b|freebox|free mobile|sfr|bouygues telecom|orange|france|francais\w*|territoires?|departements?|communes?|regions?|\brip\b|zones? amii|amel|new deal mobile|plan france tres haut debit)\b/;
+const TEL_NAMES = /\b(orange|free|bouygues|sfr|iliad|altice|xavier niel|drahi|christel heydemann|martin bouygues|numericable|vodafone|telecom)\b/;
+const TEL_CONTEXT = /\b(operateurs?|abonnes?|clients? mobiles?|forfaits?|offres? (mobiles?|fibre|internet)|reseaux?|antennes?|box|mobiles?|internet|fibre|cuivre|frequences|couverture|debit|wifi|wi-fi|roaming|panne|telephon\w*|consolidation|rachat de sfr|cession de sfr|quatre operateurs|trois operateurs)\b/;
 const TEL_SUBS = [
   { id: "all", name: "Toute l'actualité télécoms" },
   { id: "fibre", name: "Focus infra fibre", intro: "Opérateurs d'infrastructure (Xpfibre, Axione, Altitude, Orange Concessions, TDF, Cellnex, Totem…), réseaux d'initiative publique, déploiement FTTH et fin du cuivre." },
@@ -495,6 +671,8 @@ function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-
 function classify(i) {
   const t = norm(i.title + " " + i.summary + " " + (i.cats || []).join(" "));
   const rubrics = RUBRICS.filter(r => r.re.test(t)).map(r => r.id);
+  // Noms d'opérateurs seuls (Orange, Free, Bouygues…) : télécoms seulement avec un mot du métier à côté.
+  if (!rubrics.includes("telecoms") && TEL_NAMES.test(t) && TEL_CONTEXT.test(t)) rubrics.unshift("telecoms");
   let tel = null;
   if (rubrics.includes("telecoms")) {
     const intl = TEL_INTL.test(t), fr = TEL_FR.test(t);
@@ -600,6 +778,7 @@ let saved = store.get("kiosque.saved", []);
 const VIEWS = ["une", "moi", ...RUBRICS.map(r => r.id), "autres", "saved"];
 let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
 let telSub = "all";
+let sportSub = "all";
 let filter = "all";
 let shown = PAGE;
 let results = {}; // id -> { items, error }
@@ -643,15 +822,6 @@ function parseFeed(xmlText, feed) {
       cats: [...el.querySelectorAll("category")].map(c => c.textContent.trim()),
     });
   }
-  // Plan de site « Google Actualités » (<urlset>) : titre et date dans news:*, sinon titre tiré de l'adresse.
-  const urls = nodes.length || atom.length ? [] : [...doc.getElementsByTagName("url")];
-  const kid = (el, name) => [...el.getElementsByTagName("*")].find(n => n.localName === name)?.textContent.trim() || "";
-  for (const el of urls) {
-    const link = kid(el, "loc");
-    const slug = (link.split("/").filter(Boolean).pop() || "").replace(/\.html?$/, "").replace(/-/g, " ");
-    const title = kid(el, "title") || (slug.length > 25 ? slug.charAt(0).toUpperCase() + slug.slice(1) : "");
-    out.push({ title: stripHtml(title), link, date: new Date(kid(el, "publication_date") || kid(el, "lastmod") || 0), summary: "", image: [...el.getElementsByTagName("*")].find(n => n.localName === "image")?.getElementsByTagName("*")[0]?.textContent.trim() || "", cats: (kid(el, "keywords") || "").split(",").map(c => c.trim()).filter(Boolean) });
-  }
   for (const el of atom) {
     const link = el.querySelector("link[rel='alternate']") || el.querySelector("link");
     const rawDesc = textOf(el, "summary") || textOf(el, "content");
@@ -666,6 +836,21 @@ function parseFeed(xmlText, feed) {
   }
   return out.filter(i => i.title && /^https?:/i.test(i.link)).map(i => ({ ...i, src: feed.id, ...classify(i) }));
 }
+async function fetchDecoded(url) {
+  if (!NATIVE || !/^https?:/.test(url) || typeof PageShot === "undefined" || !PageShot) return "";
+  const r = await PageShot.download({ url, accept: "", data: true, timeout: 20000 });
+  if (!r || !r.data) return "";
+  const bin = atob(r.data.slice(r.data.indexOf(",") + 1)), bytes = new Uint8Array(bin.length);
+  for (let k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+  const head = new TextDecoder("latin1").decode(bytes.slice(0, 400));
+  let enc = (/encoding=["']([\w-]+)["']/i.exec(head) || [])[1] || (/charset=([\w-]+)/i.exec(r.type || "") || [])[1] || "";
+  enc = enc.toLowerCase();
+  if (!enc || enc === "utf-8" || enc === "utf8") {
+    // Déclaré en UTF-8 mais faux : on essaie UTF-8 strict, sinon Windows-1252.
+    try { return new TextDecoder("utf-8", { fatal: true }).decode(bytes); } catch { enc = "windows-1252"; }
+  }
+  try { return new TextDecoder(enc).decode(bytes); } catch { return new TextDecoder("windows-1252").decode(bytes); }
+}
 async function fetchText(f, url = f.url) {
   let lastErr;
   const snap = url === f.url && (await snapshots())[f.id];
@@ -678,8 +863,10 @@ async function fetchText(f, url = f.url) {
       clearTimeout(t);
       if (!r.ok) throw new Error("HTTP " + r.status);
       let txt = await r.text();
+      // Caractères « � » : le flux n'est pas en UTF-8 (ISO-8859-1…). Le téléphone relit les octets bruts et les décode correctement.
+      if (txt.includes("�")) try { txt = await fetchDecoded(target()) || txt; } catch (e) { console.warn("encodage", e); }
       if (/^\s*\{/.test(txt)) { const j = JSON.parse(txt); if (j.status && j.status !== "ok") throw new Error(j.message || "rss2json"); txt = jsonToRss(j); }
-      if (!/<(rss|feed|rdf|urlset)/i.test(txt)) throw new Error("réponse sans flux");
+      if (!/<(rss|feed|rdf)/i.test(txt)) throw new Error("réponse sans flux");
       return txt;
     } catch (e) { lastErr = e; }
   }
@@ -691,15 +878,18 @@ const CACHE_KEY = "kiosque.cache";
 function restoreCache() {
   const c = store.get(CACHE_KEY, null);
   if (!c) return;
-  for (const f of activeFeeds()) if (c[f.id]) results[f.id] = { items: c[f.id].map(i => ({ ...i, date: new Date(i.date || 0) })), cached: true };
+  for (const f of activeFeeds()) if (c[f.id]) results[f.id] = { items: c[f.id].map(i => ({ ...i, ...classify(i), date: new Date(i.date || 0) })), cached: true };
 }
 function saveCache() {
-  const out = {};
-  for (const f of activeFeeds()) {
-    const items = results[f.id]?.items;
-    if (items?.length) out[f.id] = items.slice(0, 80).map(i => ({ title: i.title, link: i.link, src: i.src, date: +i.date || 0, summary: (i.summary || "").slice(0, 300), image: i.image, cats: i.cats, rubrics: i.rubrics, tel: i.tel, ad: i.ad }));
+  // Taille limitée (stockage du téléphone ~5 Mo) : moins d'articles par journal si besoin.
+  for (const [n, sl] of [[120, 300], [70, 200], [40, 120]]) {
+    const out = {};
+    for (const f of activeFeeds()) {
+      const items = results[f.id]?.items;
+      if (items?.length) out[f.id] = items.slice(0, n).map(i => ({ title: i.title, link: i.link, src: i.src, date: +i.date || 0, summary: (i.summary || "").slice(0, sl), image: i.image, cats: i.cats, rubrics: i.rubrics, tel: i.tel, ad: i.ad }));
+    }
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(out)); return; } catch {}
   }
-  store.set(CACHE_KEY, out);
 }
 async function loadAll() {
   const active = activeFeeds();
@@ -719,7 +909,13 @@ async function loadAll() {
       const got = await Promise.allSettled(urls.map(async u => parseFeed(await fetchText(f, u), f)));
       const items = got.filter(g => g.status === "fulfilled").flatMap(g => g.value);
       const failed = got.find(g => g.status === "rejected");
-      if (items.length || !failed) results[f.id] = { items };
+      // Les articles déjà reçus restent 3 jours : un flux ne garde souvent que ses 20 à 30 derniers titres.
+      if (items.length || !failed) {
+        const have = new Set(items.map(i => i.link)), old = Date.now() - 3 * 86400000;
+        const prev = (results[f.id]?.items || []).filter(i => !have.has(i.link) && +i.date > old);
+        const seen = new Set();
+        results[f.id] = { items: [...items, ...prev].filter(i => !seen.has(i.link) && seen.add(i.link)).sort((a, b) => (b.date || 0) - (a.date || 0)).slice(0, 150) };
+      }
       else results[f.id] = { items: results[f.id]?.items || [], error: String(failed.reason?.message || failed.reason) };
       soon();
     }
@@ -740,7 +936,7 @@ function NO_NET_HINT() {
   return "Aucun article n'a pu être chargé" + why + "." + where;
 }
 function feedById(id) { return feeds.find(f => f.id === id); }
-function rubricName(id) { return id === "autres" ? "Autres" : (RUBRICS.find(r => r.id === id) || {}).name || id; }
+function rubricName(id) { return rubPrefs.names[id] || ENTRY_NAMES[id] || (RUBRICS.find(r => r.id === id) || {}).name || id; }
 function ago(d) {
   d = d instanceof Date ? d : new Date(d);
   if (!d || isNaN(d) || d.getTime() === 0) return "";
@@ -799,11 +995,45 @@ function allItems() {
   const seen = new Set();
   return items.filter(i => !seen.has(i.link) && seen.add(i.link));
 }
+// Journal spécialisé (L'Équipe → Sport, Frandroid → Tech…) : rubrique déduite du nom ou de l'adresse,
+// sinon de ses articles (au moins la moitié dans une même rubrique). Tous ses articles vont dans cette rubrique.
+const SPEC_HINTS = [
+  [/telecom|telesat|degroup|freebox|fibre|lafibre|alloforfait|lightreading|fierce|mobileworldlive|rcrwireless|capacitymedia|insidetowers|datacenterdynamics|mobileeurope|policytracker|fastmode|bbcmag|arcep/, "telecoms"],
+  [/01net|numerama|frandroid|clubic|next\.ink|zdnet|silicon|journal ?du ?geek|presse-citron|les ?numeriques|lemondeinformatique|dcmag|usine-digitale|distributique|channelnews/, "tech"],
+  [/equipe|\bsports?\b|foot|rugby|tennis|cyclisme|\bvelo\b|basket|handball|eurosport|maxifoot/, "sport"],
+  [/allocine|telerama|\bculture\b|cinema|musique/, "culture"],
+  [/sciences? et avenir|futura-sciences|reporterre/, "environnement"],
+  [/doctissimo|\bsante\b/, "sante"],
+  [/boursorama|capital\.fr|challenges|bfm ?business|investir/, "economie"],
+];
+let specMemo = null;
+function feedRubric(id) {
+  if (!specMemo) {
+    specMemo = new Map();
+    for (const f of activeFeeds()) {
+      const key = norm(f.name + " " + f.url);
+      let r = (SPEC_HINTS.find(([re]) => re.test(key)) || [])[1] || null;
+      if (!r) {
+        const its = results[f.id]?.items || [];
+        if (its.length >= 8) {
+          const c = new Map();
+          for (const i of its) for (const x of i.rubrics) if (x !== "autres") c.set(x, (c.get(x) || 0) + 1);
+          const top = [...c].sort((a, b) => b[1] - a[1])[0];
+          if (top && top[1] >= its.length * 0.5) r = top[0];
+        }
+      }
+      specMemo.set(f.id, r);
+    }
+  }
+  return specMemo.get(id) || null;
+}
+const inRubric = (i, id) => i.rubrics.includes(id) || feedRubric(i.src) === id;
 function inView(i) {
   if (view === "une") return true;
   if (view === "moi") return forMe(i);
-  if (!i.rubrics.includes(view)) return false;
+  if (!inRubric(i, view)) return false;
   if (view === "telecoms" && telSub !== "all") return !!i.tel?.[telSub];
+  if (view === "sport" && sportSub !== "all") return sportOf(i).includes(sportSub);
   return true;
 }
 function currentItems() {
@@ -811,7 +1041,9 @@ function currentItems() {
   if (filter !== "all") items = items.filter(i => i.src === filter);
   const q = norm($("#q").value.trim());
   if (q) items = items.filter(i => norm(i.title + " " + i.summary).includes(q));
-  return items.sort((a, b) => (b.date || 0) - (a.date || 0));
+  // Dans une rubrique, les articles des journaux spécialisés (L'Équipe en Sport…) passent en premier.
+  const spec = i => view !== "une" && view !== "moi" && feedRubric(i.src) === view ? 1 : 0;
+  return items.sort((a, b) => spec(b) - spec(a) || (b.date || 0) - (a.date || 0));
 }
 
 // ——— Regroupement des articles qui parlent du même sujet ———
@@ -840,50 +1072,81 @@ function groupItems(items) {
 }
 function groupBox(i) {
   if (!i._grp?.length) return null;
-  const d = document.createElement("details");
-  d.className = "grp";
-  const sm = document.createElement("summary");
-  const names = [...new Set(i._grp.map(o => feedById(o.src)?.name || o.src))];
-  sm.textContent = i._grp.length + (i._grp.length > 1 ? " autres articles" : " autre article") + " sur ce sujet · " + names.slice(0, 3).join(", ") + (names.length > 3 ? "…" : "");
-  d.append(sm);
+  const box = document.createElement("div");
+  box.className = "grp";
+  const all = [i, ...i._grp];
+  const hd = document.createElement("p"); hd.className = "ghead";
+  hd.textContent = "Ce sujet dans " + new Set(all.map(o => o.src)).size + " journaux · " + all.length + " articles";
+  box.append(hd);
   const ul = document.createElement("ul");
-  for (const o of i._grp) {
+  const item = o => {
     const li = document.createElement("li");
     const src = document.createElement("span"); src.className = "gsrc";
     const dot = document.createElement("span"); dot.className = "dot"; dot.style.background = feedById(o.src)?.color || "var(--muted)";
-    src.append(dot, document.createTextNode((feedById(o.src)?.name || o.src) + " · " + ago(o.date)));
+    const nm = document.createElement("b"); nm.textContent = feedById(o.src)?.name || o.srcName || o.src;
+    src.append(dot, nm, document.createTextNode(" · " + ago(o.date)));
     li.append(src, link(o));
-    ul.append(li);
+    return li;
+  };
+  i._grp.slice(0, 5).forEach(o => ul.append(item(o)));
+  box.append(ul);
+  if (i._grp.length > 5) {
+    const d = document.createElement("details");
+    const sm = document.createElement("summary"); sm.textContent = "Voir les " + (i._grp.length - 5) + " autres";
+    const u2 = document.createElement("ul"); i._grp.slice(5).forEach(o => u2.append(item(o)));
+    d.append(sm, u2); box.append(d);
   }
-  d.append(ul);
-  return d;
+  return box;
 }
 
 // ——— Menus ———
-function renderMenu() {
+// La barre suit l'ordre choisi dans Réglages → Rubriques : icône, nom et petit compteur.
+// Appui long sur une rubrique : la déplacer, la renommer ou la masquer.
+const ALWAYS_SHOWN = ["une", "moi", "saved", "telecoms"];
+function rubCount() {
   const items = allItems();
-  const count = id => id === "une" ? items.length : id === "moi" ? items.filter(forMe).length : items.filter(i => i.rubrics.includes(id)).length;
-  const entries = [{ id: "une", name: "À la une" }, { id: "moi", name: "Pour moi", me: true }, ...RUBRICS, { id: "autres", name: "Autres" }, { id: "saved", name: "Enregistrés" }];
+  return id => id === "une" ? items.length : id === "moi" ? items.filter(forMe).length : id === "saved" ? saved.length : items.filter(i => inRubric(i, id)).length;
+}
+function longPress(el, fn) {
+  let t = null, x0 = 0, y0 = 0;
+  const stop = () => { clearTimeout(t); t = null; };
+  el.addEventListener("pointerdown", e => { x0 = e.clientX; y0 = e.clientY; el._lp = false; stop(); t = setTimeout(() => { el._lp = true; t = null; fn(); }, 550); });
+  el.addEventListener("pointermove", e => { if (t && Math.hypot(e.clientX - x0, e.clientY - y0) > 10) stop(); });
+  for (const ev of ["pointerup", "pointerleave", "pointercancel"]) el.addEventListener(ev, stop);
+  el.addEventListener("contextmenu", e => { e.preventDefault(); if (!el._lp) { stop(); el._lp = true; fn(); } });
+}
+function renderMenu() {
+  const items = allItems(), count = rubCount();
   const nav = $("#menu");
   nav.innerHTML = "";
-  for (const r of entries) {
+  // Bouton « Rubriques » : toutes les rubriques en grille.
+  const all = document.createElement("button");
+  all.type = "button"; all.className = "allrub";
+  all.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Rubriques';
+  all.onclick = () => openRubrics(count);
+  nav.append(all);
+  for (const id of userOrder()) {
+    if (rubHidden(id) && id !== view) continue;
+    const c = count(id);
+    // Rubriques sans article : seulement dans la grille (sauf Mon fil, Télécoms et la rubrique affichée).
+    if (items.length && !c && id !== view && !ALWAYS_SHOWN.includes(id)) continue;
     const b = document.createElement("button");
-    b.type = "button";
-    b.setAttribute("aria-current", String(r.id === view));
-    if (r.star) { b.classList.add("tel"); b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">◆</span>'); }
-    if (r.me) { b.classList.add("me"); b.insertAdjacentHTML("beforeend", '<span class="star" aria-hidden="true">★</span>'); }
-    b.append(document.createTextNode(r.name));
+    b.type = "button"; b.className = "rub";
+    b.setAttribute("aria-current", String(id === view));
+    if (id === "telecoms") b.classList.add("tel");
+    const ic = document.createElement("span"); ic.className = "ico"; ic.setAttribute("aria-hidden", "true"); ic.textContent = rubIcon(id);
+    b.append(ic, document.createTextNode(rubricName(id)));
     const n = document.createElement("span"); n.className = "n";
-    n.textContent = r.id === "saved" ? saved.length : (items.length ? count(r.id) : "");
+    n.textContent = items.length || id === "saved" ? c : "";
     b.append(n);
-    if (items.length && r.id !== "saved" && r.id !== view && !count(r.id)) b.classList.add("empty");
-    b.onclick = () => go(r.id);
+    b.onclick = () => { if (b._lp) { b._lp = false; return; } go(id); };
+    longPress(b, () => openRubActions(id));
     nav.append(b);
   }
   const sub = $("#submenu");
-  sub.hidden = view !== "telecoms";
+  sub.hidden = view !== "telecoms" && view !== "sport";
+  sub.innerHTML = "";
   if (view === "telecoms") {
-    sub.innerHTML = "";
     const tel = items.filter(i => i.tel);
     for (const s of TEL_SUBS) {
       const b = document.createElement("button");
@@ -895,10 +1158,146 @@ function renderMenu() {
       b.onclick = () => { telSub = s.id; shown = PAGE; renderAll(); window.scrollTo({ top: 0 }); };
       sub.append(b);
     }
-  }
+  } else if (view === "sport") renderSportSub(sub, items);
 }
+function openRubrics(count) {
+  const box = $("#rubgrid"); box.innerHTML = "";
+  const grid = document.createElement("div"); grid.className = "rubtiles";
+  for (const id of userOrder()) {
+    if (rubHidden(id)) continue;
+    const b = document.createElement("button"); b.type = "button"; b.className = "rubtile";
+    b.setAttribute("aria-current", String(id === view));
+    const c = count(id);
+    const ic = document.createElement("span"); ic.className = "ico"; ic.setAttribute("aria-hidden", "true"); ic.textContent = rubIcon(id);
+    const t = document.createElement("b"); t.textContent = rubricName(id);
+    const sm = document.createElement("small"); sm.textContent = c + (c > 1 ? " articles" : " article");
+    b.append(ic, t, sm);
+    if (!c && id !== "saved") b.classList.add("empty");
+    b.onclick = () => { $("#rubdlg").close(); go(id); };
+    grid.append(b);
+  }
+  box.append(grid);
+  const hid = rubPrefs.hidden.filter(id => id !== "une" && userOrder().includes(id));
+  const p = document.createElement("div"); p.className = "row";
+  const m = document.createElement("button"); m.type = "button"; m.className = "btn";
+  m.textContent = "Organiser les rubriques" + (hid.length ? " (" + hid.length + " masquée" + (hid.length > 1 ? "s" : "") + ")" : "");
+  m.onclick = () => { $("#rubdlg").close(); openSettings("rubs"); };
+  p.append(m); box.append(p);
+  $("#rubdlg").showModal();
+}
+function openSettings(tab) {
+  $("#manage").click();
+  const b = document.querySelector('.tabs button[data-tab="' + tab + '"]'); if (b) b.click();
+}
+// Petit menu de l'appui long : déplacer, renommer, masquer.
+let raId = null;
+function openRubActions(id) {
+  raId = id;
+  $("#ra-title").textContent = rubIcon(id) + " " + rubricName(id);
+  $("#ra-name").value = rubricName(id);
+  $("#ra-hide").hidden = id === "une";
+  $("#ra-hide").textContent = rubHidden(id) ? "👁 Afficher dans la barre" : "🚫 Masquer de la barre";
+  if (!$("#rubact").open) $("#rubact").showModal();
+}
+function moveRub(id, dir) {
+  const o = userOrder(), k = o.indexOf(id);
+  let j = k + dir;
+  while (j >= 0 && j < o.length && rubHidden(o[j])) j += dir;
+  if (j < 0 || j >= o.length) return;
+  o.splice(k, 1); o.splice(j, 0, id);
+  rubPrefs.order = o; saveRubs();
+}
+function renameRub(id, name) {
+  name = (name || "").trim();
+  const base = ENTRY_NAMES[id] || (RUBRICS.find(r => r.id === id) || {}).name;
+  if (!name || name === base) delete rubPrefs.names[id]; else rubPrefs.names[id] = name;
+  const c = rubPrefs.custom.find(x => x.id === id); if (c && name) { c.name = name; delete rubPrefs.names[id]; const r = RUBRICS.find(x => x.id === id); if (r) r.name = name; }
+  saveRubs();
+}
+function toggleRub(id) {
+  rubPrefs.hidden = rubHidden(id) ? rubPrefs.hidden.filter(x => x !== id) : [...rubPrefs.hidden, id];
+  saveRubs();
+  if (rubHidden(view)) go("une");
+}
+// Après un ajout ou une suppression de rubrique : les articles sont reclassés.
+function reclassify() {
+  for (const r of Object.values(results)) for (const i of r.items || []) Object.assign(i, classify(i));
+  specMemo = null;
+}
+function rubChanged() { renderAll(); const cur = $("#menu [aria-current='true']"); if (cur) cur.scrollIntoView({ inline: "center", block: "nearest" }); }
+$("#ra-x").onclick = () => $("#rubact").close();
+$("#ra-left").onclick = () => { moveRub(raId, -1); rubChanged(); };
+$("#ra-right").onclick = () => { moveRub(raId, 1); rubChanged(); };
+$("#ra-ren").onclick = () => { renameRub(raId, $("#ra-name").value); openRubActions(raId); rubChanged(); };
+$("#ra-name").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); $("#ra-ren").click(); } };
+$("#ra-hide").onclick = () => { toggleRub(raId); $("#rubact").close(); rubChanged(); };
+$("#ra-all").onclick = () => { $("#rubact").close(); openSettings("rubs"); };
+// Onglet Rubriques : glisser par la poignée, flèches, nom modifiable, œil pour masquer.
+function renderRubRows() {
+  const box = $("#rubrows"); box.innerHTML = "";
+  const order = userOrder();
+  order.forEach((id, k) => {
+    const row = document.createElement("div"); row.className = "rubrow" + (rubHidden(id) ? " off" : "");
+    const h = document.createElement("span"); h.className = "handle"; h.textContent = "⠿"; h.setAttribute("aria-hidden", "true");
+    const ic = document.createElement("span"); ic.className = "ico"; ic.textContent = rubIcon(id);
+    const inp = document.createElement("input"); inp.value = rubricName(id); inp.setAttribute("aria-label", "Nom de la rubrique");
+    inp.onchange = () => { renameRub(id, inp.value); inp.value = rubricName(id); renderAll(); };
+    const acts = document.createElement("span"); acts.className = "acts";
+    const btn = (t, label, fn, dis) => { const b = document.createElement("button"); b.type = "button"; b.textContent = t; b.title = label; b.setAttribute("aria-label", label); b.disabled = !!dis; b.onclick = fn; acts.append(b); };
+    btn("▲", "Monter", () => { const o = userOrder(); o.splice(k, 1); o.splice(k - 1, 0, id); rubPrefs.order = o; saveRubs(); renderRubRows(); renderAll(); }, k === 0);
+    btn("▼", "Descendre", () => { const o = userOrder(); o.splice(k, 1); o.splice(k + 1, 0, id); rubPrefs.order = o; saveRubs(); renderRubRows(); renderAll(); }, k === order.length - 1);
+    if (id !== "une") btn(rubHidden(id) ? "🚫" : "👁", rubHidden(id) ? "Afficher" : "Masquer", () => { toggleRub(id); renderRubRows(); renderAll(); });
+    const cu = rubPrefs.custom.find(x => x.id === id);
+    if (cu) btn("🗑", "Supprimer", () => {
+      if (!confirm("Supprimer la rubrique « " + rubricName(id) + " » ?")) return;
+      rubPrefs.custom = rubPrefs.custom.filter(x => x.id !== id);
+      rubPrefs.hidden = rubPrefs.hidden.filter(x => x !== id); delete rubPrefs.names[id];
+      const j = RUBRICS.findIndex(r => r.id === id); if (j >= 0) RUBRICS.splice(j, 1);
+      saveRubs(); reclassify(); if (view === id) view = "une"; renderRubRows(); renderAll();
+    });
+    row.append(h, ic, inp, acts);
+    if (cu) { const kw = document.createElement("small"); kw.className = "kw"; kw.textContent = "Mots-clés : " + cu.kw; row.append(kw); }
+    h.onpointerdown = e => {
+      e.preventDefault();
+      try { h.setPointerCapture(e.pointerId); } catch {}
+      const rows = [...box.children], from = rows.indexOf(row), y0 = e.clientY;
+      const mids = rows.map(r => { const b = r.getBoundingClientRect(); return b.top + b.height / 2; });
+      const step = row.offsetHeight + 6;
+      let to = from;
+      row.classList.add("drag");
+      h.onpointermove = ev => {
+        const dy = ev.clientY - y0, y = mids[from] + dy;
+        row.style.transform = "translateY(" + dy + "px)";
+        to = mids.filter((m, j) => j !== from && m < y).length;
+        rows.forEach((r, j) => {
+          if (j === from) return;
+          const sh = from < to && j > from && j <= to ? -step : to < from && j >= to && j < from ? step : 0;
+          r.style.transform = sh ? "translateY(" + sh + "px)" : "";
+        });
+      };
+      h.onpointerup = h.onpointercancel = () => {
+        h.onpointermove = h.onpointerup = h.onpointercancel = null;
+        if (to !== from) { const o = userOrder(); o.splice(from, 1); o.splice(to, 0, id); rubPrefs.order = o; saveRubs(); renderAll(); }
+        renderRubRows();
+      };
+    };
+    box.append(row);
+  });
+}
+$("#rubadd").onsubmit = e => {
+  e.preventDefault();
+  const name = $("#rubname").value.trim(), kw = $("#rubkw").value.trim();
+  if (!name || !kw) return;
+  const id = "c_" + Date.now().toString(36);
+  rubPrefs.custom.push({ id, name, kw });
+  RUBRICS.push({ id, name, custom: true, kw, re: kwRe(kw) });
+  saveRubs(); reclassify();
+  $("#rubname").value = ""; $("#rubkw").value = "";
+  renderRubRows(); renderAll();
+};
+$("#rubreset").onclick = () => { rubPrefs.order = []; rubPrefs.hidden = []; rubPrefs.names = {}; saveRubs(); renderRubRows(); renderAll(); };
 function go(id) {
-  view = id; filter = "all"; shown = PAGE; telSub = "all";
+  view = id; filter = "all"; shown = PAGE; telSub = "all"; sportSub = "all";
   try { history.replaceState(null, "", "#" + id); } catch {}
   renderAll(); window.scrollTo({ top: 0 });
   const cur = $("#menu [aria-current='true']"); if (cur) cur.scrollIntoView({ inline: "center", block: "nearest" });
@@ -910,9 +1309,15 @@ function renderSources() {
   $(".sources").hidden = view === "saved";
   const visible = allItems().filter(inView);
   list.append(srcButton("all", "Tous les journaux", "var(--accent)", visible.length, null));
-  for (const f of activeFeeds()) {
+  // Journaux de la rubrique en premier (L'Équipe en tête de Sport…), puis ceux qui ont le plus d'articles ici ; les journaux sans article ici à la fin.
+  const n = f => visible.filter(i => i.src === f.id).length;
+  const rows = activeFeeds().map((f, k) => ({ f, k, n: results[f.id] ? n(f) : -1, spec: view !== "une" && view !== "moi" && feedRubric(f.id) === view }));
+  if (view !== "une") rows.sort((a, b) => b.spec - a.spec || (b.n > 0) - (a.n > 0) || b.n - a.n || a.k - b.k);
+  for (const { f, n: c, spec } of rows) {
     const r = results[f.id];
-    list.append(srcButton(f.id, f.name, f.color, r ? visible.filter(i => i.src === f.id).length : "…", r?.error));
+    const b = srcButton(f.id, f.name, f.color, c < 0 ? "…" : c, r?.error);
+    if (spec) { b.classList.add("spec"); b.title = "Journal spécialisé de la rubrique " + rubricName(view); }
+    list.append(b);
   }
 }
 function srcButton(id, name, color, count, error) {
@@ -949,8 +1354,6 @@ const FIT_CSS = "html,body{overflow-x:hidden!important;max-width:100vw!important
 const READER_CSS = `[id^="google_ads"],[id^="div-gpt-ad"],ins.adsbygoogle,.adsbygoogle,[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],.OUTBRAIN,
 [class^="ad-"],[class*=" ad-"],[class$="-ad"],[class*="-ad "],.ad,.ads,.advert,.advertisement,.publicite,[class*="publicite"],[class*="dfp"],[id*="dfp"],
 [data-ad],[data-ad-slot],[data-adunit],[id^="sas_"],[class*="sas-"],[id*="teads"],[class*="teads"],[class*="sponsor"],[id*="sponsor"],[class*="native-ad"],
-[class*="ad-slot"],[id*="ad-slot"],[class*="adslot"],[class*="ad_slot"],[class*="adunit"],[class*="banner-ad"],[class*="outstream"],[id*="outstream"],
-[class*="video-ad"],[class*="ima-ad"],[id*="ima-ad"],[class^="pub-"],[class*=" pub-"],[class*="pub_"],[id^="pub-"],[id^="pub_"],[class*="megaban"],[class*="habillage"],
 iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[src*="amazon-adsystem"],iframe[src*="smartadserver"],iframe[id^="google_ads"]
 {display:none!important;height:0!important;min-height:0!important}`;
 // Refuse les bandeaux de consentement : boutons connus des gestionnaires de cookies, sinon par le texte du bouton.
@@ -970,26 +1373,126 @@ const READER_JS = `(function () {
     }
     return false;
   }
-  var AD = /^(publicit.|pub|annonce|advertisement|sponsoris.|contenu sponsoris.)$/i;
-  var A2HS = /(installer|ajouter) (sur|.) l..cran d.accueil|installer l.appli(cation)?|add to home screen|install (the )?app/i;
+  var n = 0, done = false;
+  var timer = setInterval(function () { if (done || ++n > 30) return clearInterval(timer); done = tryClick(); }, 500);
+})();`;
+// Pubs repérées par leur étiquette (« Publicité », « Sponsorisé »…) ou leur nom : le bloc entier est masqué, même s'il arrive après le chargement.
+const AD_JS = `(function () {
+  if (window.__kiosqueAds) return; window.__kiosqueAds = true;
+  var LABEL = /^(publicit.|la publicit.|advertisement|advertising|annonce|annonces|sponsoris.|contenu sponsoris.|sponsored|partenaire|pub|ad|ads)$/i;
+  var NAME = /(^|[-_ ])(ad|ads|adv|advert|advertising|pub|publicite|dfp|gpt|sas|teads|outstream|sponso|sponsored|banniere|habillage|megaban|pave)([-_ 0-9]|$)/i;
   function hide(e) { if (e && e !== document.body && e !== document.documentElement) e.style.setProperty("display", "none", "important"); }
-  function sweep() {
-    var labels = document.querySelectorAll("span, div, p, small, strong, b, em, label");
-    for (var i = 0; i < labels.length; i++) {
-      var l = labels[i];
-      if (l.children.length > 1 || (l.textContent || "").length > 30 || !AD.test(l.textContent.replace(/\s+/g, " ").trim())) continue;
-      // L'étiquette et l'emplacement voisin vivent dans le même bloc : on masque ce bloc s'il ne contient pas l'article.
-      var box = l.parentElement;
-      if (box && !box.querySelector("article, h1, h2") && (box.textContent || "").length < 400) hide(box); else hide(l);
+  function txt(e) { return (e.innerText || e.textContent || "").trim(); }
+  function scan() {
+    var all = document.querySelectorAll("div,span,p,small,b,strong,em,i,figcaption,aside,section,header,label");
+    for (var i = 0; i < all.length; i++) {
+      var e = all[i];
+      if (e.children.length > 1) continue;
+      var t = (e.textContent || "").trim();
+      if (t.length > 30 || !LABEL.test(t)) continue;
+      // Remonte au bloc qui ne contient que l'étiquette et la pub (pas le texte de l'article).
+      var box = e, up = e.parentElement, n = 0;
+      while (up && up !== document.body && n < 5 && txt(up).length < 60 && up.getBoundingClientRect().height < 1200) { box = up; up = up.parentElement; n++; }
+      hide(box);
     }
-    var all = document.querySelectorAll("div, section, aside, dialog, [role=dialog]");
-    for (var j = 0; j < all.length; j++) {
-      var d = all[j], st = getComputedStyle(d);
-      if ((st.position === "fixed" || st.position === "sticky") && (d.textContent || "").length < 300 && A2HS.test(d.textContent)) hide(d);
+    var named = document.querySelectorAll("[id],[class]");
+    for (var j = 0; j < named.length; j++) {
+      var m = named[j], key = (m.id || "") + " " + (typeof m.className === "string" ? m.className : "");
+      if (NAME.test(key) && txt(m).length < 60 && m.querySelector("iframe,video,img,ins")) hide(m);
     }
   }
-  var n = 0, done = false;
-  var timer = setInterval(function () { sweep(); if (!done) done = tryClick(); if (++n > 40) clearInterval(timer); }, 500);
+  scan();
+  var timer = null, end = Date.now() + 30000;
+  try {
+    new MutationObserver(function () { if (Date.now() > end || timer) return; timer = setTimeout(function () { timer = null; scan(); }, 400); })
+      .observe(document.documentElement, { childList: true, subtree: true });
+  } catch (e) {}
+  setTimeout(scan, 1500); setTimeout(scan, 4000);
+})();`;
+// Fenêtres cookies ou « acceptez les cookies ou abonnez-vous » (Frandroid…) : masquées, et la page défile à nouveau.
+const WALL_CSS = '#didomi-host,.didomi-popup-container,.didomi-notice-banner,#onetrust-consent-sdk,#CybotCookiebotDialog,.fc-consent-root,.qc-cmp2-container,#sd-cmp,[id^="sp_message_container"],#appconsent,#axeptio_overlay,.cmp-root,#cmpbox,#cmpbox2,.cmpboxBG,#gdpr-consent-tool-wrapper,#tarteaucitronRoot,#usercentrics-root,#usercentrics-cmp-ui,.truste_overlay,.truste_box_overlay,#truste-consent-track,#consent_blackbar,#trustarc-banner-overlay,.osano-cm-window,#ccc,.cky-consent-container,.cky-overlay,#cmp-app-container,.evidon-banner,#iubenda-cs-banner{display:none!important}';
+const WALL_JS = `(function () {
+  if (window.__kiosqueWall) return; window.__kiosqueWall = true;
+  var KEY = /cookie|consentement|confidentialit|partenaires|vie priv|donn[ée]es personnelles|j.accepte|tout accepter|accepter et/i;
+  var NO = /^(tout rejeter|rejeter tout|tout refuser|refuser tout|continuer sans accepter|refuser|je refuse|reject all|decline all|refuser et fermer)$/i;
+  // Bouton « Tout rejeter » / « Continuer sans accepter » : touché s'il existe (aussi dans les shadow DOM).
+  function roots() { var r = [document], a = document.querySelectorAll("*"); for (var i = 0; i < a.length; i++) if (a[i].shadowRoot) r.push(a[i].shadowRoot); return r; }
+  function reject() {
+    var R = roots();
+    for (var k = 0; k < R.length; k++) {
+      var c = R[k].querySelectorAll("button,a,[role=button]");
+      for (var j = 0; j < c.length; j++) {
+        var t = (c[j].innerText || c[j].textContent || "").replace(/\\s+/g, " ").trim();
+        if (t.length < 40 && NO.test(t) && c[j].getClientRects().length) { c[j].click(); return true; }
+      }
+    }
+    return false;
+  }
+  var walled = false;
+  function unlock() {
+    walled = true;
+    if (!document.getElementById("__kunlock")) {
+      var st = document.createElement("style"); st.id = "__kunlock";
+      st.textContent = "html,body{overflow-y:auto!important;touch-action:auto!important;-ms-touch-action:auto!important}html.sp-message-open,body.sp-message-open,.didomi-popup-open{overflow:auto!important;position:static!important}";
+      (document.head || document.documentElement).appendChild(st);
+      // Certaines fenêtres bloquent le doigt (touchmove annulé) : leurs écouteurs ne reçoivent plus le geste, la page défile.
+      window.addEventListener("touchmove", function (ev) { ev.stopImmediatePropagation(); }, { capture: true, passive: true });
+      window.addEventListener("wheel", function (ev) { ev.stopImmediatePropagation(); }, { capture: true, passive: true });
+    }
+    [document.documentElement, document.body].forEach(function (e) {
+      if (!e) return; var s = getComputedStyle(e);
+      if (s.overflow === "hidden" || s.overflowY === "hidden") { e.style.setProperty("overflow", "auto", "important"); e.style.setProperty("overflow-y", "auto", "important"); }
+      if (e === document.body && s.position === "fixed") { e.style.setProperty("position", "static", "important"); }
+      e.classList.remove("didomi-popup-open", "sp-message-open", "modal-open", "no-scroll", "noscroll", "overflow-hidden");
+    });
+  }
+  function scan() {
+    if (reject()) setTimeout(unlock, 400);
+    if (walled) unlock();
+    var W = innerWidth, H = innerHeight, hit = false, L = document.querySelectorAll("body *");
+    for (var i = 0; i < L.length; i++) {
+      var e = L[i], s = getComputedStyle(e);
+      if (s.position !== "fixed" && s.position !== "sticky" && !(s.position === "absolute" && (parseInt(s.zIndex, 10) || 0) > 999)) continue;
+      var r = e.getBoundingClientRect();
+      if ((r.width < W * 0.5 || r.height < H * 0.2) && !e.shadowRoot) continue;
+      var sr = e.shadowRoot, t = ((e.innerText || "") + " " + (sr ? sr.textContent || "" : "")).slice(0, 6000);
+      if (t.length > 5000 || e.querySelector("article") || !KEY.test(t) || !(e.querySelector("button,a,[role=button]") || (sr && sr.querySelector("button")))) continue;
+      e.style.setProperty("display", "none", "important"); hit = true;
+    }
+    // Fenêtres dessinées dans un shadow DOM (Usercentrics…) : l'hôte est masqué.
+    var R = roots();
+    for (var q = 1; q < R.length; q++) {
+      var E = R[q].querySelectorAll("*");
+      for (var z = 0; z < E.length; z++) {
+        var sz = getComputedStyle(E[z]); if (sz.position !== "fixed") continue;
+        var rz = E[z].getBoundingClientRect(), tz = E[z].textContent || "";
+        if (rz.width >= W * 0.5 && rz.height >= H * 0.2 && tz.length < 6000 && KEY.test(tz)) { R[q].host.style.setProperty("display", "none", "important"); hit = true; break; }
+      }
+    }
+    var F = document.querySelectorAll('iframe[src*="consent"],iframe[src*="cmp"],iframe[id^="sp_message"],iframe[title*="onsent"]');
+    for (var j = 0; j < F.length; j++) { F[j].style.setProperty("display", "none", "important"); hit = true; }
+    // Grande iframe posée en position fixe par-dessus la page (fenêtre de consentement d'un autre domaine).
+    var I = document.querySelectorAll("iframe");
+    for (var m = 0; m < I.length; m++) {
+      var fr = I[m], rf = fr.getBoundingClientRect();
+      if (rf.width * rf.height < W * H * 0.4 || /youtube|dailymotion|vimeo|player|video/i.test(fr.src || "")) continue;
+      for (var p = fr; p && p !== document.body && p !== document.documentElement; p = p.parentElement) {
+        if (getComputedStyle(p).position === "fixed") { p.style.setProperty("display", "none", "important"); hit = true; break; }
+      }
+    }
+    if (hit) {
+      // Fond grisé resté seul (calque plein écran sans texte).
+      for (var k = 0; k < L.length; k++) {
+        var o = L[k], so = getComputedStyle(o);
+        if (so.position !== "fixed") continue;
+        var ro = o.getBoundingClientRect();
+        if (ro.width >= W * 0.95 && ro.height >= H * 0.9 && !(o.innerText || "").trim()) o.style.setProperty("display", "none", "important");
+      }
+      unlock();
+    }
+  }
+  scan();
+  var n = 0, timer = setInterval(function () { scan(); if (++n > 40) clearInterval(timer); }, 600);
 })();`;
 async function openInBrowser(url) {
   if (NATIVE) {
@@ -1001,7 +1504,8 @@ async function openInBrowser(url) {
         ref.addEventListener("loadstop", () => {
           try {
             ref.insertCSS({ code: FIT_CSS });
-            if (clean) { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); }
+            ref.insertCSS({ code: WALL_CSS }); ref.executeScript({ code: WALL_JS });
+            if (clean) { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); ref.executeScript({ code: AD_JS }); }
           } catch (e) {}
         });
         return;
@@ -1033,7 +1537,8 @@ function altLinks(i) {
 // Traduction : Google Traduction dans la langue choisie dans les réglages.
 // Le bouton « Traduire » ouvre le lien choisi dans Réglages → Traduction (modifiable dans l'onglet Liens).
 let transLink = store.get("kiosque.tlink", "translate");
-const openTranslated = i => openInBrowser(buildUrl((links.find(l => l.id === transLink) || DEFAULT_LINKS[1]).tpl, i));
+// Le bouton « Traduire » ouvre toujours Google Traduction (demande d'Alain), dans la langue choisie.
+const openTranslated = i => openInBrowser(buildUrl(DEFAULT_LINKS[1].tpl, i));
 
 function link(i, cls) {
   const a = document.createElement("a");
@@ -1043,12 +1548,83 @@ function link(i, cls) {
   a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
   return a;
 }
+// Articles sans image dans le flux : l'image de partage de la page (og:image) est récupérée quand l'article
+// apparaît à l'écran, 3 à la fois, et retenue pour les prochaines fois.
+const OG_KEY = "kiosque.ogimg2";
+const ogCache = store.get(OG_KEY, {});
+// Image d'une page : image de partage (og/twitter), sinon première vraie photo de la page.
+function pageImage(html, base) {
+  const head = html.slice(0, 300000);
+  const m = /<meta[^>]+(?:property|name)=["'](?:og:image(?::secure_url|:url)?|twitter:image(?::src)?)["'][^>]*>/i.exec(head)
+    || /<link[^>]+rel=["']image_src["'][^>]*>/i.exec(head);
+  const c = m && /(?:content|href)=["']([^"']+)["']/i.exec(m[0]);
+  if (c && c[1].trim()) return absUrl(c[1].replace(/&amp;/g, "&"), base);
+  const body = html.slice(Math.max(0, html.search(/<(article|main)[\s>]/i)), 600000);
+  for (const t of body.match(/<img\b[^>]*>/gi) || []) {
+    const a = n => { const x = new RegExp("\\s" + n + "=[\"']([^\"']+)[\"']", "i").exec(t); return x ? x[1] : ""; };
+    let u = a("data-lazy-src") || a("data-src") || a("data-original") || a("src") || (a("srcset") || a("data-srcset")).split(/\s+/)[0];
+    if (!u || /^data:/.test(u) || /logo|icon|avatar|gravatar|sprite|pixel|blank|emoji|spacer|badge|banner|\.svg|\.gif|1x1|feeds\.|share|facebook|twitter|pub[-_]/i.test(u + " " + a("class") + " " + a("alt"))) continue;
+    const w = +a("width") || 0, h = +a("height") || 0;
+    if ((w && w < 200) || (h && h < 120)) continue;
+    return absUrl(u.replace(/&amp;/g, "&"), base);
+  }
+  return "";
+}
+// Vignette aux couleurs du journal, pour les articles sans aucune image.
+function tile(i) {
+  const f = feedById(i.src) || { name: i.srcName || i.src, color: "#13233d" };
+  const t = document.createElement("div"); t.className = "tile";
+  t.style.setProperty("--fc", f.color);
+  let host = "";
+  try { host = new URL(f.url || i.link).hostname.replace(/^(www|feeds?|services|dwh|rss)\./, ""); } catch {}
+  if (host) {
+    const im = document.createElement("img"); im.alt = ""; im.loading = "lazy"; im.referrerPolicy = "no-referrer";
+    im.src = "https://www.google.com/s2/favicons?sz=128&domain=" + encodeURIComponent(host);
+    im.onerror = () => im.remove();
+    t.append(im);
+  }
+  const s = document.createElement("span"); s.textContent = f.name; t.append(s);
+  return t;
+}
+let ogBusy = 0; const ogQueue = [];
+function ogNext() {
+  while (ogBusy < 3 && ogQueue.length) {
+    const [i, im, a] = ogQueue.shift(); ogBusy++;
+    fetch(i.link, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" } })
+      .then(r => r.ok ? r.text() : "").then(html => {
+        const u = pageImage(html, i.link);
+        ogCache[i.link] = u;
+        const keys = Object.keys(ogCache); if (keys.length > 600) keys.slice(0, keys.length - 600).forEach(k => delete ogCache[k]);
+        store.set(OG_KEY, ogCache);
+        if (u) { i.image = u; im.src = u; } else im.replaceWith(tile(i));
+      }).catch(() => im.replaceWith(tile(i))).finally(() => { ogBusy--; ogNext(); });
+  }
+}
+const ogSeen = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return; ogSeen.unobserve(e.target); ogQueue.push(e.target.kOg); ogNext();
+}), { rootMargin: "300px" }) : null;
 function img(i) {
-  if (!i.image) return null;
+  if (!i.image && ogCache[i.link]) i.image = ogCache[i.link];
+  if (!i.image) {
+    const a = document.createElement("a");
+    if (!NATIVE || !ogSeen || ogCache[i.link] === "" || !/^https?:/.test(i.link || "") || /news\.google\./.test(i.link)) {
+      a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer"; a.tabIndex = -1;
+      a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
+      a.append(tile(i));
+      return a;
+    }
+    const im = document.createElement("img");
+    im.className = "thumb"; im.alt = ""; im.referrerPolicy = "no-referrer";
+    im.onerror = () => im.replaceWith(tile(i));
+    a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer"; a.tabIndex = -1;
+    a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
+    a.append(im); a.kOg = [i, im, a]; ogSeen.observe(a);
+    return a;
+  }
   const im = document.createElement("img");
   im.className = "thumb"; im.loading = "lazy"; im.alt = ""; im.referrerPolicy = "no-referrer";
   im.src = i.image;
-  im.onerror = () => im.remove();
+  im.onerror = () => im.replaceWith(tile(i));
   const a = document.createElement("a");
   a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer"; a.tabIndex = -1;
   a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
@@ -1135,11 +1711,14 @@ function card(i) {
   return c;
 }
 
-function renderAll() { renderMenu(); renderSources(); render(); }
+function renderAll() { specMemo = null; renderMenu(); renderSources(); render(); }
 
 function render() {
   const lead = $("#lead"), grid = $("#grid"), status = $("#status"), intro = $("#intro");
   lead.innerHTML = ""; grid.innerHTML = "";
+  try { renderFoot(); } catch (e) { console.warn("foot", e); }
+  const spName = view === "sport" && sportSub !== "all" ? " · " + (SPORT_SUBS.find(x => x.id === sportSub) || {}).name : "";
+  $("#viewtitle").textContent = rubricName(view) + spName + (filter !== "all" ? " · " + (feedById(filter)?.name || "") : "");
   const sub = view === "telecoms" && TEL_SUBS.find(s => s.id === telSub);
   intro.hidden = !(sub && sub.intro);
   if (sub && sub.intro) intro.textContent = sub.intro;
@@ -1184,7 +1763,6 @@ function render() {
   const g0 = groupBox(first); if (g0) right.append(g0);
   right.append(actions(first));
   wrap.append(left, right);
-  if (!first.image) wrap.style.gridTemplateColumns = "minmax(0,1fr)";
   lead.append(wrap);
 
   for (const i of rest.slice(0, shown)) grid.append(card(i));
@@ -1222,7 +1800,20 @@ function renderSaved() {
 // ——— Partage avec capture d'écran ———
 // La capture de la version ordinateur est faite par le service Microlink (bloqueur de pubs et de bandeaux cookies activé).
 // Page entière, avec bloqueur de pubs, et CSS qui masque bandeaux cookies, pop-ups, lettres d'information et blocs publicitaires.
-const SHOT_CSS = '[id*="didomi"],[class*="didomi"],[id*="cookie"],[class*="cookie"],[class*="consent"],[id*="consent"],[id^="sp_message"],[class*="newsletter"],[class*="popup"],[class*="popin"],[id*="popin"],[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],[class^="ad-"],[class*=" ad-"],[id^="ad-"],[class*="advert"],[id*="advert"],[class*="dfp"],[id*="dfp"],[class*="sponsor"],[class*="pub-"],[id^="pub"],[class*="sticky-ad"],[class*="banner"],[class*="interstitial"],iframe{display:none!important}html,body{overflow:visible!important}';
+const SHOT_CSS = READER_CSS.replace(/\s+/g, " ") + '#gt-nvframe,.goog-te-banner-frame,#wtgbr,#gtx-trans,.skiptranslate,#HEADER,#__hdr,[id*="header-bar"][id*="archive"]{display:none!important}html,body{top:0!important;margin-top:0!important;height:auto!important;max-height:none!important}' + '[id*="didomi"],[class*="didomi"],[id*="cookie"],[class*="cookie"],[class*="consent"],[id*="consent"],[id^="sp_message"],[class*="newsletter"],[class*="popup"],[class*="popin"],[id*="popin"],[id*="taboola"],[class*="taboola"],[id*="outbrain"],[class*="outbrain"],[class^="ad-"],[class*=" ad-"],[id^="ad-"],[class*="advert"],[id*="advert"],[class*="dfp"],[id*="dfp"],[class*="sponsor"],[class*="pub-"],[id^="pub"],[class*="sticky-ad"],[class*="banner"],[class*="interstitial"],[class*="paywall"],[id*="poool"],[class*="poool"],[class*="outstream"],[class*="publicite"],[id*="google_ads"],iframe[src*="doubleclick"],iframe[src*="googlesyndication"],iframe[id^="google_ads"]{display:none!important}html,body{overflow:visible!important}';
+// Lien capturé : celui défini dans l'onglet Liens (lien d'ouverture du journal, ou service du bouton « Traduire »).
+// Ordre : le lien du journal (s'il a une adresse), sinon le service du bouton « Traduire » s'il n'est pas Google,
+// sinon le premier lien personnel de l'onglet Liens, et Google Traduction en dernier.
+let shotPick = store.get("kiosque.shotlink", ""); // lien choisi dans le menu Partager
+function shotTarget(i) {
+  const picked = links.find(x => x.id === shotPick);
+  if (picked) return { url: buildUrl(picked.tpl, i), name: picked.name };
+  const own = l => l && l.tpl && l.id !== "translate";
+  const l = [linkById(feedById(i.src)?.link || "orig"), links.find(x => x.id === transLink)].find(own)
+    || links.find(own) || links.find(x => x.id === "translate" && x.tpl) || DEFAULT_LINKS[1];
+  return { url: buildUrl(l.tpl, i), name: l.name };
+}
+const shotLink = i => shotTarget(i).url;
 // Version traduite de l'article par Google (même page, servie par translate.goog).
 function translatedUrl(link) {
   try {
@@ -1233,30 +1824,112 @@ function translatedUrl(link) {
   } catch { return link; }
 }
 const langName = () => $("#tlang").selectedOptions[0]?.textContent || transLang;
-let shotMode = "orig";
-function screenshotUrl(link) {
+let shotMode = "tr"; // le partage se fait toujours avec la capture de la traduction
+// Défilement de toute la page avant la capture : images différées chargées, page entière traduite par Google.
+// Certains sites font défiler l'article dans un bloc intérieur (page de la hauteur de l'écran) : les services ne
+// capturent alors qu'un écran. Ce script « déroule » ces blocs (hauteur libre) pour que la page ait sa vraie hauteur,
+// puis fait défiler toute la page (images différées) avant de remonter en haut.
+const SCROLL_JS = `(function(){
+function unroll(){var vh=innerHeight,all=document.querySelectorAll("body *");
+for(var i=0;i<all.length;i++){var e=all[i],cs=getComputedStyle(e);
+if(/(auto|scroll)/.test(cs.overflowY)&&e.scrollHeight>e.clientHeight+50&&e.clientHeight>vh*0.5){
+for(var p=e;p&&p!==document.documentElement;p=p.parentElement){p.style.setProperty("height","auto","important");p.style.setProperty("max-height","none","important");p.style.setProperty("overflow","visible","important");}}}
+[document.documentElement,document.body].forEach(function(x){if(x){x.style.setProperty("height","auto","important");x.style.setProperty("overflow","visible","important");x.style.setProperty("position","static","important");}});}
+unroll();var y=0,t=setInterval(function(){y+=700;window.scrollTo(0,y);var d=document.documentElement,b=document.body,H=Math.max(d.scrollHeight,b?b.scrollHeight:0);
+if(y>=H||y>40000){clearInterval(t);unroll();setTimeout(function(){window.scrollTo(0,0);},800);}},180);})();`;
+function screenshotUrl(link, scripts = true) {
   return "https://api.microlink.io/?url=" + encodeURIComponent(link) +
     "&screenshot=true&screenshot.fullPage=true&screenshot.type=jpeg&meta=false&adblock=true" +
-    "&viewport.width=1366&viewport.height=900&viewport.deviceScaleFactor=1&waitForTimeout=2500&styles=" + encodeURIComponent(SHOT_CSS);
+    "&viewport.width=1366&viewport.height=900&viewport.deviceScaleFactor=1&waitForTimeout=" + (scripts ? 12000 : 4000) + "&styles=" + encodeURIComponent(SHOT_CSS) +
+    (scripts ? "&scripts=" + encodeURIComponent(SCROLL_JS) : "");
 }
-// Capture : Microlink (sans pubs, mais 5 captures gratuites par jour), sinon thum.io (pubs visibles).
-// Chaque capture est gardée en mémoire pour ne pas user le quota en rouvrant le partage.
-const shotCache = new Map();
-async function capturePage(link) {
-  if (shotCache.has(link)) return shotCache.get(link);
-  let img = null, why = "";
-  try {
-    const r = await fetch(screenshotUrl(link));
-    const j = await r.json().catch(() => ({}));
-    if (r.ok && j.status === "success" && j.data?.screenshot?.url) img = await loadImage(j.data.screenshot.url);
-    else why = r.status === 429 ? "quota" : (j.message || "HTTP " + r.status);
-  } catch (e) { why = e.message || String(e); }
-  if (!img) {
-    try { img = await loadImage("https://image.thum.io/get/width/1366/fullpage/noanimate/" + link); }
-    catch { throw new Error(why === "quota" ? "limite de 5 captures gratuites par jour atteinte, réessayez demain" : "service de capture injoignable"); }
+// Capture : plusieurs services web gratuits essayés l'un après l'autre (quand l'un a atteint sa limite, on passe au suivant).
+// Tous en version ordinateur (1366 px), page entière. Les trois premiers bloquent les pubs et les bandeaux de cookies ;
+// Google PageSpeed sert de dernier recours (gratuit, sans compte, mais il peut laisser des pubs).
+const PageShot = plugin("PageShot");
+const shotKeys = { s1: store.get("kiosque.key.screenshotone", ""), af: store.get("kiosque.key.apiflash", "") };
+const qs = o => Object.entries(o).map(([k, v]) => k + "=" + encodeURIComponent(v)).join("&");
+// Image d'un service : dans l'appli, téléchargée par le téléphone (pas de blocage CORS) puis affichée et partagée telle quelle.
+async function imageFromUrl(url) {
+  if (PageShot) {
+    const r = await PageShot.download({ url, timeout: 120000 });
+    const img = await loadImage(CAP.convertFileSrc ? CAP.convertFileSrc(r.path) : "file://" + r.path);
+    img.kFile = r.path;
+    return img;
   }
-  shotCache.set(link, img);
+  return loadImage(url);
+}
+async function getJson(url) {
+  const r = await fetch(url);
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 429) throw new Error("quota");
+  if (!r.ok) throw new Error(j.message || j.error?.message || "HTTP " + r.status);
+  return j;
+}
+const SHOT_SERVICES = [
+  { name: "Microlink", run: async link => {
+      // Sans clé, Microlink peut refuser le script de défilement (403) : on redemande alors sans lui.
+      const j = await getJson(screenshotUrl(link)).catch(e => { if (/403/.test(e.message)) return getJson(screenshotUrl(link, false)); throw e; });
+      if (j.status !== "success" || !j.data?.screenshot?.url) throw new Error(j.message || "pas d'image");
+      return imageFromUrl(j.data.screenshot.url);
+  } },
+  { name: "ScreenshotOne", key: "s1", run: link => imageFromUrl("https://api.screenshotone.com/take?" + qs({
+      access_key: shotKeys.s1, url: link, full_page: "true", full_page_scroll: "true", viewport_width: 1366, viewport_height: 900,
+      device_scale_factor: 1, format: "jpg", image_quality: 85, block_ads: "true", block_cookie_banners: "true",
+      block_banners_by_heuristics: "true", block_trackers: "true", styles: SHOT_CSS, scripts: SCROLL_JS, delay: 10, cache: "true",
+      // Sans bypass_csp, les sites protégés (franceinfo…) refusent le script et le style injectés : page bloquée à un écran.
+      bypass_csp: "true", full_page_scroll_delay: 600 })) },
+  { name: "ApiFlash", key: "af", run: link => {
+      const base = { access_key: shotKeys.af, url: link, full_page: "true", scroll_page: "true", width: 1366, height: 900, format: "jpeg",
+        quality: 85, delay: 10, no_ads: "true", no_cookie_banners: "true", no_tracking: "true" };
+      // Demande complète (script et style), puis, si ApiFlash la refuse (400), demande simple.
+      return imageFromUrl("https://api.apiflash.com/v1/urltoimage?" + qs({ ...base, js: SCROLL_JS, css: SHOT_CSS, wait_until: "network_idle" }))
+        .catch(e => { if (/400/.test(e.message)) return imageFromUrl("https://api.apiflash.com/v1/urltoimage?" + qs(base)); throw e; });
+  } },
+  { name: "Google PageSpeed", ads: true, run: async link => {
+      const j = await getJson("https://www.googleapis.com/pagespeedonline/v5/runPagespeed?" + qs({ url: link, strategy: "desktop", category: "performance" }));
+      const data = j.lighthouseResult?.fullPageScreenshot?.screenshot?.data;
+      if (!data) throw new Error("pas d'image");
+      return loadImage(data);
+  } },
+];
+// archive.ph (archive.today) affiche un CAPTCHA aux services de capture. Pour un lien d'archive, le téléphone retrouve
+// lui-même la dernière copie archivée de l'article (avec les cookies du lecteur) et récupère la capture pleine page
+// qu'archive.ph a faite en l'archivant (…/scr.png). Sinon, les services capturent l'article d'origine.
+const ARCHIVE_HOST = /(^|\.)archive\.(ph|today|is|li|vn|md|fo)$/i;
+const isArchive = url => { try { return ARCHIVE_HOST.test(new URL(url).hostname); } catch { return false; } };
+async function archiveShot(article, archiveUrl) {
+  if (!PageShot) throw new Error("archive.ph : seulement dans l'appli");
+  const host = new URL(archiveUrl).hostname;
+  const r = await PageShot.resolve({ url: "https://" + host + "/newest/" + article });
+  const m = String(r.url).match(/^https?:\/\/[^/]+\/([A-Za-z0-9]{4,8})\/?$/)
+    || String(r.head || "").match(/rel=["']?canonical["']?\s+href=["']?https?:\/\/archive\.[a-z]+\/([A-Za-z0-9]{4,8})["'\s>]/i);
+  if (!m) throw new Error(/captcha|one more step/i.test(r.head || "") ? "archive.ph demande un CAPTCHA : ouvrez une fois un article avec le lien Archive dans l'appli" : "pas de copie archivée de cet article (réponse " + r.status + ")");
+  const img = await imageFromUrl("https://" + host + "/" + m[1] + "/scr.png");
+  img.kService = "archive.ph"; img.kAds = false;
   return img;
+}
+// Chaque capture est gardée en mémoire pour ne pas user les quotas en rouvrant le partage.
+const shotCache = new Map();
+async function capturePage(link, onTry) {
+  if (shotCache.has(link)) return shotCache.get(link);
+  const errs = [];
+  for (const svc of SHOT_SERVICES) {
+    if (svc.key && !shotKeys[svc.key]) continue;
+    onTry?.(svc.name);
+    try {
+      const img = await svc.run(link);
+      img.kService = svc.name; img.kAds = !!svc.ads;
+      shotCache.set(link, img);
+      return img;
+    } catch (e) {
+      const m = e.message || String(e);
+      console.warn("Capture", svc.name, m);
+      const clean = m.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+      errs.push(svc.name + " : " + (m === "quota" || /\b429\b/.test(m) ? "limite atteinte" : clean.slice(0, 90)));
+    }
+  }
+  throw new Error(errs.join(" ; ") || "aucun service de capture");
 }
 let shareState = null;
 function shareText(i) { return i.title + " (" + (feedById(i.src)?.name || i.srcName || "") + ")\n" + i.link; }
@@ -1269,32 +1942,538 @@ function wrapText(ctx, text, maxW) {
   if (line) lines.push(line);
   return lines;
 }
-async function buildShareImage(i) {
-  const tr = shotMode === "tr";
-  const shot = await capturePage(tr ? translatedUrl(i.link) : i.link);
-  // Les téléphones limitent la hauteur d'une image : au-delà de 14 000 px, on réduit l'ensemble proportionnellement.
-  const MAXH = 14000;
-  const W = Math.round(Math.min(1366, 1366 * MAXH / (shot.naturalHeight * 1366 / shot.naturalWidth + 300))), pad = Math.round(40 * W / 1366);
-  const c = document.createElement("canvas");
+// ——— Capture « article seul » faite par l'appli ———
+// Le téléphone télécharge la page du lien, en extrait l'article (Readability, comme le mode lecture de Firefox) :
+// titre, chapeau, auteur, texte et images de l'article, sans menus, pubs, autres articles ni adresse. L'article est mis
+// en page sur 1000 px de large puis converti en image (html2canvas). Pas de service en ligne, donc ni quota ni CAPTCHA.
+const ART_W = 1000;
+function absUrl(u, base) { try { return new URL(u, base).href; } catch { return ""; } }
+async function fetchPage(url) {
+  const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept-Language": "fr-FR,fr;q=0.9" } });
+  if (!r.ok) throw new Error("page : HTTP " + r.status);
+  return r.text();
+}
+// Images de l'article : téléchargées par le téléphone pour pouvoir être dessinées dans l'image.
+async function localImage(src) {
+  if (!src || /^data:/.test(src)) return src;
+  if (!PageShot) return src;
+  const r = await PageShot.download({ url: src, timeout: 30000, data: true });
+  return r.data || (CAP.convertFileSrc ? CAP.convertFileSrc(r.path) : "file://" + r.path);
+}
+async function articleShot(i, url) {
+  if (!window.Readability || !window.html2canvas) throw new Error("module de lecture absent");
+  const html = await fetchPage(url);
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const base = doc.createElement("base"); base.href = url; doc.head.prepend(base);
+  // Images différées : la vraie adresse est souvent dans data-src / data-srcset.
+  doc.querySelectorAll("img").forEach(im => {
+    const lazy = im.getAttribute("data-src") || im.getAttribute("data-lazy-src") || im.getAttribute("data-original") || (im.getAttribute("data-srcset") || im.getAttribute("srcset") || "").split(",").pop().trim().split(/\s+/)[0];
+    if (lazy && (!im.getAttribute("src") || /^data:/.test(im.getAttribute("src")))) im.setAttribute("src", lazy);
+  });
+  doc.querySelectorAll("noscript").forEach(n => { if (/<img/i.test(n.textContent)) n.outerHTML = n.textContent; });
+  const art = new Readability(doc, { charThreshold: 300 }).parse();
+  if (!art || !art.content || (art.textContent || "").trim().length < 400) throw new Error("article introuvable dans la page");
+  const box = document.createElement("div");
+  box.style.cssText = `position:fixed;left:-20000px;top:0;width:${ART_W}px;background:#fff;color:#111;padding:48px 64px;box-sizing:border-box;font:21px/1.6 Georgia,'Times New Roman',serif;`;
+  const st = document.createElement("style");
+  st.textContent = `.kart *{max-width:100%!important;box-sizing:border-box}.kart img{display:block;height:auto!important;margin:18px auto;border-radius:4px}
+    .kart h1{font:700 40px/1.2 Georgia,serif;margin:0 0 14px}.kart .ksrc{font:600 15px/1.4 system-ui,sans-serif;color:#b3261e;letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px}
+    .kart .kby{font:15px/1.4 system-ui,sans-serif;color:#555;margin:0 0 22px}.kart .kexc{font-weight:700;margin:0 0 20px}
+    .kart a{color:inherit;text-decoration:none}.kart figure{margin:18px 0}.kart figcaption{font:14px/1.4 system-ui,sans-serif;color:#666}
+    .kart h2,.kart h3{font-family:Georgia,serif;line-height:1.25}.kart blockquote{border-left:4px solid #ddd;margin:16px 0;padding-left:16px;color:#333}
+    .kart iframe,.kart video,.kart button,.kart form,.kart svg{display:none!important}`;
+  box.className = "kart"; box.append(st);
+  const head = document.createElement("div");
+  head.innerHTML = `<div class="ksrc"></div><h1></h1><p class="kby"></p>`;
+  head.querySelector(".ksrc").textContent = art.siteName || feedById(i.src)?.name || i.srcName || "";
+  head.querySelector("h1").textContent = art.title || i.title;
+  head.querySelector(".kby").textContent = [art.byline, art.publishedTime ? new Date(art.publishedTime).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : ""].filter(Boolean).join(" · ");
+  box.append(head);
+  const body = document.createElement("div");
+  body.innerHTML = art.content;
+  // Le chapeau n'est pas toujours dans le contenu : on l'ajoute s'il manque.
+  if (art.excerpt && !body.textContent.includes(art.excerpt.slice(0, 60))) { const ex = document.createElement("p"); ex.className = "kexc"; ex.textContent = art.excerpt; body.prepend(ex); }
+  body.querySelectorAll("script,style,iframe,video,audio,button,form,input,svg,picture source").forEach(n => n.remove());
+  const imgs = [...body.querySelectorAll("img")];
+  await Promise.all(imgs.map(async (im, k) => {
+    const src = absUrl(im.getAttribute("src") || "", url);
+    im.removeAttribute("srcset"); im.removeAttribute("sizes"); im.removeAttribute("loading");
+    if (!src || k > 15) { im.remove(); return; }
+    try { im.src = await localImage(src); await im.decode().catch(() => {}); if (!im.naturalWidth || im.naturalWidth < 80) im.remove(); }
+    catch { im.remove(); }
+  }));
+  box.append(body);
+  document.body.append(box);
+  try {
+    const h = box.scrollHeight, scale = Math.min(1, 14000 / h);
+    const c = await html2canvas(box, { backgroundColor: "#ffffff", scale, useCORS: true, logging: false, windowWidth: ART_W, width: ART_W, height: h, x: 0, y: 0, scrollX: 0, scrollY: 0 });
+    c.kService = "article extrait par l'appli"; c.kAds = false;
+    return c;
+  } finally { box.remove(); }
+}
+
+// ——— Capture « page du site, article seul » ———
+// La page est rendue avec la présentation du site (ses feuilles de style, son en-tête, ses polices), mais on n'y garde
+// que l'article : colonnes, « À lire aussi », autres articles, commentaires, pubs, pied de page et scripts sont retirés.
+const JUNK_SEL = [
+  "script", "noscript", "iframe", "aside", "nav", "footer", "form", "dialog", "video", "audio", "object", "embed",
+  "[role=complementary]", "[role=navigation]", "[role=contentinfo]", "[aria-hidden=true]:not(img)",
+  ...["related", "recommend", "lire-aussi", "lireaussi", "read-more", "readmore", "a-lire", "alire", "voir-aussi", "most-read", "mostread", "plus-lus", "plus-vus",
+      "popular", "trending", "outbrain", "taboola", "newsletter", "comment", "share", "social", "sharing", "partage", "sidebar", "widget", "promo", "subscribe",
+      "abonnement", "paywall", "teaser", "carousel", "playlist", "breadcrumb", "tags", "author-bio", "next-article", "live-list", "cookie", "consent", "didomi",
+      "banner", "sticky", "player"].flatMap(k => [`[class*="${k}" i]`, `[id*="${k}" i]`]),
+].join(",");
+function pText(el) { let n = 0; el.querySelectorAll("p").forEach(p => { n += p.textContent.trim().length; }); return n; }
+function findArticle(doc) {
+  const cands = [...doc.querySelectorAll('[itemprop="articleBody"], article, main, [role=main], [class*="article" i], [id*="article" i], [class*="content" i], [class*="story" i], [class*="post" i]')];
+  let best = null, bestN = 0;
+  for (const c of cands) { const n = pText(c); if (n > bestN * 1.15 || (n >= bestN * 0.85 && best && best.contains(c))) { if (n > bestN) bestN = n; best = c; } }
+  if (!best || bestN < 400) return null;
+  // On remonte pour inclure le titre (h1) et le chapeau de l'article.
+  const h1 = doc.querySelector("h1");
+  let el = best;
+  if (h1 && !el.contains(h1)) { let a = el.parentElement; while (a && a !== doc.body && !a.contains(h1)) a = a.parentElement; if (a && a !== doc.body && pText(a) < bestN * 1.6) el = a; }
+  return el;
+}
+// Feuilles de style et polices du site, téléchargées par le téléphone et intégrées à la page : sans elles, le texte
+// est mis en page avec la police du site puis dessiné avec une autre (caractères qui se chevauchent).
+async function inlineStyles(doc, pageUrl) {
+  const fonts = new Map();
+  const localFont = u => {
+    if (!PageShot) return Promise.resolve(u);
+    if (!fonts.has(u)) fonts.set(u, PageShot.download({ url: u, accept: "", timeout: 30000, data: true })
+      .then(r => r.data || (CAP.convertFileSrc ? CAP.convertFileSrc(r.path) : u)).catch(() => u));
+    return fonts.get(u);
+  };
+  // Images des feuilles de style (logo en fond, icônes) : intégrées aussi, dans une certaine limite.
+  let nImg = 0;
+  const cssImage = u => /\.(png|jpe?g|gif|webp|svg|avif)([?#]|$)/i.test(u) && nImg++ < 40 ? localImage(u).catch(() => u) : Promise.resolve(u);
+  const URL_RE = /url\(\s*(["']?)([^"')]+)\1\s*\)/gi;
+  async function fixCss(css, cssUrl, depth = 0) {
+    for (const m of [...css.matchAll(/@import\s+(?:url\(\s*)?["']?([^"')\s;]+)["']?\s*\)?[^;]*;/gi)]) {
+      let inner = "";
+      if (depth < 2) { try { const u = absUrl(m[1], cssUrl); inner = await fixCss(await fetchPage(u), u, depth + 1); } catch {} }
+      css = css.replace(m[0], inner);
+    }
+    const map = {};
+    await Promise.all([...new Set([...css.matchAll(URL_RE)].map(m => m[2]))].map(async u => {
+      if (/^(data:|#)/i.test(u)) return;
+      const abs = absUrl(u, cssUrl);
+      map[u] = /\.(woff2?|ttf|otf|eot)([?#]|$)/i.test(abs) ? await localFont(abs) : await cssImage(abs);
+    }));
+    return css.replace(URL_RE, (all, q, u) => map[u] ? `url("${map[u]}")` : all);
+  }
+  doc.querySelectorAll('link[rel~="preload"], link[rel~="prefetch"], link[rel~="stylesheet"][media="print"]').forEach(l => l.remove());
+  await Promise.all([...doc.querySelectorAll('link[rel~="stylesheet"][href]')].map(async l => {
+    const u = absUrl(l.getAttribute("href"), pageUrl);
+    try {
+      const st = doc.createElement("style");
+      if (l.media && l.media !== "all") st.media = l.media;
+      st.textContent = await fixCss(await fetchPage(u), u);
+      l.replaceWith(st);
+    } catch { l.setAttribute("href", u); }
+  }));
+  await Promise.all([...doc.querySelectorAll("style")].map(async st => { if (/url\(|@import/i.test(st.textContent)) st.textContent = await fixCss(st.textContent, pageUrl); }));
+}
+// Page convertie en image par le navigateur (svg + foreignObject) : polices, espacements et césures identiques à
+// l'affichage, contrairement à html2canvas qui redessine le texte mot par mot (mots collés ou chevauchés).
+// Les images et polices sont déjà intégrées (data:), seule condition pour qu'elles apparaissent.
+async function nativeShot(fd, W, H, scale, x0 = 0, cw = W) {
+  // Photos allégées à leur taille d'affichage (×2) : une image svg trop lourde est refusée par certains téléphones.
+  for (const im of [...fd.images]) {
+    const src = im.getAttribute("src") || "";
+    if (!/^data:image\/(jpeg|webp)/.test(src) || src.length < 250000 || !im.naturalWidth) continue;
+    const w = Math.min(im.naturalWidth, Math.max(1, Math.round(im.getBoundingClientRect().width * 2)) || im.naturalWidth);
+    if (w >= im.naturalWidth * 0.9 && src.length < 1500000) continue;
+    try {
+      const k = document.createElement("canvas"); k.width = w; k.height = Math.round(im.naturalHeight * w / im.naturalWidth);
+      k.getContext("2d").drawImage(im, 0, 0, k.width, k.height);
+      im.setAttribute("src", k.toDataURL("image/jpeg", 0.85));
+    } catch {}
+  }
+  const html = new XMLSerializer().serializeToString(fd.documentElement);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><foreignObject x="0" y="0" width="${W}" height="${H}">${html}</foreignObject></svg>`;
+  const load = src => { const img = new Image(); return new Promise((res, rej) => { img.onload = () => res(img); img.onerror = () => rej(new Error("image svg refusée")); img.src = src; setTimeout(() => rej(new Error("délai dépassé")), 60000); }); };
+  const draw = img => {
+    const c = document.createElement("canvas");
+    c.width = Math.round(cw * scale); c.height = Math.round(H * scale);
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, -x0 * scale, 0, W * scale, H * scale);
+    ctx.getImageData(0, 0, 1, 1); // erreur si l'image est « protégée »
+    return c;
+  };
+  let c, blob = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+  try { const img = await load(blob); await new Promise(r => setTimeout(r, 300)); c = draw(img); }
+  catch (e) { const img = await load("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg)); await new Promise(r => setTimeout(r, 300)); c = draw(img); }
+  finally { URL.revokeObjectURL(blob); }
   const ctx = c.getContext("2d");
-  const k = W / 1366;
-  ctx.font = `700 ${34 * k}px Georgia, serif`;
-  const lines = wrapText(ctx, i.title, W - pad * 2).slice(0, 3);
-  const headH = (70 + lines.length * 44 + 20) * k, footH = 72 * k;
-  const shotH = Math.round(shot.naturalHeight * (W / shot.naturalWidth));
-  c.width = W; c.height = headH + shotH + footH;
-  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, c.height);
-  ctx.fillStyle = "#13233d"; ctx.fillRect(0, 0, W, headH);
-  ctx.fillStyle = "#ff5a3c"; ctx.font = `600 ${20 * k}px 'IBM Plex Mono', monospace`;
-  ctx.fillText(("KIOSQUE · " + (feedById(i.src)?.name || i.srcName || "") + (tr ? " · TRADUCTION " + langName() : "")).toUpperCase(), pad, 46 * k);
-  ctx.fillStyle = "#ffffff"; ctx.font = `700 ${34 * k}px Georgia, serif`;
-  lines.forEach((l, n) => ctx.fillText(l, pad, (96 + n * 44) * k));
-  ctx.drawImage(shot, 0, headH, W, shotH);
-  ctx.fillStyle = "#14202b"; ctx.fillRect(0, headH + shotH, W, footH);
-  ctx.fillStyle = "#ffffff"; ctx.font = `500 ${22 * k}px 'IBM Plex Mono', monospace`;
-  let url = i.link; while (ctx.measureText("Source : " + url).width > W - pad * 2 && url.length > 20) url = url.slice(0, -2);
-  ctx.fillText("Source : " + url + (url === i.link ? "" : "…"), pad, headH + shotH + 45 * k);
+  // Vérifie que l'image n'est pas vide.
+  const d = ctx.getImageData(0, 0, c.width, Math.min(c.height, 2000)).data;
+  let ink = 0;
+  for (let k = 0; k < d.length; k += 400) if (d[k] < 200 || d[k + 1] < 200 || d[k + 2] < 200) ink++;
+  if (ink < 20) throw new Error("image vide");
   return c;
+}
+// Autres articles et encarts dans l'article : blocs « Sur le même thème / À lire aussi », listes de liens, invitations.
+const EXTRA_RE = /^(sur le m[eê]me (th[eè]me|sujet)|[àa] lire aussi|lire aussi|voir aussi|[àa] voir aussi|dans la m[eê]me rubrique|les plus lus|les plus partag[ée]s|nos autres articles|articles? (li[ée]s|recommand[ée]s|associ[ée]s)|vous aimerez aussi|en lien avec cet article|à d[ée]couvrir|tous les articles|sur le m[eê]me th[eè]me)\b/i;
+const PROMO_RE = /(source pr[ée]f[ée]r[ée]e|privil[ée]gier l.affichage|recevez|abonnez-vous|t[ée]l[ée]chargez l.appli|suivez-nous|newsletter|partager (sur|l.article)|copier le lien|commentaires?)/i;
+function pruneExtras(doc, art) {
+  const h1 = doc.querySelector("h1");
+  const keep = e => e === art || e.contains(h1) || (h1 && h1.contains(e));
+  // Titre de rubrique d'autres articles : on retire le bloc qui le contient, et tout ce qui suit dans ce bloc.
+  art.querySelectorAll("h2,h3,h4,h5,p,span,div,strong").forEach(t => {
+    if (!t.isConnected || t.children.length > 2 || !EXTRA_RE.test(t.textContent.trim()) || t.textContent.trim().length > 60) return;
+    let b = t;
+    while (b.parentElement && b.parentElement !== art && !keep(b.parentElement) && pText(b.parentElement) - pText(b) < 200) b = b.parentElement;
+    if (keep(b)) return;
+    let n = b.nextElementSibling;
+    if (b.parentElement === art || b.parentElement && b.parentElement.children.length > 3) while (n && pText(n) < 200 && !keep(n)) { const x = n.nextElementSibling; if (n.querySelector("a")) n.remove(); n = x; }
+    b.remove();
+  });
+  // Petits encarts d'invitation (Google, appli, newsletter, partage).
+  art.querySelectorAll("div,p,section,aside,span,button,ul").forEach(e => {
+    if (!e.isConnected || keep(e)) return;
+    const t = e.textContent.trim();
+    if (t.length < 260 && PROMO_RE.test(t) && pText(e) < 260) e.remove();
+  });
+  // Blocs faits surtout de liens (listes d'autres articles), hors texte de l'article.
+  art.querySelectorAll("ul,ol,section,div,nav").forEach(e => {
+    if (!e.isConnected || keep(e)) return;
+    const links = e.querySelectorAll("a"); if (links.length < 2) return;
+    const t = e.textContent.replace(/\s+/g, " ").trim().length || 1;
+    let lt = 0; links.forEach(a => { lt += a.textContent.replace(/\s+/g, " ").trim().length; });
+    if (lt / t > 0.6 || e.querySelectorAll("a img, a picture").length >= 2) e.remove();
+  });
+}
+// Logo du site : image ou dessin (svg) marqué « logo », ou lien vers l'accueil, hors de l'article.
+function findLogo(doc, art) {
+  const sel = ['[class*="logo" i] img', '[class*="logo" i] svg', 'img[class*="logo" i]', 'svg[class*="logo" i]', 'img[alt*="logo" i]', 'img[src*="logo" i]', '[id*="logo" i] img', '[id*="logo" i] svg',
+    'a[rel~="home"] img', 'a[rel~="home"] svg', 'header a[href="/"] img', 'header a[href="/"] svg', '[class*="logo" i]'];
+  for (const q of sel) for (const e of doc.querySelectorAll(q)) if (!art.contains(e) && !e.closest("footer")) return e.matches("svg *") ? e.closest("svg") : e;
+  return null;
+}
+async function siteShot(i, url, opts = {}) {
+  if (!window.html2canvas && !opts.htmlOnly) throw new Error("module d'image absent");
+  const html = await fetchPage(url);
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  doc.querySelectorAll("img").forEach(im => {
+    const lazy = im.getAttribute("data-src") || im.getAttribute("data-lazy-src") || im.getAttribute("data-original") || (im.getAttribute("data-srcset") || im.getAttribute("srcset") || "").split(",").pop().trim().split(/\s+/)[0];
+    if (lazy && (!im.getAttribute("src") || /^data:/.test(im.getAttribute("src")))) im.setAttribute("src", lazy);
+  });
+  const art = findArticle(doc);
+  if (!art) throw new Error("article introuvable dans la page");
+  const logo = findLogo(doc, art), logoCopy = logo && logo.cloneNode(true);
+  // On garde le chemin body → article, plus l'en-tête du site (logo) ; tout le reste de la page est retiré.
+  for (let n = art; n && n !== doc.body; n = n.parentElement)
+    for (const sib of [...n.parentElement.children]) {
+      if (sib === n) continue;
+      const keepHeader = (sib.matches("header,[role=banner]") || /(^|[-_ ])(header|masthead)([-_ ]|$)/i.test(sib.className + " " + sib.id) || (logo && sib.contains(logo))) && pText(sib) < 300;
+      if (!keepHeader && !/^(STYLE|LINK|SCRIPT)$/.test(sib.tagName)) sib.remove();
+    }
+  doc.querySelectorAll("nav, [role=navigation], form, header [class*=menu i], header [class*=search i]").forEach(n => { if (!n.contains(art) && !(logo && n.contains(logo))) n.remove(); });
+  const keptHeader = [...doc.body.querySelectorAll("header,[role=banner],[class*=header i],[id*=header i]")].some(h => !art.contains(h) && h.textContent.trim());
+  // Logo du site : s'il n'est plus dans la page (ou n'y était pas), bandeau ajouté en haut avec le logo.
+  if (logo ? !doc.body.contains(logo) : !keptHeader) {
+    const bar = doc.createElement("div");
+    bar.style.cssText = "display:flex;align-items:center;gap:16px;padding:16px 40px;background:#fff;border-bottom:1px solid #e3e3e3;position:static";
+    if (logoCopy) { logoCopy.style.cssText += ";height:56px;width:auto;max-width:420px;display:block"; bar.append(logoCopy); }
+    else {
+      const ic = [...doc.querySelectorAll('link[rel~="apple-touch-icon"], link[rel~="icon"]')].map(l => l.getAttribute("href")).find(Boolean);
+      const name = (doc.querySelector('meta[property="og:site_name"]') || {}).content || new URL(url).hostname.replace(/^www\./, "");
+      if (ic) { const im = doc.createElement("img"); im.setAttribute("src", absUrl(ic, url)); im.style.cssText = "height:48px;width:auto;max-width:300px;border-radius:8px"; bar.append(im); }
+      const t = doc.createElement("span"); t.textContent = name; t.style.cssText = "font:700 30px Arial,sans-serif;color:#222"; bar.append(t);
+    }
+    doc.body.prepend(bar);
+  }
+  art.querySelectorAll(JUNK_SEL).forEach(n => { if (!n.contains(doc.querySelector("h1")) && n !== art) n.remove(); });
+  pruneExtras(doc, art);
+  try { doc.querySelectorAll(READER_CSS.replace(/\{[\s\S]*$/, "")).forEach(n => n.remove()); } catch {}
+  doc.querySelectorAll("script").forEach(n => n.remove());
+  // Blocs « Publicité » repérés par leur étiquette.
+  doc.querySelectorAll("div,span,p,small").forEach(e => { if (e.children.length <= 1 && /^(publicit.|advertisement|annonce|sponsoris.|pub)$/i.test(e.textContent.trim())) (e.parentElement && e.parentElement.textContent.trim().length < 60 ? e.parentElement : e).remove(); });
+  if (opts.htmlOnly) return { doc, art };
+  // Images : téléchargées par le téléphone (sinon l'image finale ne pourrait pas être créée).
+  const imgs = [...doc.querySelectorAll("img")];
+  await Promise.all(imgs.map(async (im, k) => {
+    const src = absUrl(im.getAttribute("src") || "", url);
+    im.removeAttribute("srcset"); im.removeAttribute("sizes"); im.removeAttribute("loading");
+    if (!src || k > 25) { im.remove(); return; }
+    try { im.setAttribute("src", await localImage(src)); } catch { im.remove(); }
+  }));
+  doc.querySelectorAll("picture source").forEach(n => n.remove());
+  await Promise.all([...doc.querySelectorAll('[style*="url("]')].slice(0, 20).map(async e => {
+    const m = /url\(\s*["']?([^"')]+)["']?\s*\)/.exec(e.getAttribute("style"));
+    if (m && !/^data:/.test(m[1])) try { const d = await localImage(absUrl(m[1], url)); e.setAttribute("style", e.getAttribute("style").replace(m[0], `url("${d}")`)); } catch {}
+  }));
+  await inlineStyles(doc, url);
+  const base = doc.createElement("base"); base.href = url; doc.head.prepend(base);
+  const fix = doc.createElement("style");
+  fix.textContent = "html,body{height:auto!important;min-height:0!important;overflow:visible!important;-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}*{animation:none!important;transition:none!important}" +
+    "[style*='position: fixed'],[style*='position:fixed']{position:static!important}img{opacity:1!important;visibility:visible!important}";
+  doc.head.append(fix);
+  const frame = document.createElement("iframe");
+  frame.style.cssText = "position:fixed;left:-20000px;top:0;width:1366px;height:900px;border:0;background:#fff";
+  document.body.append(frame);
+  let fontStyle = null, nativeErr = "";
+  try {
+    await new Promise(res => { frame.onload = res; frame.srcdoc = "<!doctype html>" + doc.documentElement.outerHTML; setTimeout(res, 15000); });
+    const fd = frame.contentDocument;
+    // Laisse le temps aux feuilles de style, polices et images de se charger.
+    await Promise.race([Promise.all([...fd.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; }))), new Promise(r => setTimeout(r, 8000))]);
+    // Toutes les polices du site chargées avant de dessiner (sinon chevauchements).
+    try { fd.fonts.forEach(f => { if (f.status === "unloaded") f.load().catch(() => {}); }); } catch {}
+    try { await Promise.race([fd.fonts.ready, new Promise(r => setTimeout(r, 6000))]); } catch {}
+    await new Promise(r => setTimeout(r, 400));
+    // Menus et bandeaux fixes remis dans le flux ; blocs vides de pub refermés.
+    fd.querySelectorAll("body *").forEach(e => { const p = getComputedStyle(e).position; if (p === "fixed" || p === "sticky") e.style.setProperty("position", "static", "important"); });
+    const h = Math.max(fd.documentElement.scrollHeight, fd.body.scrollHeight);
+    frame.style.height = h + "px";
+    await new Promise(r => setTimeout(r, 300));
+    if (pText(fd.body) < 300) throw new Error("article vide après nettoyage");
+    // Lisibilité : paragraphes collés (sans marge) espacés, intertitres en gras, interlignes trop serrés aérés.
+    const fart = fd.querySelector("h1") ? (fd.querySelector("h1").closest("article,main,[role=main]") || fd.body) : fd.body;
+    fart.querySelectorAll("p").forEach(p => {
+      const cs = fd.defaultView.getComputedStyle(p), fs = parseFloat(cs.fontSize) || 16, lh = parseFloat(cs.lineHeight);
+      if (!parseFloat(cs.marginBottom) && !parseFloat(cs.marginTop) && p.nextElementSibling) p.style.setProperty("margin-bottom", "0.9em", "important");
+      if (lh && lh / fs < 1.3) p.style.setProperty("line-height", "1.55", "important");
+      if (parseFloat(cs.letterSpacing) < 0) p.style.setProperty("letter-spacing", "normal", "important");
+    });
+    fart.querySelectorAll("h2,h3,h4").forEach(h => {
+      const cs = fd.defaultView.getComputedStyle(h);
+      if (parseInt(cs.fontWeight) < 600) h.style.setProperty("font-weight", "700", "important");
+      if (!parseFloat(cs.marginTop)) h.style.setProperty("margin", "1.2em 0 0.5em", "important");
+    });
+    // Blocs gris : fonds gris clair passés en blanc, cases vides (emplacements de pub, vidéos retirées) supprimées.
+    fd.querySelectorAll("html, body, body *").forEach(e => {
+      if (!e.isConnected) return;
+      const cs = fd.defaultView.getComputedStyle(e), m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?/.exec(cs.backgroundColor);
+      if (m && (m[4] === undefined || +m[4] > 0.1)) {
+        const [r, g, b] = [+m[1], +m[2], +m[3]];
+        if (Math.max(r, g, b) - Math.min(r, g, b) < 18 && Math.min(r, g, b) >= 170 && Math.max(r, g, b) < 255) e.style.setProperty("background-color", "#fff", "important");
+      }
+      if (e !== fd.body && e.offsetHeight > 40 && !e.textContent.trim() && !e.querySelector("img,svg,picture,canvas") && !/^(IMG|SVG|HR|BR|PICTURE|CANVAS)$/i.test(e.tagName) && !(cs.backgroundImage && cs.backgroundImage !== "none")) e.remove();
+    });
+    await new Promise(r => setTimeout(r, 200));
+    // Cadrage : seulement la largeur utile (logo, titre, article), marges blanches de la page retirées.
+    let x0 = 1366, x1 = 0;
+    for (const e of [fd.querySelector("h1"), findArticle(fd), findLogo(fd, fd.createElement("i"))]) {
+      if (!e) continue; const r = e.getBoundingClientRect(); if (r.width < 40) continue;
+      x0 = Math.min(x0, r.left); x1 = Math.max(x1, r.right);
+    }
+    if (x1 - x0 < 500) { const m = (x0 + x1) / 2 || 683; x0 = m - 250; x1 = m + 250; }
+    x0 = Math.max(0, Math.floor(x0 - 24)); x1 = Math.min(1366, Math.ceil(x1 + 24));
+    const W = x1 - x0;
+    const H = Math.max(fd.documentElement.scrollHeight, fd.body.scrollHeight);
+    // Image en haute définition (×2), dans les limites d'un canvas Android.
+    const scale = Math.max(0.5, Math.min(2, 16000 / H, Math.sqrt(40e6 / (W * H))));
+    // 1) Image dessinée par le navigateur lui-même (texte exactement comme à l'écran) ; 2) sinon html2canvas.
+    try { const c = await nativeShot(fd, 1366, H, scale, x0, W); c.kService = "page du site, article seul"; c.kAds = false; return c; }
+    catch (e) { console.warn("rendu natif", e); nativeErr = String(e && e.message || e).slice(0, 80); }
+    // Rendu de secours : html2canvas mesure le texte avec la police du site mais l'écrit avec celle de l'appli
+    // quand elles diffèrent (mots collés). On passe donc tout le texte en polices du téléphone, identiques des deux côtés.
+    fd.querySelectorAll("body, body *").forEach(e => {
+      const cs = fd.defaultView.getComputedStyle(e), fam = cs.fontFamily.toLowerCase();
+      const serif = /serif/.test(fam) && !/sans/.test(fam) || /georgia|times|merriweather|lora|playfair|garamond|tiempos|charter|noto serif|source serif|pt serif|domine|libre baskerville/.test(fam);
+      e.style.setProperty("font-family", serif ? "'Noto Serif', Georgia, serif" : "Roboto, 'Noto Sans', Arial, sans-serif", "important");
+      e.style.setProperty("letter-spacing", "normal", "important");
+      e.style.setProperty("word-spacing", "normal", "important");
+      e.style.setProperty("font-kerning", "none", "important");
+      e.style.setProperty("font-variant-ligatures", "none", "important");
+    });
+    await new Promise(r => setTimeout(r, 300));
+    const H2 = Math.max(fd.documentElement.scrollHeight, fd.body.scrollHeight);
+    frame.style.height = H2 + "px";
+    await new Promise(r => setTimeout(r, 200));
+    // html2canvas dessine le texte sur un canvas de l'appli : les polices du site doivent y être
+    // déclarées aussi, sinon le texte est écrit avec une autre police aux positions de la vraie (chevauchements).
+    const faces = [];
+    for (const sh of fd.styleSheets) { try { for (const r of sh.cssRules) if (r.type === 5) faces.push(r.cssText); } catch {} }
+    fontStyle = document.createElement("style"); fontStyle.textContent = faces.join("\n"); document.head.append(fontStyle);
+    try { document.fonts.forEach(f => { if (f.status === "unloaded") f.load().catch(() => {}); }); } catch {}
+    try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 6000))]); } catch {}
+    const c = await html2canvas(fd.documentElement, { backgroundColor: "#ffffff", scale: Math.min(scale, 16000 / H2), useCORS: true, logging: false, width: W, height: H2, windowWidth: 1366, windowHeight: H2, x: x0, y: 0, scrollX: 0, scrollY: 0 });
+    c.kService = "page du site, article seul, rendu de secours"; c.kAds = false; c.kWhy = nativeErr;
+    return c;
+  } finally { frame.remove(); if (fontStyle) fontStyle.remove(); }
+}
+
+// Vraie copie d'écran, version ordinateur : la page nettoyée (logo, titre, article, sans pubs ni autres articles)
+// est envoyée à ScreenshotOne, dont le navigateur la dessine en entier. Le texte ne peut pas y être collé.
+async function serviceCleanShot(i, url) {
+  if (!shotKeys.s1) throw new Error("pas de clé ScreenshotOne (Réglages → Appli)");
+  if (!PageShot) throw new Error("hors appli");
+  const { doc, art } = await siteShot(i, url, { htmlOnly: true });
+  // Page tronquée : les blocs autour de l'article (hauteur d'écran fixe, défilement intérieur) sont dépliés.
+  for (let n = art; n; n = n.parentElement) ["height:auto", "max-height:none", "min-height:0", "overflow:visible", "position:static"].forEach(d => { const [k, v] = d.split(":"); n.style.setProperty(k, v, "important"); });
+  art.querySelectorAll("*").forEach(n => { if (/(overflow|max-height|height)\s*:/i.test(n.getAttribute("style") || "")) { n.style.setProperty("max-height", "none", "important"); n.style.setProperty("overflow", "visible", "important"); } });
+  doc.querySelectorAll("img").forEach(im => { im.removeAttribute("loading"); im.removeAttribute("srcset"); im.removeAttribute("sizes"); const src = im.getAttribute("src"); if (src) im.setAttribute("src", absUrl(src, url)); });
+  doc.querySelectorAll("picture source").forEach(n => n.remove());
+  doc.querySelectorAll('link[rel~="preload"], link[rel~="prefetch"]').forEach(l => l.remove());
+  doc.querySelectorAll("link[href]").forEach(l => l.setAttribute("href", absUrl(l.getAttribute("href"), url)));
+  const base = doc.createElement("base"); base.href = url; doc.head.prepend(base);
+  const fix = doc.createElement("style");
+  fix.textContent = "html,body{height:auto!important;min-height:0!important;overflow:visible!important}*{animation:none!important;transition:none!important}" +
+    "[style*='position: fixed'],[style*='position:fixed'],header,[class*=sticky i]{position:static!important}img{opacity:1!important;visibility:visible!important}" +
+    "body,html{background:#fff!important}article p,main p{margin-bottom:.9em}article h2,article h3,main h2,main h3{font-weight:700}";
+  doc.head.append(fix);
+  const html = "<!doctype html>" + doc.documentElement.outerHTML;
+  // Hauteur réelle de l'article : la page nettoyée est affichée en version ordinateur (1366 px) dans l'appli,
+  // défilée jusqu'en bas pour charger images et polices, puis mesurée.
+  let artH = 0;
+  const frame = document.createElement("iframe");
+  frame.style.cssText = "position:fixed;left:-20000px;top:0;width:1366px;height:900px;border:0;background:#fff";
+  document.body.append(frame);
+  try {
+    await new Promise(res => { frame.onload = res; frame.srcdoc = html; setTimeout(res, 15000); });
+    const fd = frame.contentDocument, fw = frame.contentWindow, hh = () => Math.max(fd.documentElement.scrollHeight, fd.body ? fd.body.scrollHeight : 0);
+    for (let y = 0; y < hh() && y < 40000; y += 700) { fw.scrollTo(0, y); await new Promise(r => setTimeout(r, 60)); }
+    await Promise.race([Promise.all([...fd.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; }))), new Promise(r => setTimeout(r, 6000))]);
+    try { await Promise.race([fd.fonts.ready, new Promise(r => setTimeout(r, 4000))]); } catch {}
+    fw.scrollTo(0, 0); artH = hh();
+  } catch (e) { console.warn("mesure", e); } finally { frame.remove(); }
+  if (artH < 1500) { const chars = (art.textContent || "").replace(/\s+/g, " ").length; artH = Math.max(artH, 900 + chars * 0.42 + art.querySelectorAll("img").length * 650); }
+  artH = Math.round(Math.min(artH, 20000));
+  const dsf = artH > 9000 ? 1 : 1.5;
+  // Le service fait défiler la page écran par écran avant de copier (chaque écran chargé, puis assemblé).
+  const SCROLL = "(function(){var y=0,t=setInterval(function(){y+=600;window.scrollTo(0,y);if(y>document.documentElement.scrollHeight){clearInterval(t);window.scrollTo(0,0);}},80);})();";
+  const take = async extra => {
+    const body = JSON.stringify({ access_key: shotKeys.s1, html, viewport_width: 1366, device_scale_factor: dsf, full_page: true, full_page_scroll: true,
+      full_page_max_height: 30000, scripts: SCROLL, format: "jpg", image_quality: 90, block_ads: true, block_cookie_banners: true, block_trackers: true,
+      delay: 3, timeout: 90, bypass_csp: true, ...extra });
+    const r = await PageShot.download({ url: "https://api.screenshotone.com/take", body, contentType: "application/json", timeout: 150000 });
+    return loadImage(CAP.convertFileSrc ? CAP.convertFileSrc(r.path) : "file://" + r.path);
+  };
+  let img = await take({ viewport_height: 1000, full_page_algorithm: "by_sections", full_page_scroll_by: 800, full_page_scroll_delay: 500 });
+  // Image plus courte que l'article : 2e essai avec une fenêtre aussi haute que l'article mesuré.
+  if (img.naturalHeight / dsf < artH * 0.92) {
+    try { const img2 = await take({ viewport_height: Math.min(artH + 300, 16000 / dsf | 0) }); if (img2.naturalHeight > img.naturalHeight) img = img2; } catch (e) { console.warn("2e essai", e); }
+  }
+  const got = Math.round(img.naturalHeight / dsf);
+  // Marges blanches de part et d'autre retirées (on garde la largeur utile de la page).
+  const k = document.createElement("canvas"); k.width = img.naturalWidth; k.height = img.naturalHeight;
+  const kc = k.getContext("2d", { willReadFrequently: true }); kc.drawImage(img, 0, 0);
+  const rows = Math.min(k.height, 6000), d = kc.getImageData(0, 0, k.width, rows).data;
+  const ink = x => { for (let y = 0; y < rows; y += 7) { const o = (y * k.width + x) * 4; if (d[o] < 235 || d[o + 1] < 235 || d[o + 2] < 235) return true; } return false; };
+  let a = 0, b = k.width - 1;
+  while (a < b && !ink(a)) a += 4;
+  while (b > a && !ink(b)) b -= 4;
+  a = Math.max(0, a - 48); b = Math.min(k.width, b + 48);
+  // Blanc en bas (fenêtre plus haute que la page) retiré.
+  let bot = k.height;
+  for (let y0 = k.height - 40; y0 > 400; y0 -= 40) {
+    const row = kc.getImageData(a, y0, b - a, 40).data; let any = false;
+    for (let o = 0; o < row.length; o += 24) if (row[o] < 235 || row[o + 1] < 235 || row[o + 2] < 235) { any = true; break; }
+    if (any) { bot = Math.min(k.height, y0 + 80); break; }
+  }
+  const W = b - a, H = bot, sc = Math.min(1, 16000 / H);
+  const c = document.createElement("canvas"); c.width = Math.round(W * sc); c.height = Math.round(H * sc);
+  c.getContext("2d").drawImage(k, a, 0, W, H, 0, 0, c.width, c.height);
+  c.kService = "page du site, article seul, copie d'écran ScreenshotOne"; c.kAds = false;
+  c.kNote = "article " + artH + " px, copié " + Math.min(got, artH) + " px" + (got < artH * 0.92 ? " : incomplet" : "");
+  return c;
+}
+// Copie d'écran de la page du lien, sans nettoyage : ScreenshotOne ouvre la page en version ordinateur,
+// la fait défiler jusqu'en bas (images chargées, cadres de la hauteur de l'écran dépliés), puis la copie en entier.
+// Seuls les pubs et les bandeaux de cookies sont bloqués par le service.
+async function directShot(link) {
+  if (!PageShot) throw new Error("hors appli");
+  const take = async extra => {
+    const body = JSON.stringify({ access_key: shotKeys.s1, url: link, viewport_width: 1366, viewport_height: 900, device_scale_factor: 1.5,
+      full_page: true, full_page_scroll: true, full_page_scroll_delay: 500, full_page_max_height: 30000, scripts: SCROLL_JS,
+      format: "jpg", image_quality: 90, block_ads: true, block_cookie_banners: true, block_trackers: true,
+      delay: 8, timeout: 90, bypass_csp: true, ...extra });
+    const r = await PageShot.download({ url: "https://api.screenshotone.com/take", body, contentType: "application/json", timeout: 150000 });
+    return loadImage(CAP.convertFileSrc ? CAP.convertFileSrc(r.path) : "file://" + r.path);
+  };
+  let img = await take({}), how = "";
+  // Un seul écran reçu : 2e essai où le service défile et copie écran par écran, puis assemble.
+  if (img.naturalHeight / 1.5 < 1300) {
+    try { const img2 = await take({ full_page_algorithm: "by_sections", full_page_scroll_by: 800 }); if (img2.naturalHeight > img.naturalHeight) { img = img2; how = ", écran par écran"; } } catch (e) { console.warn("2e essai", e); }
+  }
+  // Hauteur limitée sur téléphone : au-delà de 16 000 px, l'image est réduite (jamais coupée).
+  const sc = Math.min(1, 16000 / img.naturalHeight), c = document.createElement("canvas");
+  c.width = Math.round(img.naturalWidth * sc); c.height = Math.round(img.naturalHeight * sc);
+  const ctx = c.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
+  c.kService = "ScreenshotOne, page telle quelle" + how; c.kAds = false;
+  return c;
+}
+// Copie d'écran faite par le téléphone : la page du lien s'ouvre en version ordinateur (1366 px) par-dessus l'appli,
+// l'appli la fait défiler écran par écran sous tes yeux et copie chaque écran affiché, puis les recolle bout à bout.
+// Aucun nettoyage ni blocage.
+const CONSENT_CSS = '[id*="didomi"],[class*="didomi"],[id^="sp_message"],[class*="sp_message"],#onetrust-consent-sdk,[id*="cookie-banner"],[class*="cookie-banner"],[class*="consent-banner"],.fc-consent-root{display:none!important}html,body{overflow:visible!important}';
+// Cadres de la hauteur de l'écran dépliés, pour que la page défile normalement (sans défilement automatique ici).
+const UNROLL_JS = SCROLL_JS.slice(0, SCROLL_JS.indexOf("unroll();var y")) + "unroll();setTimeout(unroll,1500);})();";
+// Script ajouté à la page avant la copie, sans rien déplacer :
+// 1) colonne de droite (« Les plus lus », « À la Une », aside) rendue invisible, sa place reste vide ;
+// 2) window.__kend() donne le bas du dernier paragraphe de l'article, pour arrêter la copie à cet endroit.
+const PAGE_JS = `(function(){
+function side(){var W=innerWidth,L=document.querySelectorAll("aside,h2,h3,h4,h5,div,span,p");
+for(var i=0;i<L.length;i++){var e=L[i],n=null;
+if(e.tagName==="ASIDE")n=e;else{if(e.children.length>2)continue;var t=(e.textContent||"").trim();if(!/^(les plus lus|[àa] la une)$/i.test(t))continue;n=e;
+while(n.parentElement&&n.parentElement!==document.body&&n.parentElement.getBoundingClientRect().width<W*0.45)n=n.parentElement;}
+var r=n.getBoundingClientRect();if(r.left>W*0.45&&r.width<W*0.45)n.style.setProperty("visibility","hidden","important");}}
+window.__kend=function(){var W=innerWidth,h=document.querySelector("h1"),hb=h?h.getBoundingClientRect().bottom:-1e9,ps=document.querySelectorAll("article p, main p, p"),best=null;
+for(var i=0;i<ps.length;i++){var p=ps[i],t=(p.textContent||"").trim();if(t.length<80)continue;var r=p.getBoundingClientRect();
+if(!r.height||r.width<W*0.2||r.left>W*0.5||r.top<hb)continue;if(p.closest("footer,aside,nav,header"))continue;if(best===null||r.bottom>best)best=r.bottom;}
+return best===null?-1:best;};
+function unwall(){var L=document.querySelectorAll("body *");for(var i=0;i<L.length;i++){var e=L[i],s=getComputedStyle(e);if(s.position!=="fixed"&&s.position!=="sticky")continue;
+var r=e.getBoundingClientRect();if(r.top>120||r.height>160)continue;var t=(e.textContent||"").replace(/\s+/g," ");if(/unwall/i.test(t)&&/reader|pin|share/i.test(t))e.style.setProperty("display","none","important");}
+var U=document.querySelectorAll('[id*="unwall" i],[class*="unwall" i]');for(var j=0;j<U.length;j++){var r2=U[j].getBoundingClientRect();if(r2.top<120&&r2.height<160)U[j].style.setProperty("display","none","important");}}
+try{side();unwall();}catch(e){}setTimeout(function(){try{side();unwall();}catch(e){}},1500);})();`;
+// Bandes vides à gauche et à droite (fond blanc du site, ou noir hors de la page) retirées de l'image.
+// Une colonne est « vide » si, sur presque toutes les lignes, elle a la couleur du bord de cette ligne
+// (les bandeaux pleine largeur comme le pied de page comptent donc comme vides).
+function cropSides(img) {
+  const w = img.naturalWidth, h = img.naturalHeight, k = document.createElement("canvas");
+  k.width = w; k.height = h;
+  const kc = k.getContext("2d", { willReadFrequently: true }); kc.drawImage(img, 0, 0);
+  const N = Math.min(240, h), rows = [];
+  for (let i = 0; i < N; i++) rows.push(kc.getImageData(0, Math.floor((h - 1) * (i + 0.5) / N), w, 1).data);
+  const same = (d, x, y) => Math.abs(d[x] - d[y]) + Math.abs(d[x + 1] - d[y + 1]) + Math.abs(d[x + 2] - d[y + 2]) < 30;
+  const blank = (x, edge) => { let n = 0; for (const d of rows) if (same(d, x * 4, edge * 4)) n++; return n >= N * 0.97; };
+  // Haut de l'image : lignes uniformes sombres (bande au-dessus de la page, bandeau Unwall) retirées.
+  let top = 0;
+  const rowDark = y => { const d = kc.getImageData(0, y, w, 1).data; let n = 0; for (let x = 0; x < w; x += 8) if (d[x * 4] + d[x * 4 + 1] + d[x * 4 + 2] < 90) n++; return n >= (w / 8) * 0.97; };
+  while (top < h * 0.15 && rowDark(top)) top += 2;
+  let a = 0, b = w - 1;
+  while (a < w * 0.4 && blank(a, 0)) a++;
+  while (b > w * 0.6 && blank(b, w - 1)) b--;
+  const pad = Math.round(w * 0.012);
+  a = Math.max(0, a - pad); b = Math.min(w - 1, b + pad);
+  if (a < 8 && b > w - 9 && top < 4) return k;
+  const c = document.createElement("canvas"); c.width = b - a + 1; c.height = h - top;
+  c.getContext("2d").drawImage(k, a, top, c.width, c.height, 0, 0, c.width, c.height);
+  return c;
+}
+async function localShot(link) {
+  if (!PageShot) throw new Error("hors appli");
+  // La page s'affiche telle quelle ; l'appli la fait défiler comme au doigt et copie l'écran jusqu'à la fin de l'article.
+  // En paysage, l'écran est ~2,3 fois plus large : la page ordinateur est copiée avec plus de pixels, le texte est net.
+  // Si le téléphone manque de mémoire en paysage, nouvel essai en portrait.
+  let r;
+  try { r = await PageShot.capture({ url: link, width: 1366, maxHeight: 30000, wait: 0, css: "", js: PAGE_JS, manual: true, landscape: true }); }
+  catch (e) {
+    if (/annul/.test(String(e && e.message || e))) throw e;
+    r = await PageShot.capture({ url: link, width: 1366, maxHeight: 30000, wait: 0, css: "", js: PAGE_JS, manual: true });
+  }
+  const img = cropSides(await loadImage(CAP.convertFileSrc ? CAP.convertFileSrc(r.path) : "file://" + r.path));
+  const sc = Math.min(1, 16000 / img.height), c = document.createElement("canvas");
+  c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+  const ctx = c.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
+  c.kService = "téléphone, page telle quelle" + (r.mode ? ", " + r.mode : ""); c.kAds = false;
+  return c;
+}
+let svcErr = "";
+async function buildShareImage(i) {
+  svcErr = "";
+  // Lien de l'onglet Liens : page capturée telle quelle (aucun nettoyage par l'appli), version ordinateur, en entier.
+  const target0 = shotLink(i);
+  // 1) Copie d'écran faite par le téléphone (version ordinateur, page entière) ; 2) ScreenshotOne en secours.
+  let localErr = "";
+  try { $("#sh-image-sub").textContent = "Copie d'écran de la page par le téléphone…"; return await localShot(target0); }
+  catch (e) { console.warn("copie locale", e); localErr = String(e && e.message || e).slice(0, 90); if (/annul/.test(localErr)) throw new Error("copie annulée"); }
+  throw new Error("copie d'écran impossible : " + localErr);
 }
 document.querySelectorAll(".shotmode button").forEach(b => b.onclick = () => {
   if (!shareState || shotMode === b.dataset.mode) return;
@@ -1303,28 +2482,38 @@ document.querySelectorAll(".shotmode button").forEach(b => b.onclick = () => {
 });
 async function openShare(i) {
   const dlg = $("#sharedlg");
+  // Liste des liens de l'onglet Liens : le choix est retenu pour les prochains partages.
+  const sel = $("#shotlink"), cur = shotTarget(i);
+  sel.innerHTML = "";
+  for (const l of links) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.append(o); }
+  sel.value = (links.find(l => l.id === shotPick) || links.find(l => l.name === cur.name && buildUrl(l.tpl, i) === cur.url) || links[0]).id;
+  sel.onchange = () => { shotPick = sel.value; store.set("kiosque.shotlink", shotPick); openShare(i); };
   document.querySelectorAll(".shotmode button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === shotMode)));
   $("#shotmode-tr").textContent = "Traduction (" + langName().toLowerCase() + ")";
   shareState = { item: i, canvas: null, mode: shotMode };
   $("#sharetitle").textContent = i.title;
   const box = $("#shot");
-  box.innerHTML = '<p class="wait">Capture de la page entière' + (shotMode === "tr" ? " traduite" : "") + ', version ordinateur, en cours (10 à 20 secondes)…</p>';
+  box.innerHTML = '<p class="wait">Capture de la page entière (' + shotTarget(i).name.replace(/[<&]/g, "") + '), version ordinateur, en cours (20 à 60 secondes)…</p>';
   $("#sh-image").disabled = true;
   $("#sh-image-sub").textContent = "Capture de la page en cours…";
   if (!dlg.open) dlg.showModal();
   try {
-    const canvas = await buildShareImage(i);
+    const res = await buildShareImage(i);
     if (shareState?.item !== i || shareState.mode !== shotMode) return;
-    shareState.canvas = canvas;
     const prev = document.createElement("img");
     prev.alt = "Aperçu de la capture partagée";
-    prev.src = canvas.toDataURL("image/jpeg", 0.85);
+    if (res.file) { shareState.file = res.file; prev.src = res.src; }
+    else { shareState.canvas = res; prev.src = res.toDataURL("image/jpeg", 0.85); }
     box.innerHTML = ""; box.append(prev);
+    // Touchez l'aperçu pour voir l'image entière en plein écran et la faire défiler.
+    prev.onclick = () => { $("#sv-img").src = prev.src; $("#shotview").showModal(); $("#shotview .sv-scroll").scrollTop = 0; };
+    prev.onload = () => { const sub = $("#sh-image-sub"); if (shareState?.item === i && !/ px$/.test(sub.textContent)) sub.textContent += " · " + prev.naturalWidth + " × " + prev.naturalHeight + " px"; };
     $("#sh-image").disabled = false;
-    $("#sh-image-sub").textContent = "Capture de la page entière, avec l'adresse d'origine";
+    $("#sh-image-sub").textContent = /^page du site/.test(res.kService || "") ? "Article seul, présentation du site (" + shotTarget(i).name + "), sans pubs ni autres articles" + (/ScreenshotOne/.test(res.kService) ? " · vraie copie d'écran" + (res.kNote ? " (" + res.kNote + ")" : "") : "") + (/secours/.test(res.kService) ? " · rendu de secours" + (res.kWhy ? " (" + res.kWhy + ")" : "") : "") + (svcErr && !/ScreenshotOne/.test(res.kService) ? " · copie d'écran impossible : " + svcErr : "") : res.kService === "article extrait par l'appli" ? "Article seul, mode lecture (" + shotTarget(i).name + "), sans pubs ni autres articles" : (res.note ? res.note[0].toUpperCase() + res.note.slice(1) : shotTarget(i).name) + ", page entière, version ordinateur (" + (res.service || res.kService) + ")" + ((res.ads || res.kAds) ? " : pubs possibles, les autres services sont à leur limite" : ", sans pubs");
   } catch (e) {
     if (shareState?.item !== i) return;
-    box.innerHTML = '<p class="wait">La capture n\'a pas pu être faite (' + (e.message || e) + '). Vous pouvez quand même partager le lien.</p>';
+    box.innerHTML = '<p class="wait"></p>';
+    box.firstChild.textContent = "La capture n'a pas pu être faite (" + String(e.message || e).replace(/<[^>]*>/g, " ") + "). Vous pouvez quand même partager le lien.";
     $("#sh-image-sub").textContent = "Capture indisponible pour cet article";
   }
 }
@@ -1334,8 +2523,9 @@ async function shareNative(withImage) {
   try {
     if (NATIVE && PLUGINS.Share) {
       const opts = { title: i.title, text: txt, dialogTitle: "Partager l'article" };
-      if (c && PLUGINS.Filesystem) {
-        const data = c.toDataURL("image/jpeg", 0.88).split(",")[1];
+      if (withImage && shareState.file) opts.files = ["file://" + shareState.file];
+      else if (c && PLUGINS.Filesystem) {
+        const data = c.toDataURL("image/jpeg", 0.95).split(",")[1];
         const f = await PLUGINS.Filesystem.writeFile({ path: "kiosque-partage.jpg", data, directory: "CACHE" });
         opts.files = [f.uri];
       }
@@ -1343,12 +2533,12 @@ async function shareNative(withImage) {
       return;
     }
     if (c && navigator.canShare) {
-      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.88));
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
       const file = new File([blob], "kiosque-partage.jpg", { type: "image/jpeg" });
       if (navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: i.title, text: txt }); return; }
     }
     if (navigator.share) { await navigator.share({ title: i.title, text: txt, url: i.link }); return; }
-    if (c) { const a = document.createElement("a"); a.href = c.toDataURL("image/jpeg", 0.88); a.download = "kiosque-partage.jpg"; a.click(); }
+    if (c) { const a = document.createElement("a"); a.href = c.toDataURL("image/jpeg", 0.92); a.download = "kiosque-partage.jpg"; a.click(); }
   } catch (e) { /* partage annulé */ }
 }
 $("#sh-image").onclick = () => shareNative(true);
@@ -1359,30 +2549,343 @@ $("#sh-copy").onclick = async () => {
   catch { $("#sh-copy").textContent = "Copie impossible"; }
   setTimeout(() => { $("#sh-copy").textContent = "Copier le lien"; }, 2000);
 };
-$("#sh-close").onclick = () => { shareState = null; shotMode = "orig"; $("#sharedlg").close(); };
+$("#sv-close").onclick = () => $("#shotview").close();
+$("#rub-x").onclick = () => $("#rubdlg").close();
+$("#sh-close").onclick = $("#sh-x").onclick = () => { shareState = null; shotMode = "tr"; $("#sharedlg").close(); };
+// Bouton retour du téléphone : ferme aussi le menu.
+$("#sharedlg").addEventListener("close", () => { shareState = null; shotMode = "tr"; });
 if (!NATIVE) $("#sharehint").textContent = "Les boutons ouvrent le menu de partage de l'appareil quand il existe. Sinon, l'image est téléchargée.";
+
+// ——— Sport : sous-rubriques par sport, équipes suivies, résultats et classements ———
+// Calendriers et scores de fixturedownload.com (gratuit, sans clé), lus par le téléphone et gardés 30 minutes.
+// Les classements sont calculés à partir des scores.
+const FD = "https://fixturedownload.com/feed/json/";
+const SPORTS = [
+  { id: "foot", name: "Football", icon: "⚽", re: /\b(football|footballeurs?|ligue [12]\b|ligue des champions|ligue europa|ligue conference|ligue des nations|premier league|liga\b|serie a\b|bundesliga|coupe de france|mercato|psg|om\b|olympique (de marseille|lyonnais)|real madrid|fc barcelone|barca|manchester (city|united)|liverpool|arsenal|chelsea|bayern|juventus|inter milan|deschamps|mbappe|dembele|buteur|uefa|fifa|ballon d.or|equipe de france de football)\b/ },
+  { id: "rugby", name: "Rugby", icon: "🏉", re: /\b(rugby|top 14|pro d2|six nations|6 nations|xv de france|champions cup|stade toulousain|ovalie|antoine dupont|galthie)\b/ },
+  { id: "tennis", name: "Tennis", icon: "🎾", re: /\b(tennis|roland-garros|roland garros|wimbledon|us open|open d.australie|atp|wta|masters 1000|coupe davis|billie jean king cup|sinner|alcaraz|djokovic|swiatek|sabalenka|gauff)\b/ },
+  { id: "velo", name: "Cyclisme", icon: "🚴", re: /\b(cyclisme|cyclistes?|tour de france|giro|vuelta|peloton|pogacar|vingegaard|evenepoel|paris-roubaix|milan-san remo|maillot jaune|contre-la-montre)\b/ },
+  { id: "basket", name: "Basket", icon: "🏀", re: /\b(basket\w*|nba|euroligue|euroleague|wembanyama|betclic elite)\b/ },
+  { id: "f1", name: "Formule 1", icon: "🏎️", re: /\b(formule 1|f1|grand prix de|verstappen|hamilton|leclerc|norris|piastri|gasly|ocon|scuderia|ecurie|motogp)\b/ },
+];
+const SPORT_SUBS = [{ id: "all", name: "Tout le sport", icon: "🏅" }, ...SPORTS, { id: "autre", name: "Autres sports", icon: "🏟️" }];
+function sportOf(i) {
+  if (i._sp && i._spk === i.title) return i._sp;
+  const t = norm(i.title + " " + i.summary + " " + (i.cats || []).join(" "));
+  const l = SPORTS.filter(x => x.re.test(t)).map(x => x.id);
+  i._spk = i.title; i._sp = l.length ? l : ["autre"];
+  return i._sp;
+}
+const COUNTRIES = [
+  { id: "fr", name: "🇫🇷 France" }, { id: "eu", name: "🇪🇺 Coupes d'Europe" }, { id: "int", name: "🌐 Sélections nationales" },
+  { id: "en", name: "🏴 Angleterre" }, { id: "es", name: "🇪🇸 Espagne" }, { id: "it", name: "🇮🇹 Italie" }, { id: "de", name: "🇩🇪 Allemagne" }, { id: "us", name: "🇺🇸 États-Unis" },
+];
+// table : classement calculé (pts : points par victoire / nul / défaite).
+const COMPS = [
+  { id: "ligue-1", name: "Ligue 1", sport: "foot", country: "fr", table: [3, 1, 0] },
+  { id: "champions-league", name: "Ligue des champions", short: "C1", sport: "foot", country: "eu", euro: true },
+  { id: "europa-league", name: "Ligue Europa", short: "C3", sport: "foot", country: "eu", euro: true },
+  { id: "conference-league", name: "Ligue Conférence", short: "C4", sport: "foot", country: "eu", euro: true },
+  { id: "nations-league", name: "Ligue des nations", sport: "foot", country: "int" },
+  { id: "6-nations", name: "Tournoi des Six Nations", sport: "rugby", country: "int", year: 1, table: [4, 2, 0], note: "points sans bonus" },
+  { id: "epl", name: "Premier League", sport: "foot", country: "en", table: [3, 1, 0] },
+  { id: "la-liga", name: "Liga", sport: "foot", country: "es", table: [3, 1, 0] },
+  { id: "serie-a", name: "Serie A", sport: "foot", country: "it", table: [3, 1, 0] },
+  { id: "bundesliga", name: "Bundesliga", sport: "foot", country: "de", table: [3, 1, 0] },
+  { id: "nba", name: "NBA", sport: "basket", country: "us", table: "pct" },
+];
+const sportById = id => SPORTS.find(x => x.id === id) || { icon: "🏅", name: id };
+const FR_RE = /\b(paris|psg|marseille|lyon|monaco|lille|lens|rennes|nice|brest|strasbourg|nantes|toulouse|auxerre|angers|havre|lorient|metz|troyes|le mans|reims|montpellier|saint-etienne|paris fc)\b/;
+// Mêmes noms canoniques que la tâche de fond (runners/check.js) : la Ligue 1 dit « Olympique de Marseille », les coupes « Marseille ».
+const CANON = { "olympique de marseille": "marseille", "paris saint-germain": "paris saint-germain", "paris": "paris saint-germain", "psg": "paris saint-germain", "olympique lyonnais": "lyon", "losc lille": "lille", "rc lens": "lens", "stade rennais fc": "rennes", "stade rennais": "rennes", "as monaco": "monaco", "ogc nice": "nice", "stade brestois 29": "brest", "rc strasbourg alsace": "strasbourg", "fc nantes": "nantes", "toulouse fc": "toulouse", "aj auxerre": "auxerre", "angers sco": "angers", "havre athletic club": "le havre", "le havre ac": "le havre", "fc lorient": "lorient", "fc metz": "metz", "estac troyes": "troyes" };
+const teamKey = n => { const k = norm(n).replace(/\s+/g, " ").trim(); return CANON[k] || k; };
+const SHORT = { marseille: "OM", "paris saint-germain": "PSG" };
+const shortTeam = n => SHORT[teamKey(n)] || n;
+let sportPrefs = (() => {
+  const old = store.get("kiosque.foot", null);
+  const d = { sports: SPORTS.map(x => x.id), countries: ["fr", "eu", "int"], teams: ["marseille"], euroFr: true, notify: true, tab: "teams", comp: "ligue-1", ctab: "ligue-1" };
+  if (old && !store.get("kiosque.sport", null)) { d.teams = old.om === false ? [] : ["marseille"]; d.euroFr = old.euro !== false; d.notify = old.om !== false || old.euro !== false; }
+  return { ...d, ...store.get("kiosque.sport", {}) };
+})();
+const saveSport = () => store.set("kiosque.sport", sportPrefs);
+const footSeason = () => { const d = new Date(); return d.getMonth() >= 6 ? d.getFullYear() : d.getFullYear() - 1; };
+const compUrl = c => FD + c.id + "-" + (footSeason() + (c.year || 0));
+const activeComps = () => COMPS.filter(c => sportPrefs.sports.includes(c.sport) && sportPrefs.countries.includes(c.country));
+const fdTime = s => { const m = /^(\d{4})-(\d\d)-(\d\d)[T ](\d\d):(\d\d)/.exec(s || ""); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : NaN; };
+async function getJson(url) {
+  const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 20000);
+  try { const r = await fetch(url, { signal: ctrl.signal }); if (!r.ok) throw new Error("HTTP " + r.status); return JSON.parse(await r.text()); }
+  finally { clearTimeout(t); }
+}
+const played = r => r.HomeTeamScore !== null && r.HomeTeamScore !== undefined && r.HomeTeamScore !== "";
+// Données gardées en version compacte : [heure, domicile, extérieur, score dom., score ext., journée]
+let sportData = store.get("kiosque.sportdata", {}), sportBusy = null, sportErr = "";
+function compact(list) {
+  return list.map(r => [fdTime(r.DateUtc), r.HomeTeam || "", r.AwayTeam || "", played(r) ? +r.HomeTeamScore : null, played(r) ? +r.AwayTeamScore : null, r.RoundNumber || ""])
+    .filter(r => r[1] && r[2] && !isNaN(r[0])).sort((a, b) => a[0] - b[0]);
+}
+async function loadSport(force) {
+  if (sportBusy) return sportBusy;
+  const comps = activeComps().filter(c => force || !sportData[c.id] || Date.now() - sportData[c.id].at > 30 * 60e3);
+  if (!comps.length) return;
+  sportBusy = (async () => {
+    const res = await Promise.allSettled(comps.map(c => getJson(compUrl(c))));
+    res.forEach((r, k) => { if (r.status === "fulfilled" && Array.isArray(r.value)) sportData[comps[k].id] = { at: Date.now(), rows: compact(r.value) }; });
+    const fails = res.filter(x => x.status === "rejected");
+    sportErr = fails.length ? fails.length + " source(s) injoignable(s) : " + String(fails[0].reason?.message || fails[0].reason) : "";
+    if (fails.length < res.length) { store.set("kiosque.sportdata", sportData); syncNotif(); }
+  })().catch(e => { sportErr = String(e.message || e); }).finally(() => {
+    sportBusy = null;
+    if (view === "sport" || view === "une") render();
+    if ($("#spdlg").open) renderSportTeams();
+  });
+  return sportBusy;
+}
+function readTable(rows, pts) {
+  const t = {};
+  const row = n => t[n] || (t[n] = { name: n, j: 0, g: 0, n: 0, p: 0, bp: 0, bc: 0, pts: 0 });
+  for (const r of rows) {
+    const h = row(r[1]), a = row(r[2]);
+    if (r[3] === null) continue;
+    const x = r[3], y = r[4];
+    h.j++; a.j++; h.bp += x; h.bc += y; a.bp += y; a.bc += x;
+    if (x > y) { h.g++; a.p++; } else if (x < y) { a.g++; h.p++; } else { h.n++; a.n++; }
+  }
+  const out = Object.values(t);
+  if (pts === "pct") { out.forEach(r => { r.pts = r.j ? (r.g / r.j).toFixed(3).replace(/^0/, "") : "—"; r.pct = r.j ? r.g / r.j : 0; }); out.sort((a, b) => b.pct - a.pct || b.g - a.g || a.name.localeCompare(b.name)); }
+  else { out.forEach(r => { r.pts = r.g * pts[0] + r.n * pts[1] + r.p * pts[2]; }); out.sort((a, b) => b.pts - a.pts || (b.bp - b.bc) - (a.bp - a.bc) || b.bp - a.bp || a.name.localeCompare(b.name)); }
+  out.forEach((r, k) => { r.rank = k + 1; const d = r.bp - r.bc; r.diff = (d > 0 ? "+" : "") + d; });
+  return out;
+}
+const isMine = n => sportPrefs.teams.includes(teamKey(n));
+// Tous les matchs connus, avec leur compétition ; mine = équipe suivie (ou club français en coupe d'Europe si l'option est cochée).
+function allMatches() {
+  const out = [], now = Date.now();
+  for (const c of activeComps()) for (const r of sportData[c.id]?.rows || []) {
+    const mine = isMine(r[1]) || isMine(r[2]), fr = !!c.euro && sportPrefs.euroFr && FR_RE.test(norm(r[1] + " " + r[2]));
+    out.push({ c, t: r[0], home: r[1], away: r[2], hs: r[3], as: r[4], round: r[5], mine, fr,
+      state: r[3] !== null ? "post" : r[0] <= now && now - r[0] < 2.5 * 3600e3 ? "in" : r[0] <= now ? "post" : "pre" });
+  }
+  return out.sort((a, b) => a.t - b.t);
+}
+const followed = m => m.mine || m.fr;
+const hm = d => String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+function dayLabel(d) {
+  const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+  const k = Math.round((new Date(d).setHours(0, 0, 0, 0) - t0) / 864e5);
+  if (k === 0) return "Aujourd'hui"; if (k === 1) return "Demain"; if (k === -1) return "Hier";
+  return d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+}
+function matchRow(m, withComp) {
+  const d = new Date(m.t), row = document.createElement("div"); row.className = "m" + (m.mine ? " mine" : "");
+  const w = document.createElement("div"); w.className = "when"; w.innerHTML = "<span></span><br><span></span>";
+  w.children[0].textContent = dayLabel(d); w.children[2].textContent = m.state === "in" ? "en cours" : hm(d);
+  const who = document.createElement("div"); who.className = "who";
+  who.textContent = shortTeam(m.home) + " – " + shortTeam(m.away);
+  if (withComp !== false) { const sm = document.createElement("small"); sm.textContent = sportById(m.c.sport).icon + " " + m.c.name + (m.round ? " · J" + m.round : ""); who.append(sm); }
+  const sc = document.createElement("div"); sc.className = "sc";
+  sc.textContent = m.state === "pre" || m.hs === null ? "" : m.hs + " – " + m.as;
+  row.append(w, who, sc);
+  return row;
+}
+function renderFootbar() {
+  const bar = $("#footbar"); bar.innerHTML = "";
+  const show = view === "une" || view === "sport";
+  const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+  const soon = show ? allMatches().filter(m => followed(m) && m.state !== "post" && m.t >= +t0 && m.t < +t0 + 2 * 864e5) : [];
+  bar.hidden = !soon.length;
+  for (const m of soon.slice(0, 4)) {
+    const d = new Date(m.t), x = document.createElement("div"), b = document.createElement("b");
+    b.textContent = sportById(m.c.sport).icon + " " + (m.state === "in" ? "En ce moment" : dayLabel(d) + " " + hm(d)) + " · " + shortTeam(m.home) + " – " + shortTeam(m.away);
+    x.append(b, document.createTextNode(" · " + m.c.name + (m.state === "in" && m.hs !== null ? " · " + m.hs + "-" + m.as : "")));
+    bar.append(x);
+  }
+}
+function renderSportSub(sub, items) {
+  const sp = items.filter(i => inRubric(i, "sport"));
+  for (const s of SPORT_SUBS) {
+    if (s.id !== "all" && s.id !== "autre" && !sportPrefs.sports.includes(s.id)) continue;
+    const c = s.id === "all" ? sp.length : sp.filter(i => sportOf(i).includes(s.id)).length;
+    if (sp.length && !c && s.id !== sportSub && s.id !== "all") continue;
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = s.icon + " " + s.name;
+    b.setAttribute("aria-current", String(s.id === sportSub));
+    const n = document.createElement("span"); n.className = "n"; n.textContent = sp.length ? c : "";
+    b.append(n);
+    b.onclick = () => { sportSub = s.id; shown = PAGE; renderAll(); window.scrollTo({ top: 0 }); };
+    sub.append(b);
+  }
+}
+// Panneau Sport : Mes équipes, Résultats, Classement, ⚙ Mes sports.
+function renderFoot() {
+  renderFootbar();
+  const box = $("#foot");
+  box.hidden = view !== "sport";
+  if (box.hidden) return;
+  loadSport(false);
+  box.innerHTML = "";
+  const tabs = document.createElement("div"); tabs.className = "ftabs";
+  for (const [id, name] of [["teams", "Mes équipes"], ["res", "Résultats"], ["table", "Classement"], ["prefs", "⚙ Mes sports"]]) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = name;
+    b.setAttribute("aria-current", String(sportPrefs.tab === id));
+    b.onclick = () => { if (id === "prefs") { openSportPrefs(); return; } sportPrefs.tab = id; saveSport(); renderFoot(); };
+    tabs.append(b);
+  }
+  box.append(tabs);
+  const head = t => { const h = document.createElement("h4"); h.textContent = t; box.append(h); };
+  const empty = t => { const p = document.createElement("p"); p.className = "note small"; p.textContent = t; box.append(p); };
+  const comps = activeComps(), loaded = comps.filter(c => sportData[c.id]);
+  const chips = (list, key) => {
+    if (!list.length) return null;
+    if (!list.some(c => c.id === sportPrefs[key])) sportPrefs[key] = list[0].id;
+    const bar = document.createElement("div"); bar.className = "chips";
+    for (const c of list) {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = sportById(c.sport).icon + " " + c.name;
+      b.setAttribute("aria-current", String(c.id === sportPrefs[key]));
+      b.onclick = () => { sportPrefs[key] = c.id; saveSport(); renderFoot(); };
+      bar.append(b);
+    }
+    box.append(bar);
+    return list.find(c => c.id === sportPrefs[key]);
+  };
+  if (!comps.length) empty("Aucune compétition choisie. Touchez « ⚙ Mes sports » pour choisir vos sports et vos pays.");
+  else if (!loaded.length) empty(sportBusy || !sportErr ? "Chargement des résultats…" : "Résultats indisponibles : " + sportErr);
+  else if (sportPrefs.tab === "table") {
+    const c = chips(comps.filter(x => x.table), "ctab");
+    if (!c) empty("Pas de classement pour les compétitions choisies.");
+    else if (!sportData[c.id]) empty("Chargement…");
+    else {
+      const tb = readTable(sportData[c.id].rows, c.table), pct = c.table === "pct";
+      const t = document.createElement("table");
+      t.innerHTML = '<thead><tr><th>#</th><th class="c">' + (c.sport === "foot" ? "Club" : "Équipe") + '</th><th>' + (pct ? "%" : "Pts") + '</th><th>J</th><th>' + (pct ? "V-D" : "G-N-P") + '</th><th>Diff</th></tr></thead><tbody></tbody>';
+      for (const r of tb) {
+        const tr = document.createElement("tr"); if (isMine(r.name)) tr.className = "om";
+        const cells = [r.rank, shortTeam(r.name), r.pts, r.j, pct ? r.g + "-" + r.p : r.g + "-" + r.n + "-" + r.p, r.diff];
+        cells.forEach((v, k) => { const td = document.createElement("td"); if (k === 1) td.className = "c"; td.textContent = v; tr.append(td); });
+        t.tBodies[0].append(tr);
+      }
+      box.append(t);
+      if (c.note) empty("Classement calculé d'après les scores (" + c.note + ").");
+    }
+  } else if (sportPrefs.tab === "res") {
+    const c = chips(comps, "comp");
+    const list = allMatches().filter(m => m.c.id === c.id);
+    if (!sportData[c.id]) empty("Chargement…");
+    else {
+      const past = list.filter(m => m.state === "post" && m.hs !== null).slice(-12).reverse(), next = list.filter(m => m.state !== "post").slice(0, 12);
+      head("Derniers résultats");
+      if (past.length) past.forEach(m => box.append(matchRow(m, false))); else empty("Aucun résultat pour l'instant.");
+      head("À venir");
+      if (next.length) next.forEach(m => box.append(matchRow(m, false))); else empty("Aucun match prévu pour l'instant.");
+    }
+  } else {
+    const mine = allMatches().filter(followed);
+    if (!sportPrefs.teams.length && !sportPrefs.euroFr) empty("Vous ne suivez aucune équipe. Touchez « ⚙ Mes sports » pour en choisir.");
+    else {
+      const names = sportPrefs.teams.map(k => SHORT[k] || teamLabel(k));
+      if (names.length || sportPrefs.euroFr) empty("Suivies : " + [...names, ...(sportPrefs.euroFr ? ["clubs français en coupe d'Europe"] : [])].join(", "));
+      const next = mine.filter(m => m.state !== "post"), past = mine.filter(m => m.state === "post" && m.hs !== null).reverse();
+      head("Prochains matchs");
+      if (next.length) next.slice(0, 8).forEach(m => box.append(matchRow(m))); else empty("Aucun match prévu pour l'instant dans les compétitions choisies.");
+      head("Derniers résultats");
+      if (past.length) past.slice(0, 8).forEach(m => box.append(matchRow(m))); else empty("Aucun résultat pour l'instant.");
+    }
+  }
+  const at = Math.max(0, ...loaded.map(c => sportData[c.id].at));
+  const n = document.createElement("p"); n.className = "fnote";
+  n.textContent = at ? "Données fixturedownload.com · mises à jour à " + hm(new Date(at)) + (sportErr ? " · " + sportErr : "") : "";
+  const r = document.createElement("button"); r.type = "button"; r.textContent = "Actualiser";
+  r.onclick = () => { r.textContent = "…"; loadSport(true); };
+  n.append(r); box.append(n);
+}
+// Nom affiché d'une équipe suivie (le nom long de la Ligue 1 si on le connaît).
+function teamLabel(k) {
+  for (const c of COMPS) for (const r of sportData[c.id]?.rows || []) for (const n of [r[1], r[2]]) if (teamKey(n) === k) return n;
+  return k.replace(/\b\w/g, x => x.toUpperCase());
+}
+// Dialogue « Mes sports » : sports, pays, équipes suivies.
+function chip(box, label, checked, onchange) {
+  const l = document.createElement("label"), c = document.createElement("input");
+  c.type = "checkbox"; c.checked = checked; c.onchange = () => onchange(c.checked);
+  l.append(c, document.createTextNode(label)); box.append(l);
+  return l;
+}
+function sportChanged() { saveSport(); loadSport(false); syncNotif(); renderAll(); }
+function openSportPrefs() {
+  const sb = $("#sp-sports"); sb.innerHTML = "";
+  for (const x of SPORTS) chip(sb, x.icon + " " + x.name, sportPrefs.sports.includes(x.id), on => { sportPrefs.sports = on ? [...sportPrefs.sports, x.id] : sportPrefs.sports.filter(y => y !== x.id); sportChanged(); renderSportTeams(); });
+  const cb = $("#sp-countries"); cb.innerHTML = "";
+  for (const x of COUNTRIES) chip(cb, x.name, sportPrefs.countries.includes(x.id), on => { sportPrefs.countries = on ? [...sportPrefs.countries, x.id] : sportPrefs.countries.filter(y => y !== x.id); sportChanged(); renderSportTeams(); });
+  $("#sp-eurofr").checked = sportPrefs.euroFr;
+  $("#sp-search").value = "";
+  renderSportTeams();
+  loadSport(false);
+  if (!$("#spdlg").open) $("#spdlg").showModal();
+}
+function renderSportTeams() {
+  const mine = $("#sp-mine"); mine.innerHTML = "";
+  for (const k of sportPrefs.teams) chip(mine, SHORT[k] ? SHORT[k] + " (" + teamLabel(k) + ")" : teamLabel(k), true, () => { sportPrefs.teams = sportPrefs.teams.filter(y => y !== k); sportChanged(); renderSportTeams(); });
+  if (!sportPrefs.teams.length) { const s = document.createElement("span"); s.className = "none"; s.textContent = "Aucune équipe suivie pour l'instant."; mine.append(s); }
+  const q = norm($("#sp-search").value.trim()), box = $("#sp-teams"); box.innerHTML = "";
+  const seen = new Set(sportPrefs.teams);
+  // Équipes des championnats d'abord (noms longs), puis celles des coupes.
+  const comps = activeComps().sort((a, b) => !!a.euro - !!b.euro);
+  let any = false;
+  for (const c of comps) {
+    const rows = sportData[c.id]?.rows;
+    if (!rows) continue;
+    const names = [...new Set(rows.flatMap(r => [r[1], r[2]]))].filter(n => !seen.has(teamKey(n)) && (!q || norm(n).includes(q))).sort((a, b) => a.localeCompare(b, "fr"));
+    if (!names.length) continue;
+    names.forEach(n => seen.add(teamKey(n)));
+    any = true;
+    const h = document.createElement("h4"); h.textContent = sportById(c.sport).icon + " " + c.name; box.append(h);
+    const g = document.createElement("div"); g.className = "chipsel";
+    for (const n of names) chip(g, n, false, () => { sportPrefs.teams = [...sportPrefs.teams, teamKey(n)]; sportChanged(); renderSportTeams(); });
+    box.append(g);
+  }
+  if (!any) { const p = document.createElement("p"); p.className = "note"; p.textContent = sportBusy ? "Chargement des équipes…" : q ? "Aucune équipe trouvée." : activeComps().length ? "Liste des équipes indisponible pour l'instant." : "Choisissez au moins un pays ou une compétition."; box.append(p); }
+}
+$("#sp-search").oninput = () => renderSportTeams();
+$("#sp-eurofr").onchange = () => { sportPrefs.euroFr = $("#sp-eurofr").checked; sportChanged(); };
+$("#sp-x").onclick = $("#sp-done").onclick = () => $("#spdlg").close();
 
 // ——— Alertes (notifications) ———
 // L'appli transmet ses réglages à la tâche de fond (www/runners/check.js), qui envoie les notifications.
 const RUNNER = "fr.kiosque.check";
-const BgRunner = plugin("BackgroundRunner");
-const NOTIF_RULES = [
+// Le module natif s'appelle « CapacitorBackgroundRunner » (sous l'ancien nom, Android répondait « unable to find plugin »).
+const BgRunner = plugin("CapacitorBackgroundRunner");
+const notifRules = () => [
   { id: "fibre", name: "Infra fibre", re: TEL_FIBRE.source },
   { id: "regl", name: "Réglementaire télécoms", re: TEL_REGL.source },
   { id: "telecoms", name: "Toute l'actualité télécoms", re: RUBRICS[0].re.source },
-  ...RUBRICS.slice(1).map(r => ({ id: r.id, name: r.name, re: r.re.source })),
+  ...RUBRICS.slice(1).map(r => ({ id: r.id, name: rubricName(r.id), re: r.re.source })),
   { id: "moi", name: "Pour moi (d'après vos enregistrés)", get re() { const t = profile().top; return t.length ? "\\b(" + t.join("|") + ")\\b" : "(?!)"; } },
   { id: "all", name: "Tous les articles", re: "." },
 ];
 let notif = store.get("kiosque.notif", { enabled: false, rules: ["fibre", "regl"], keywords: "", quiet: true });
 function notifConfig() {
-  const rules = NOTIF_RULES.filter(r => notif.rules.includes(r.id)).map(r => ({ name: r.name, re: r.re }));
+  const rules = notifRules().filter(r => notif.rules.includes(r.id)).map(r => ({ name: r.name, re: r.re }));
   const kws = notif.keywords.split(",").map(k => norm(k.trim())).filter(Boolean).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   if (kws.length) rules.unshift({ name: "Mot-clé suivi", re: "\\b(" + kws.join("|") + ")" });
   return {
     enabled: notif.enabled, quiet: notif.quiet, rules, adRe: hideAds ? AD_RE.source : "",
     feeds: activeFeeds().map(f => ({ name: f.name, urls: [f.url, ...(f.more || [])] })),
+    matches: sportPrefs.notify ? { teams: sportPrefs.teams, euroFr: sportPrefs.euroFr, comps: activeComps().map(c => ({ id: c.id, name: c.name, url: compUrl(c), euro: !!c.euro, icon: sportById(c.sport).icon })) } : {},
   };
+}
+// Autorisation « Notifications » d'Android (obligatoire depuis Android 13) : demandée si elle manque.
+async function askNotifPerm() {
+  if (!BgRunner) return true;
+  try {
+    let p = await BgRunner.checkPermissions({});
+    if (p && p.notifications === "granted") return true;
+    p = await BgRunner.requestPermissions({ apis: ["notifications"] });
+    if (p && p.notifications && p.notifications !== "granted") {
+      $("#notif-status").textContent = "Notifications refusées par Android : Réglages du téléphone → Applications → Kiosque → Notifications → Autoriser.";
+      return false;
+    }
+  } catch (e) { console.warn("autorisation notifications", e); }
+  return true;
 }
 async function syncNotif() {
   store.set("kiosque.notif", notif);
@@ -1396,7 +2899,7 @@ function renderNotifPane() {
   $("#notif-kw").value = notif.keywords;
   const box = $("#notif-rules");
   box.innerHTML = "";
-  for (const r of NOTIF_RULES) {
+  for (const r of notifRules()) {
     const l = document.createElement("label");
     const c = document.createElement("input");
     c.type = "checkbox"; c.id = "nr-" + r.id; c.checked = notif.rules.includes(r.id);
@@ -1404,30 +2907,83 @@ function renderNotifPane() {
     l.append(c, document.createTextNode(r.name));
     box.append(l);
   }
-  $("#notif-status").textContent = NATIVE ? "" : "Les alertes fonctionnent dans l'appli Android.";
+  $("#notif-status").textContent = NATIVE ? "" : "Les notifications fonctionnent dans l'appli Android.";
+  $("#sp-notify").checked = sportPrefs.notify;
+  const tn = sportPrefs.teams.map(k => SHORT[k] || teamLabel(k));
+  $("#sp-notify-sub").textContent = "La veille vers 18 h et le jour du match vers 9 h. " + (tn.length || sportPrefs.euroFr ? "Suivies : " + [...tn, ...(sportPrefs.euroFr ? ["clubs français en coupe d'Europe"] : [])].join(", ") + "." : "Aucune équipe suivie.") + " À changer dans Sport → ⚙ Mes sports.";
+  refreshNotifDiag();
 }
+$("#sp-notify").onchange = async () => {
+  sportPrefs.notify = $("#sp-notify").checked; saveSport();
+  if (sportPrefs.notify) await askNotifPerm();
+  syncNotif();
+};
+// Diagnostic : dernière vérification faite en arrière-plan, et économie de batterie d'Android.
+const PS = plugin("PageShot");
+function fmtWhen(t) { const d = new Date(t); return (dayLabel(d) === "Aujourd'hui" ? "aujourd'hui" : dayLabel(d).toLowerCase()) + " à " + hm(d); }
+function showNotifStatus(st, now) {
+  st = st && typeof st === "object" ? st : {};
+  const parts = [];
+  parts.push(st.wake ? "Dernier réveil en arrière-plan : " + fmtWhen(st.wake) + "." : "Dernier réveil en arrière-plan : jamais pour l'instant (Android n'a pas encore lancé Kiosque).");
+  if (st.at) {
+    let t = (now ? "Vérification faite " : "Dernière vérification : ") + fmtWhen(st.at) + " · " + (st.feeds || 0) + " journaux lus" + (st.errors ? " (" + st.errors + " en erreur)" : "") + ", " + (st.fresh || 0) + " article" + (st.fresh > 1 ? "s" : "") + " pour vous, " + (st.sent || 0) + " notification" + (st.sent > 1 ? "s" : "") + " envoyée" + (st.sent > 1 ? "s" : "") + ".";
+    if (st.first) t += " Première lecture : Kiosque note les articles déjà parus et ne préviendra que pour les suivants.";
+    if (st.waiting) t += " Nuit : notifications regroupées pour le matin.";
+    parts.push(t);
+  } else if (st.ran && !st.enabled) parts.push("Les notifications d'articles sont désactivées.");
+  if (st.matchAt) parts.push("Matchs : " + (st.matches || 0) + " notification" + (st.matches > 1 ? "s" : "") + " à " + hm(new Date(st.matchAt)) + ".");
+  $("#notif-last").textContent = parts.join(" ");
+  const late = notif.enabled && (!st.wake || Date.now() - st.wake > 2 * 3600e3);
+  if (late) $("#notif-battery").hidden = false;
+}
+async function refreshNotifDiag() {
+  if (!NATIVE || !BgRunner) { $("#notif-last").textContent = "Le diagnostic est disponible dans l'appli Android."; return; }
+  try { showNotifStatus(await BgRunner.dispatchEvent({ label: RUNNER, event: "status", details: {} })); }
+  catch (e) { $("#notif-last").textContent = "État de la tâche de fond illisible : " + (e.message || e); }
+  try {
+    const b = await PS.battery({});
+    const lim = b && b.ignoring === false;
+    $("#notif-battery-note").hidden = !lim;
+    if (lim) $("#notif-battery").hidden = false;
+    else if (b && b.ignoring) { $("#notif-battery").hidden = true; }
+  } catch (e) { console.warn("batterie", e); }
+}
+$("#notif-now").onclick = async () => {
+  if (!BgRunner) { $("#notif-last").textContent = "Disponible dans l'appli Android."; return; }
+  const b = $("#notif-now"); b.disabled = true; b.textContent = "Vérification…";
+  try {
+    if (notif.enabled) await askNotifPerm();
+    await syncNotif();
+    let st = await BgRunner.dispatchEvent({ label: RUNNER, event: "checkNow", details: {} });
+    if (!st || typeof st !== "object") st = await BgRunner.dispatchEvent({ label: RUNNER, event: "status", details: {} });
+    showNotifStatus(st, true);
+  } catch (e) { $("#notif-last").textContent = "Vérification impossible : " + (e.message || e); }
+  finally { b.disabled = false; b.textContent = "Vérifier maintenant"; }
+};
+$("#notif-battery").onclick = async () => {
+  try { await PS.openSettings({ what: "battery" }); }
+  catch { try { await PS.openSettings({ what: "app" }); } catch (e) { $("#notif-status").textContent = "Ouvrez Réglages → Applications → Kiosque → Batterie → Aucune restriction."; } }
+};
+document.addEventListener("visibilitychange", () => { if (!document.hidden && $("#dlg").open) refreshNotifDiag(); });
 $("#notif-on").onchange = async () => {
   notif.enabled = $("#notif-on").checked;
-  if (notif.enabled && BgRunner) {
-    try {
-      const p = await BgRunner.requestPermissions({ apis: ["notifications"] });
-      if (p && p.notifications && p.notifications !== "granted") $("#notif-status").textContent = "Autorisez les notifications de Kiosque dans les réglages Android.";
-    } catch (e) { /* déjà accordé ou non requis */ }
-  }
+  if (notif.enabled) await askNotifPerm();
   syncNotif();
 };
 $("#notif-quiet").onchange = () => { notif.quiet = $("#notif-quiet").checked; syncNotif(); };
 $("#notif-kw").onchange = () => { notif.keywords = $("#notif-kw").value; syncNotif(); };
 $("#notif-test").onclick = async () => {
   if (!BgRunner) { $("#notif-status").textContent = "Disponible dans l'appli Android."; return; }
-  try { await BgRunner.dispatchEvent({ label: RUNNER, event: "test", details: {} }); $("#notif-status").textContent = "Alerte de test envoyée."; }
-  catch (e) { $("#notif-status").textContent = "Échec de l'alerte de test : " + (e.message || e); }
+  if (!(await askNotifPerm())) return;
+  await syncNotif();
+  try { await BgRunner.dispatchEvent({ label: RUNNER, event: "test", details: {} }); $("#notif-status").textContent = "Notification de test envoyée."; }
+  catch (e) { $("#notif-status").textContent = "Échec de la notification de test : " + (e.message || e); }
 };
 
 // ——— Réglages ———
 const GROUPS = [
   { name: "Presse généraliste", ids: ["lesechos", "lemonde", "figaro", "libe", "franceinfo", "parisien", "20min", "courrier", "latribune", "lepoint", "lexpress"] },
-  { name: "Tech", ids: ["01net", "numerama", "frandroid", "clubic", "next", "zdnet", "silicon", "lmi-telecoms", "dcmag"] },
+  { name: "Tech", ids: ["01net", "numerama", "frandroid", "clubic", "next", "zdnet", "usinedigitale", "distributique", "channelnews", "silicon", "lmi-telecoms", "dcmag"] },
   { name: "Télécoms et infra, France", ids: ["degroupnews", "universfreebox", "fibreguide", "lafibreinfo", "alloforfait"] },
   { name: "Télécoms et infra, international", ids: ["lightreading", "fierce", "totaltele", "mwl", "rcr", "capacity", "fibresystems", "telecomramblings", "developingtelecoms", "insidetowers", "dcd", "mobileeurope", "policytracker", "fastmode", "bbcmag"] },
 ];
@@ -1526,29 +3082,20 @@ async function showFeedLinks(f) {
   };
 }
 $("#fl-close").onclick = () => $("#feedlinks").close();
-// Supprime tous les liens ajoutés : il ne reste que « Article d'origine » et « Google Traduction ».
-$("#resetlinks").onclick = () => {
-  if (!confirm("Supprimer tous vos liens ajoutés et revenir à « Article d'origine » et « Google Traduction » ?")) return;
-  links = DEFAULT_LINKS.map(l => ({ ...l }));
-  feeds.forEach(f => { if (!links.some(l => l.id === f.link)) f.link = "orig"; });
-  if (!links.some(l => l.id === transLink)) { transLink = "translate"; store.set("kiosque.tlink", transLink); }
-  saveLinks(); saveFeeds(); renderDialog(); render();
-};
 $("#addlink").onclick = () => { links.push({ id: "l" + Date.now(), name: "Nouveau lien", tpl: "" }); saveLinks(); renderLinks(); const ins = $("#linkrows").querySelectorAll(".tpl"); ins[ins.length - 1]?.focus(); };
 document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
   document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
   document.querySelectorAll(".tabpane").forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
-  if (b.dataset.tab === "lang") renderTlink();
+  if (b.dataset.tab === "rubs") renderRubRows();
 });
 $("#grouping").onchange = () => { grouping = $("#grouping").checked; store.set("kiosque.group", grouping); shown = PAGE; renderAll(); };
 $("#hideads").onchange = () => { hideAds = $("#hideads").checked; store.set("kiosque.hideads", hideAds); renderAll(); };
-$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; renderTlink(); $("#dlg").showModal(); };
+$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
 function renderTlink() {
   const sel = $("#tlink"); sel.innerHTML = "";
   for (const l of links.filter(l => l.tpl)) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.append(o); }
   sel.value = links.some(l => l.id === transLink && l.tpl) ? transLink : "translate";
 }
-$("#tlink").onchange = () => { transLink = $("#tlink").value; store.set("kiosque.tlink", transLink); };
 $("#tlang").onchange = () => { transLang = $("#tlang").value; store.set("kiosque.tlang", transLang); };
 $("#close").onclick = () => $("#dlg").close();
 
@@ -1597,8 +3144,8 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "__BUILD__";     // numéro de version, ex. 1.42 (posé par android.yml)
-const COMMIT = "__COMMIT__";
+const BUILD = "1.36";     // numéro de version, ex. 1.42 (posé par android.yml)
+const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
 const verNum = v => { const [a, b] = String(v).split(".").map(Number); return (a || 0) * 100000 + (b || 0); };
@@ -1684,6 +3231,11 @@ renderAll();
 if (allItems().length) requestAnimationFrame(() => setTimeout(hideSplash, 50));
 loadAll();
 syncNotif();
+loadSport(false);
+if (NATIVE && BgRunner && (notif.enabled || sportPrefs.notify) && !store.get("kiosque.notifask33", false)) {
+  store.set("kiosque.notifask33", true);
+  setTimeout(() => askNotifPerm(), 3000);
+}
 setInterval(() => { if (!document.hidden) loadAll(); }, REFRESH_MS);
 </script>
 </body>
