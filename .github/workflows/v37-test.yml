@@ -1,0 +1,51 @@
+name: Test V37 Android
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'www/**'
+      - 'package.json'
+      - 'capacitor.config.*'
+      - 'ci/**'
+      - '.github/workflows/v37-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Installer les dépendances
+        run: npm install
+      - name: Vérifier le patch du navigateur intégré
+        run: python3 ci/patch-iab.py && grep -q KiosqueBlock node_modules/cordova-plugin-inappbrowser/src/android/InAppBrowser.java
+      - name: Générer le projet Android
+        run: |
+          npx cap add android
+          sed -i "s#dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'#dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs', '../../node_modules/@capacitor/background-runner/android/src/main/libs'#" android/app/build.gradle
+          grep -q "background-runner/android/src/main/libs" android/app/build.gradle
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />\n</manifest>#' android/app/src/main/AndroidManifest.xml
+          echo "kotlin.jvm.target.validation.mode=warning" >> android/gradle.properties
+          npx capacitor-assets generate --android
+          npx cap sync android
+      - name: Compiler l’APK de test
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kiosque-v37-test-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
