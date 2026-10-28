@@ -1,6 +1,14 @@
 name: Test V37 Android
 
 on:
+  push:
+    branches: [feat/v37-ma-veille]
+    paths:
+      - 'www/**'
+      - 'package.json'
+      - 'capacitor.config.*'
+      - 'ci/**'
+      - '.github/workflows/v37-test.yml'
   pull_request:
     branches: [main]
     paths:
