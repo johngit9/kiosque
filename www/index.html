@@ -3265,7 +3265,7 @@ let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { show
   const setTopics = arr => { try { localStorage.setItem(key, JSON.stringify(arr)); } catch {} };
   const normV = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const escV = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const itemsV = () => { try { return typeof allItems==="function" ? allItems().filter(i=>i && i.title && i.url) : []; } catch { return []; } };
+  const itemsV = () => { try { return typeof allItems==="function" ? allItems().filter(i=>i && i.title && i.link) : []; } catch { return []; } };
   const scoreV = (i, topics) => {
     const t=normV([i.title,i.description,i.summary,i.src,i.source].join(" "));
     let score=0;
@@ -3281,7 +3281,7 @@ let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { show
     const count=items.length;
     $v("v37briefTitle").textContent=topics.length ? (ranked.length ? ranked.length+" article(s) correspondent à votre veille" : "Vos sujets sont prêts à être suivis") : "Les titres à retenir aujourd’hui";
     $v("v37briefText").textContent=count ? (topics.length ? (ranked.length ? "Sur "+count+" articles chargés, "+ranked.length+" correspondent à vos sujets prioritaires. Voici les plus pertinents." : "Aucun article chargé ne correspond encore à vos mots-clés. Les derniers titres restent disponibles ci-dessous.") : count+" articles sont disponibles dans les flux chargés. Ajoutez vos sujets pour personnaliser le briefing.") : "Aucun article n’est encore chargé. Actualisez les flux puis revenez ici. Le briefing est généré localement, sans résumé IA ni envoi de données.";
-    $v("v37stories").innerHTML=candidates.length?candidates.map(({i,score})=>'<a class="v37-story" href="'+escV(i.url)+'" target="_blank" rel="noopener noreferrer"><small>'+escV(i.src||i.source||"Kiosque")+(score?" · correspondance "+score:"")+'</small><strong>'+escV(i.title)+'</strong><small>Ouvrir l’article ↗</small></a>').join(""):'<div class="v37-empty">Aucun article disponible pour le moment. Appuyez sur Actualiser dans Kiosque.</div>';
+    $v("v37stories").innerHTML=candidates.length?candidates.map(({i,score})=>'<a class="v37-story" href="'+escV(i.url)+'" target="_blank" rel="noopener noreferrer"><small>'+escV((typeof feedById==="function" && feedById(i.src)?.name) || i.src || i.source || "Kiosque")+(score?" · correspondance "+score:"")+'</small><strong>'+escV(i.title)+'</strong><small>Ouvrir l’article ↗</small></a>').join(""):'<div class="v37-empty">Aucun article disponible pour le moment. Appuyez sur Actualiser dans Kiosque.</div>';
   }
   $v("v37open").addEventListener("click",()=>{renderV();dlg.showModal();});
   $v("v37close").addEventListener("click",()=>dlg.close());
