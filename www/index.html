@@ -336,6 +336,24 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   .card, .lead { animation: fade 0.25s ease both; }
   @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
 }
+
+/* Kiosque V37 — espace de veille personnalisé */
+.v37-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font:600 12px var(--f-sans);cursor:pointer;white-space:nowrap}
+.v37-btn:hover{border-color:var(--accent);background:var(--chip)}
+#v37dlg{width:min(760px,calc(100vw - 28px));max-height:min(88dvh,900px);border:1px solid var(--line);border-radius:20px;padding:0;background:var(--surface);color:var(--ink);box-shadow:0 24px 90px #0003}
+#v37dlg::backdrop{background:#10182799;backdrop-filter:blur(3px)}
+.v37-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.v37-head h2{margin:0;font-size:21px}.v37-kicker{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.v37-body{padding:18px 20px;display:grid;gap:18px;overflow:auto}
+.v37-hero{padding:18px;border-radius:16px;background:linear-gradient(130deg,#13233d,#145d63);color:#fff}
+.v37-hero h3{margin:5px 0 8px;font-size:20px}.v37-hero p{margin:0;color:#e4f1f2;font-size:13px;line-height:1.55}
+.v37-section h3{margin:0 0 10px;font-size:15px}.v37-topics{display:flex;flex-wrap:wrap;gap:7px}.v37-chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 10px;border-radius:99px;font-size:12px}
+.v37-form{display:grid;grid-template-columns:1fr auto;gap:8px}.v37-form input{min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:11px;font:inherit}
+.v37-note{font-size:12px;color:var(--muted);margin:8px 0 0}.v37-stories{display:grid;gap:9px}
+.v37-story{display:grid;gap:5px;padding:12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.v37-story:hover{border-color:var(--accent)}.v37-story strong{font-size:14px;line-height:1.4}.v37-story small{color:var(--muted);font-size:11px}.v37-empty{padding:14px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:13px}
+@media(max-width:560px){.v37-btn{padding:7px 9px}.v37-head{padding:15px}.v37-body{padding:14px}.v37-form{grid-template-columns:1fr}.v37-hero h3{font-size:18px}}
+
 </style>
 </head>
 <body>
@@ -346,6 +364,7 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <div class="tools">
       <span id="stamp" class="stamp"></span>
       <button id="refresh" class="round" type="button" aria-label="Actualiser" title="Actualiser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button id="v37open" class="v37-btn" type="button">Ma veille</button>
       <button id="manage" class="round" type="button" aria-label="Réglages" title="Réglages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
     </div>
   </header>
@@ -550,6 +569,15 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
 </dialog>
 
+
+<dialog id="v37dlg" aria-labelledby="v37title">
+  <div class="v37-head"><div><div class="v37-kicker">Kiosque · V37</div><h2 id="v37title">Ma veille</h2></div><button id="v37close" class="round" type="button" aria-label="Fermer">✕</button></div>
+  <div class="v37-body">
+    <section class="v37-hero"><div class="v37-kicker" style="color:#9ee5dc">Briefing du jour</div><h3 id="v37briefTitle">Votre actualité, en un coup d’œil</h3><p id="v37briefText">Votre briefing se construit à partir des articles chargés et de vos sujets suivis. Les données restent sur cet appareil.</p></section>
+    <section class="v37-section"><h3>Mes sujets suivis</h3><form id="v37form" class="v37-form"><input id="v37keywords" placeholder="Ex. fibre, IA, cybersécurité, Orange" aria-label="Mots-clés à suivre"><button class="btn primary" type="submit">Enregistrer</button></form><p class="v37-note">Séparez les sujets par des virgules. Ils servent à classer les articles et à composer votre briefing local.</p><div id="v37topics" class="v37-topics" style="margin-top:10px"></div></section>
+    <section class="v37-section"><h3>À suivre en priorité</h3><div id="v37stories" class="v37-stories"></div></section>
+  </div>
+</dialog>
 <script src="lib/readability.js"></script>
 <script src="lib/html2canvas.min.js"></script>
 <script>
@@ -3225,6 +3253,42 @@ $("#addform").onsubmit = e => {
 $("#refresh").onclick = loadAll;
 $("#more").onclick = () => { shown += PAGE; render(); };
 let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { shown = PAGE; render(); }, 150); };
+
+
+/* V37: veille personnalisée et briefing quotidien calculés localement */
+(() => {
+  const dlg = document.getElementById("v37dlg");
+  if (!dlg) return;
+  const $v = id => document.getElementById(id);
+  const key = "kiosque.v37.topics";
+  const getTopics = () => { try { const x=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(x)?x.filter(Boolean).slice(0,30):[]; } catch { return []; } };
+  const setTopics = arr => { try { localStorage.setItem(key, JSON.stringify(arr)); } catch {} };
+  const normV = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const escV = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const itemsV = () => { try { return typeof allItems==="function" ? allItems().filter(i=>i && i.title && i.link) : []; } catch { return []; } };
+  const scoreV = (i, topics) => {
+    const t=normV([i.title,i.description,i.summary,i.src,i.source].join(" "));
+    let score=0;
+    for(const topic of topics){const k=normV(topic).trim(); if(k && t.includes(k)) score+=Math.max(1,k.split(/\s+/).length*2);}
+    return score;
+  };
+  function renderV(){
+    const topics=getTopics(), items=itemsV();
+    $v("v37keywords").value=topics.join(", ");
+    $v("v37topics").innerHTML=topics.length?topics.map(t=>'<span class="v37-chip">'+escV(t)+'</span>').join(""):'<span class="v37-note">Aucun sujet enregistré pour le moment.</span>';
+    const ranked=items.map(i=>({i,score:scoreV(i,topics)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+    const candidates=(ranked.length?ranked:items.map(i=>({i,score:0}))).slice(0,5);
+    const count=items.length;
+    $v("v37briefTitle").textContent=topics.length ? (ranked.length ? ranked.length+" article(s) correspondent à votre veille" : "Vos sujets sont prêts à être suivis") : "Les titres à retenir aujourd’hui";
+    $v("v37briefText").textContent=count ? (topics.length ? (ranked.length ? "Sur "+count+" articles chargés, "+ranked.length+" correspondent à vos sujets prioritaires. Voici les plus pertinents." : "Aucun article chargé ne correspond encore à vos mots-clés. Les derniers titres restent disponibles ci-dessous.") : count+" articles sont disponibles dans les flux chargés. Ajoutez vos sujets pour personnaliser le briefing.") : "Aucun article n’est encore chargé. Actualisez les flux puis revenez ici. Le briefing est généré localement, sans résumé IA ni envoi de données.";
+    $v("v37stories").innerHTML=candidates.length?candidates.map(({i,score})=>'<a class="v37-story" href="'+escV(i.link)+'" target="_blank" rel="noopener noreferrer"><small>'+escV((typeof feedById==="function" && feedById(i.src)?.name) || i.src || i.source || "Kiosque")+(score?" · correspondance "+score:"")+'</small><strong>'+escV(i.title)+'</strong><small>Ouvrir l’article ↗</small></a>').join(""):'<div class="v37-empty">Aucun article disponible pour le moment. Appuyez sur Actualiser dans Kiosque.</div>';
+  }
+  $v("v37open").addEventListener("click",()=>{renderV();dlg.showModal();});
+  $v("v37close").addEventListener("click",()=>dlg.close());
+  dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+  $v("v37form").addEventListener("submit",e=>{e.preventDefault();const arr=[...new Set($v("v37keywords").value.split(",").map(x=>x.trim()).filter(Boolean))].slice(0,30);setTopics(arr);renderV();});
+  window.addEventListener("hashchange",()=>{if(!dlg.open)return;renderV();});
+})();
 
 restoreCache();
 renderAll();
