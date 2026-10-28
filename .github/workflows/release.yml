@@ -1,0 +1,27 @@
+name: Publier l'APK livré
+
+# Publie dans les Releases le dernier APK du dossier apk/ (kiosque-vNN.apk), tel quel :
+# il est déjà signé avec la clé des versions livrées et contient le module natif PageShot.
+on:
+  push:
+    branches: [main]
+    paths: ["apk/**", ".github/workflows/release.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publier dans les Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APK=$(ls apk/kiosque-v*.apk | sort -V | tail -1)
+          N=$(basename "$APK" .apk | sed 's/kiosque-v//')
+          cp "$APK" kiosque.apk
+          gh release delete android --yes --cleanup-tag || true
+          gh release create android kiosque.apk --title "Kiosque 1.${N}" --notes "Version 1.${N} de Kiosque (v${N}). Téléchargez kiosque.apk sur votre téléphone puis ouvrez-le pour l'installer : elle s'installe par-dessus les versions livrées depuis le 25/10/2026." --latest
