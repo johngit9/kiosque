@@ -1,9 +1,9 @@
 name: Appli Android (APK)
 
+# Construction automatique arrêtée depuis la v36 : les versions livrées (dossier apk/) contiennent le module
+# natif PageShot (android-plugin/) et sont signées avec une autre clé que ci/debug.keystore.
+# Un APK construit ici ne pourrait pas s'installer par-dessus. Lancement manuel seulement.
 on:
-  push:
-    branches: [main]
-    paths: ["www/**", "assets/**", "ci/**", "capacitor.config.json", "package.json", ".github/workflows/android.yml"]
   workflow_dispatch:
 
 permissions:
