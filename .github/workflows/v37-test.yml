@@ -44,11 +44,28 @@ jobs:
           echo "kotlin.jvm.target.validation.mode=warning" >> android/gradle.properties
           npx capacitor-assets generate --android
           npx cap sync android
-      - name: Compiler l’APK V37
+      - name: Compiler l’APK V37 release non signé
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleRelease --no-daemon
+      - name: Préparer apksigner pour Mac ARM64
+        run: |
+          BT="$(ls -1 "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          mkdir -p apk-tools/lib
+          cp "$ANDROID_HOME/build-tools/$BT/lib/apksigner.jar" apk-tools/lib/
+          cat > apk-tools/apksigner <<'EOF'
+          #!/bin/sh
+          SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+          exec java -jar "$SCRIPT_DIR/lib/apksigner.jar" "$@"
+          EOF
+          chmod +x apk-tools/apksigner
+          echo "$BT" > apk-tools/build-tools-version.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: kiosque-v37-ui-validee
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: kiosque-v37-release-unsigned
+          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apksigner-mac-arm64
+          path: apk-tools/
           if-no-files-found: error
