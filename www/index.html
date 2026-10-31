@@ -466,7 +466,7 @@ dialog h2 { font: 700 19px var(--f-head); }
 .jt .lg span { font: 700 18px var(--f-head); color: #fff; }
 .jt small { color: var(--muted); font: 10.5px var(--f-mono); }
 .jt span.nm { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 100%; }
-.searchwrap.big { max-width: none; flex: none; }
+.searchwrap.big { max-width: none; flex: none; order: 0; }
 .searchwrap.big .search { padding: 12px 14px 12px 40px; font-size: 14.5px; background: var(--surface); border-radius: 14px; }
 .pagehead { display: flex; align-items: center; gap: 10px; }
 .pagehead h2 { font: 700 20px var(--f-head); margin: 0; }
@@ -3464,7 +3464,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.43";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.44";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3785,19 +3785,7 @@ function renderHome() {
   const lead = (recent.length ? recent : heads).slice(0, 80).sort((a, b) => importance(b) - importance(a))[0];
   box.append(shead("À la une", "Voir tout", () => setTab("explore")));
   if (lead) box.append(bigCard(lead));
-  // Mes sujets suivis : quatre tuiles, les priorités hautes d'abord.
-  const count = rubCount();
-  const tops = topicIds().map((id, k) => ({ id, k, n: count(id), p: prioOf(id) })).sort((a, b) => b.p - a.p || (b.n > 0) - (a.n > 0) || a.k - b.k).slice(0, 4);
-  box.append(shead("Mes sujets suivis", "Voir tout", () => setTab("veille")));
-  const tg = el("div", "tiles");
-  for (const t of tops) {
-    const b = el("button", "ttile" + (t.p >= 3 ? " p3" : "")); b.type = "button";
-    b.append(el("span", "ic", rubIcon(t.id)), el("span", "", rubricName(t.id)), el("span", "n", t.n));
-    b.onclick = () => go(t.id);
-    longPress(b, () => openTopic(t.id));
-    tg.append(b);
-  }
-  box.append(tg);
+  // Mes sujets suivis : affichés dans Ma veille seulement (demande d'Alain, v44).
   // Derniers articles : un seul par événement, du plus récent au plus ancien.
   box.append(shead("Derniers articles"));
   const list = el("div", "rows");
