@@ -1813,10 +1813,9 @@ async function openInBrowser(url, protect) {
   window.open(url, "_blank", "noopener");
 }
 // Sous le titre : les autres liens d'ouverture (le titre ouvre le lien par défaut du journal).
-// Le titre ouvre toujours l'article lui-même : un lien Google Traduction choisi pour un journal est ignoré ici
-// (la traduction reste dans « Traduire » et le menu Partager).
+// Le titre ouvre le lien choisi pour le journal dans Réglages → Journaux, quel qu'il soit.
 const isTransLink = l => !l || l.id === "translate" || /translate\.goog|translate\.google/i.test(l.tpl || "");
-function siteLink(i) { const l = linkById(feedById(i.src)?.link || "orig"); return isTransLink(l) ? DEFAULT_LINKS[0] : l; }
+function siteLink(i) { return linkById(feedById(i.src)?.link || "orig"); }
 function openSite(i) { const l = siteLink(i); openInBrowser(buildUrl(l.tpl, i), !l.tpl); }
 // Lien du journal « article d'origine » : lu dans Kiosque (texte extrait) si possible, sinon la page du journal.
 function openArticle(i) { if (readerOn(i)) openReader(i); else openSite(i); }
@@ -3436,7 +3435,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.41";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.42";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
