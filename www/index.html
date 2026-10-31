@@ -575,7 +575,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
       <label class="srow" for="ui-theme"><span>Thème</span><select id="ui-theme"><option value="nuit">Bleu nuit</option><option value="classique">Classique (vert d'eau)</option></select></label>
     </div>
     <div class="sblock"><h3>Contenu</h3>
-      <label class="srow" for="ui-wall" hidden><span>Bloquer les pages de consentement<small>Masque automatiquement les fenêtres de cookies et de consentement</small></span><span class="switch"><input id="ui-wall" type="checkbox"><span></span></span></label>
+      <label class="srow" for="ui-wall"><span>Bloquer les pages de consentement<small>Sur l'article d'origine : masque les fenêtres de cookies (pas sur les liens définis)</small></span><span class="switch"><input id="ui-wall" type="checkbox"><span></span></span></label>
       <label class="srow" for="ui-images"><span>Chargement des images</span><select id="ui-images"><option value="std">Qualité standard</option><option value="eco">Économie de données</option><option value="none">Sans images</option></select></label>
       <label class="srow" for="ui-reader"><span>Lecture dans l'application<small>Le texte de l'article s'affiche dans Kiosque ; sinon la page du journal s'ouvre</small></span><span class="switch"><input id="ui-reader" type="checkbox"><span></span></span></label>
       <label class="srow" for="ui-ext"><span>Ouvrir les liens externes</span><select id="ui-ext"><option value="app">Dans l'appli</option><option value="chrome">Dans Chrome</option></select></label>
@@ -659,7 +659,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
   <section class="tabpane" data-pane="app" hidden>
     <h3 class="grouphead">Lecture</h3>
     <label class="toggle-line" for="inapp" hidden><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
-    <label class="toggle-line" for="clean" hidden><span><b>Nettoyer les pages</b><small>Dans le lecteur intégré : pubs masquées, bandeaux de cookies refusés (« Continuer sans accepter », « Tout refuser »). Les traqueurs connus sont toujours bloqués.</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
+    <label class="toggle-line" for="clean"><span><b>Nettoyer les pages</b><small>Sur l'article d'origine (pas sur les liens définis) : pubs masquées, bandeaux de cookies refusés (« Continuer sans accepter », « Tout refuser »). Les traqueurs connus sont toujours bloqués.</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
     <label class="field" for="zoom" hidden>Taille du texte de l'appli : <b id="zoomval"></b>
       <input id="zoom" type="range" min="85" max="150" step="5">
     </label>
@@ -1776,7 +1776,8 @@ async function openInChrome(url) {
   try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#13233d" }); return; } } catch (e) { console.warn(e); }
   location.href = url; // Repli : Android ouvre alors le navigateur du téléphone.
 }
-async function openInBrowser(url) {
+// protect : article d'origine → bloqueur de pubs et masqueur de cookies ; lien défini (Liens) → page telle quelle.
+async function openInBrowser(url, protect) {
   if (NATIVE) {
     // Lecteur intégré à l'appli, sans barre d'adresse (cordova-plugin-inappbrowser), sinon Chrome Custom Tabs.
     const iab = window.cordova?.InAppBrowser;
@@ -1796,7 +1797,10 @@ async function openInBrowser(url) {
           try {
             ref.insertCSS({ code: FIT_CSS });
             ref.executeScript({ code: BG_JS });
-            // Demande d'Alain (v40) : ni bloqueur de pubs ni masqueur de fenêtres de cookies sur la page du journal.
+            if (protect) {
+              if (ui.wall) { ref.insertCSS({ code: WALL_CSS }); ref.executeScript({ code: WALL_JS }); }
+              if (clean) { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); ref.executeScript({ code: AD_JS }); }
+            }
           } catch (e) {}
         });
         return;
@@ -1813,7 +1817,7 @@ async function openInBrowser(url) {
 // (la traduction reste dans « Traduire » et le menu Partager).
 const isTransLink = l => !l || l.id === "translate" || /translate\.goog|translate\.google/i.test(l.tpl || "");
 function siteLink(i) { const l = linkById(feedById(i.src)?.link || "orig"); return isTransLink(l) ? DEFAULT_LINKS[0] : l; }
-function openSite(i) { openInBrowser(buildUrl(siteLink(i).tpl, i)); }
+function openSite(i) { const l = siteLink(i); openInBrowser(buildUrl(l.tpl, i), !l.tpl); }
 // Lien du journal « article d'origine » : lu dans Kiosque (texte extrait) si possible, sinon la page du journal.
 function openArticle(i) { if (readerOn(i)) openReader(i); else openSite(i); }
 function altLinks(i) {
@@ -3432,7 +3436,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.40";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.41";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3918,7 +3922,7 @@ async function openReader(i) {
     if (first && hero.isConnected && hero.src && first.src.split("?")[0] === hero.src.split("?")[0]) first.remove();
     if (!hero.isConnected && first && !i.image && ui.images !== "none") { hero.src = first.src; first.remove(); wait.before(hero); }
     if (!i.summary && art.excerpt) { lede.textContent = art.excerpt; meta.before(lede); }
-    tx.querySelectorAll("a[href]").forEach(a => a.onclick = e => { e.preventDefault(); openInBrowser(a.href); });
+    tx.querySelectorAll("a[href]").forEach(a => a.onclick = e => { e.preventDefault(); openInBrowser(a.href, true); });
     const words = txt.split(" ").length;
     meta.querySelector(".rt b").textContent = Math.max(1, Math.round(words / 230)) + " min de lecture";
     wait.replaceWith(tx);
