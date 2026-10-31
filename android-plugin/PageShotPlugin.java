@@ -473,11 +473,14 @@ public class PageShotPlugin extends Plugin {
             out = nb; outCanvas = new Canvas(out); outH = cap;
         }
 
-        void nextStep() {
+        int stuck;
+        void nextStep() { nextStep(false); }
+        // js = true : défilement par la page elle-même (window.scrollBy), quand le geste du doigt n'a pas fait bouger la page.
+        void nextStep(final boolean js) {
             if (done || finishing) return;
             // Glissement d'un peu plus d'un demi-écran : assez de recouvrement pour recoller juste, même avec un menu collant.
             final int d = Math.round(viewH * (landscape ? 0.55f : 0.7f));
-            swipe(d, new Runnable() { public void run() {
+            final Runnable after = new Runnable() { public void run() {
                 h.postDelayed(new Runnable() { public void run() {
                     if (done || finishing) return;
                     grab(new Runnable() { public void run() {
@@ -485,7 +488,20 @@ public class PageShotPlugin extends Plugin {
                         steps++;
                         if (blankStrip) { manualFinish(); return; }
                         int sh = shift(prevF, strip, d);
-                        if (sh <= 2) { manualFinish(); return; } // la page ne bouge plus : bas atteint
+                        if (sh <= 2) {
+                            // La page n'a pas bougé : on vérifie qu'il ne reste vraiment rien en dessous avant de s'arrêter.
+                            wv.evaluateJavascript("(function(){var e=document.scrollingElement||document.documentElement,b=document.body;"
+                                + "var hh=Math.max(e.scrollHeight,b?b.scrollHeight:0);return hh-(window.scrollY+window.innerHeight)})()", new ValueCallback<String>() {
+                                public void onReceiveValue(String v) {
+                                    if (done || finishing) return;
+                                    float rem = 0;
+                                    try { rem = Float.parseFloat(v.replace("\"", "")); } catch (Throwable e) {}
+                                    if (rem > 40 && stuck < 4 && steps <= 120) { stuck++; nextStep(true); } else manualFinish();
+                                }
+                            });
+                            return;
+                        }
+                        stuck = 0;
                         try { ensureOut(outY + sh > outH ? Math.max(outH * 3 / 2, outY + sh) : outH); } catch (Throwable e) { manualFinish(); return; }
                         int add = Math.min(Math.min(sh, outH - outY), viewH - fixBot - fixTop);
                         if (add > 0) {
@@ -499,8 +515,17 @@ public class PageShotPlugin extends Plugin {
                         if (outY >= outH && outH >= Math.min(30000, (int) (50000000L / Math.max(1, viewW))) || steps > 120) { manualFinish(); return; }
                         checkEnd(new Runnable() { public void run() { nextStep(); } });
                     }}, -1);
-                }}, 350);
-            }});
+                }}, js ? 700 : 350);
+            }};
+            if (js) {
+                float sc = wv.getScale(); if (sc <= 0) sc = 1;
+                int css = Math.max(1, Math.round(d / sc));
+                wv.evaluateJavascript("(function(){try{var a=[document.documentElement,document.body];for(var i=0;i<a.length;i++)if(a[i]){a[i].style.setProperty('overflow-y','auto','important');}"
+                    + "var L=document.querySelectorAll('body *');for(var j=0;j<L.length;j++){var s=getComputedStyle(L[j]);if(s.position!=='fixed')continue;var r=L[j].getBoundingClientRect();"
+                    + "if(r.height>innerHeight*0.45&&r.width>innerWidth*0.5)L[j].style.setProperty('display','none','important');}}catch(e){}"
+                    + "window.scrollBy(0," + css + ");})()", null);
+                h.post(after);
+            } else swipe(d, after);
         }
 
         // Glissement du doigt vers le haut de d pixels, lent puis maintenu (pas d'élan), comme un utilisateur.

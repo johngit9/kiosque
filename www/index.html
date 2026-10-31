@@ -416,6 +416,27 @@ dialog h2 { font: 700 19px var(--f-head); }
 .vtopics .navlabel { margin: 0 0 8px 2px; }
 .vfold { display: flex; align-items: center; gap: 6px; border: 0; background: none; cursor: pointer; padding: 4px 0; }
 .vfold svg { width: 16px; height: 16px; transition: transform .2s; }
+.hfold { margin: 4px 0 -2px 2px; color: var(--muted); }
+.rgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.rtile { position: relative; display: grid; justify-items: start; gap: 4px; text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 13px; padding: 10px 10px 9px; cursor: pointer; min-width: 0; }
+.rtile .ic { font-size: 20px; line-height: 1; }
+.rtile .nm { font-size: 12.5px; font-weight: 600; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 100%; overflow-wrap: anywhere; }
+.rtile .n { position: absolute; top: 8px; right: 8px; font: 600 10.5px var(--f-mono); color: var(--muted); }
+.rtile.p3 { border-color: color-mix(in srgb, var(--accent) 70%, var(--line)); }
+.rtile.p3 .n { color: var(--accent); }
+.rtile:active { background: var(--chip); }
+.appcard { display: grid; gap: 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 16px; margin: 10px 0 14px; }
+.appcard .note { margin: 0; }
+.appcard .note:empty { display: none; }
+.aphead { display: flex; align-items: center; gap: 12px; }
+.aphead > div { display: grid; gap: 1px; }
+.aphead small { color: var(--muted); font-size: 13px; }
+.apico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); font-size: 20px; flex: none; }
+.btn.wide { width: 100%; text-align: center; padding: 12px 14px; border-radius: 12px; font-weight: 600; box-sizing: border-box; display: block; }
+.btn.ghost { background: none; }
+#updinstall:not([hidden]) + #checkupd { background: none; color: var(--ink); border-color: var(--line); }
+.apbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.apbtns .btn { text-align: center; padding: 11px; border-radius: 12px; font-weight: 600; }
 .vfold[aria-expanded="false"] svg { transform: rotate(-90deg); }
 .vchips { margin: 0 -16px 4px; padding: 0 16px 4px; }
 .vchips .n { font: 600 11px var(--f-mono); opacity: .7; }
@@ -683,25 +704,29 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
     <p id="notif-status" class="note"></p>
   </section>
   <section class="tabpane" data-pane="app" hidden>
-    <h3 class="grouphead">Lecture</h3>
+    <div class="appcard upcard">
+      <div class="aphead"><span class="apico">⟳</span><div><b>Mise à jour</b><small>Version installée : <b id="build"></b></small></div></div>
+      <p id="upd-status" class="note" role="status"></p>
+      <button id="updinstall" class="btn primary wide" type="button" hidden>Installer la mise à jour</button>
+      <button id="checkupd" class="btn primary wide" type="button">Rechercher une mise à jour</button>
+      <label class="btn wide ghost" for="apkfile">Installer un APK depuis mes fichiers</label><input id="apkfile" type="file" accept=".apk,application/vnd.android.package-archive" hidden>
+    </div>
+    <div class="appcard">
+      <div class="aphead"><span class="apico">⇅</span><div><b>Sauvegarde des réglages</b><small>Journaux, liens, alertes et articles enregistrés</small></div></div>
+      <p class="note">Ils sont conservés quand vous installez une nouvelle version par-dessus. La sauvegarde sert en cas de désinstallation ou de changement de téléphone.</p>
+      <div class="apbtns">
+        <button id="export" class="btn" type="button">Sauvegarder</button>
+        <label class="btn" for="import">Restaurer</label>
+        <input id="import" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p id="backup-status" class="note" role="status"></p>
+    </div>
+      <h3 class="grouphead">Lecture</h3>
     <label class="toggle-line" for="inapp" hidden><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
     <label class="toggle-line" for="clean"><span><b>Nettoyer les pages</b><small>Sur l'article d'origine (pas sur les liens définis) : pubs masquées, bandeaux de cookies refusés (« Continuer sans accepter », « Tout refuser »). Les traqueurs connus sont toujours bloqués.</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
     <label class="field" for="zoom" hidden>Taille du texte de l'appli : <b id="zoomval"></b>
       <input id="zoom" type="range" min="85" max="150" step="5">
     </label>
-    <h3 class="grouphead">Sauvegarde des réglages</h3>
-    <p class="note">Vos journaux, liens, alertes et articles enregistrés sont conservés quand vous installez une nouvelle version par-dessus. Une sauvegarde sert en cas de désinstallation ou de changement de téléphone.</p>
-    <div class="row">
-      <button id="export" class="btn" type="button">Sauvegarder</button>
-      <label class="btn" for="import">Restaurer</label>
-      <input id="import" type="file" accept=".json,application/json" hidden>
-    </div>
-    <p id="backup-status" class="note" role="status"></p>
-    <h3 class="grouphead">Mise à jour</h3>
-    <p class="note">Version installée : <b id="build"></b></p>
-    <div class="row"><button id="checkupd" class="btn" type="button">Rechercher une mise à jour</button><button id="updinstall" class="btn primary" type="button" hidden>Installer la mise à jour</button></div>
-    <div class="row"><label class="btn" for="apkfile">Installer un APK depuis mes fichiers</label><input id="apkfile" type="file" accept=".apk,application/vnd.android.package-archive" hidden></div>
-    <p id="upd-status" class="note" role="status"></p>
   </section>
 </dialog>
 
@@ -2744,7 +2769,9 @@ if(window.__kendKey!==k){window.__kendKey=k;return -1;}return best;};
 function unwall(){var L=document.querySelectorAll("body *");for(var i=0;i<L.length;i++){var e=L[i],s=getComputedStyle(e);if(s.position!=="fixed"&&s.position!=="sticky")continue;
 var r=e.getBoundingClientRect();if(r.top>120||r.height>160)continue;var t=(e.textContent||"").replace(/\s+/g," ");if(/unwall/i.test(t)&&/reader|pin|share/i.test(t))e.style.setProperty("display","none","important");}
 var U=document.querySelectorAll('[id*="unwall" i],[class*="unwall" i]');for(var j=0;j<U.length;j++){var r2=U[j].getBoundingClientRect();if(r2.top<120&&r2.height<160)U[j].style.setProperty("display","none","important");}}
-try{side();unwall();}catch(e){}setTimeout(function(){try{side();unwall();}catch(e){}},1500);})();`;
+try{side();unwall();}catch(e){}setTimeout(function(){try{side();unwall();}catch(e){}},1500);
+// Pages qui bloquent le défilement au doigt : leurs écouteurs ne reçoivent plus le geste, la page défile.
+try{window.addEventListener("touchmove",function(ev){ev.stopImmediatePropagation();},{capture:true,passive:true});window.addEventListener("wheel",function(ev){ev.stopImmediatePropagation();},{capture:true,passive:true});}catch(e){}})();`;
 // Bandes vides à gauche et à droite (fond blanc du site, ou noir hors de la page) retirées de l'image.
 // Une colonne est « vide » si, sur presque toutes les lignes, elle a la couleur du bord de cette ligne
 // (les bandeaux pleine largeur comme le pied de page comptent donc comme vides).
@@ -3464,7 +3491,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.44";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.45";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3758,13 +3785,28 @@ function renderHome() {
   const box = $("#home");
   $("#foot").before($("#footbar")); // le bandeau des matchs est rangé avant de vider l'accueil
   box.innerHTML = "";
-  // Puces : Tous, focus télécoms, puis les sujets suivis par priorité.
-  const ch = el("div", "hchips");
-  const chipB = (label, cur, fn) => { const b = el("button", "", label); b.type = "button"; b.setAttribute("aria-current", String(!!cur)); b.onclick = fn; ch.append(b); };
-  chipB("Tous", true, () => {});
-  if (topicIds().includes("telecoms")) { chipB("Infra fibre", false, () => go("telecoms", "fibre")); chipB("Réglementation", false, () => go("telecoms", "regl")); }
-  topicIds().slice().sort((a, b) => prioOf(b) - prioOf(a)).slice(0, 6).forEach(id => chipB(rubIcon(id) + " " + rubricName(id), false, () => go(id)));
-  box.append(ch);
+  // Rubriques : toutes, en grille de 3 ; le titre replie le bloc en une ligne de puces (choix retenu).
+  const folded = !!ui.hfold, count = rubCount();
+  const ids = userOrder().filter(x => !["une", "saved", "autres"].includes(x) && !rubHidden(x));
+  const rh = el("button", "navlabel vfold hfold"); rh.type = "button"; rh.setAttribute("aria-expanded", String(!folded));
+  rh.innerHTML = '<span>Mes rubriques</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  rh.onclick = () => { ui.hfold = !ui.hfold; saveUi(); renderHome(); };
+  box.append(rh);
+  if (folded) {
+    const ch = el("div", "hchips");
+    for (const id of ids) { const c = el("button", "", rubIcon(id) + " " + rubricName(id)); c.type = "button"; c.onclick = () => go(id); if (id !== "moi") longPress(c, () => openTopic(id)); ch.append(c); }
+    box.append(ch);
+  } else {
+    const g = el("div", "rgrid");
+    for (const id of ids) {
+      const t = el("button", "rtile" + (prioOf(id) >= 3 ? " p3" : "")); t.type = "button";
+      t.append(el("span", "ic", rubIcon(id)), el("span", "nm", rubricName(id)), el("span", "n", count(id)));
+      t.onclick = () => go(id);
+      if (id !== "moi") longPress(t, () => openTopic(id));
+      g.append(t);
+    }
+    box.append(g);
+  }
   renderFootbar(); box.append($("#footbar"));
   const items = allItems();
   const wait = loadState();
@@ -4054,7 +4096,7 @@ $("#tp-save").onclick = () => {
 };
 
 // ——— Réglages en liste ———
-const PANE_TITLES = { list: "Réglages", feeds: "Mes journaux", rubs: "Mes sujets suivis", links: "Liens et traduction", notif: "Notifications", app: "Sauvegarde et mise à jour" };
+const PANE_TITLES = { list: "Réglages", feeds: "Mes journaux", rubs: "Mes sujets suivis", links: "Liens et traduction", notif: "Notifications", app: "Mise à jour et sauvegarde" };
 function showPane(p) {
   document.querySelectorAll("#dlg .tabpane").forEach(x => x.hidden = x.dataset.pane !== p);
   $("#settitle").textContent = PANE_TITLES[p] || "Réglages";
