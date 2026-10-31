@@ -221,6 +221,16 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .rubrows { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 4px; }
 .rubrow { display: grid; grid-template-columns: 28px 26px minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); touch-action: pan-y; }
 .rubrow.off { opacity: 0.5; }
+.rubrow.r2 { grid-template-columns: 24px minmax(0, 1fr) auto auto; padding: 4px 10px 4px 6px; }
+.rubrow.r2.off { opacity: 0.75; }
+.rubrow.r2.off .nm .t { color: var(--muted); }
+.rubrow .nm { display: flex; align-items: center; gap: 9px; min-width: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; text-align: left; padding: 8px 2px; cursor: pointer; }
+.rubrow .nm .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rubrow .nm .ico { font-size: 18px; }
+.rubrow .nm .pr { font: 600 10px var(--f-mono); color: var(--accent); border: 1px solid var(--accent); border-radius: 99px; padding: 1px 6px; flex: none; }
+.rubsec { margin: 14px 0 0 2px !important; }
+.rubbtns { display: flex; gap: 8px; margin: 14px 0 6px; }
+.rubbtns .btn { flex: 1; }
 .rubrow.drag { border-color: var(--accent); box-shadow: 0 4px 14px rgb(0 0 0 / 0.15); position: relative; z-index: 2; background: var(--surface); }
 .rubrow .handle { cursor: grab; font-size: 20px; color: var(--muted); text-align: center; touch-action: none; user-select: none; padding: 4px 0; }
 .rubrow .ico { font-size: 18px; text-align: center; }
@@ -402,6 +412,23 @@ dialog h2 { font: 700 19px var(--f-head); }
 .ttile .n { min-width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; background: var(--chip); font: 600 11px var(--f-mono); padding: 0 6px; }
 .ttile.p3 { border-color: color-mix(in srgb, var(--accent) 70%, var(--line)); }
 .ttile.p3 .n { background: var(--accent); color: var(--accent-ink); }
+.vtopics { grid-column: 1 / -1; margin: 4px 0 6px; }
+.vtopics .navlabel { margin: 0 0 8px 2px; }
+.vfold { display: flex; align-items: center; gap: 6px; border: 0; background: none; cursor: pointer; padding: 4px 0; }
+.vfold svg { width: 16px; height: 16px; transition: transform .2s; }
+.vfold[aria-expanded="false"] svg { transform: rotate(-90deg); }
+.vchips { margin: 0 -16px 4px; padding: 0 16px 4px; }
+.vchips .n { font: 600 11px var(--f-mono); opacity: .7; }
+.layout > .submenu { grid-column: 1 / -1; margin: 0 -16px; padding: 0 16px; }
+.vtiles .ttile { padding: 8px 10px; border-radius: 12px; }
+.vtiles .ttile .ic { font-size: 18px; }
+.vtiles .hx { width: 22px; height: 22px; border-radius: 99px; display: grid; place-items: center; background: var(--chip); color: var(--muted); font-size: 12px; }
+.vtiles .hx.plus { background: var(--accent); color: var(--accent-ink); font-size: 15px; font-weight: 700; }
+.vtiles.editing .ttile:not(.add) { animation: none; border-style: solid; }
+.vtiles.editing .ttile.add { grid-template-columns: 30px minmax(0, 1fr) auto; }
+.vtiles .vhid, .vtiles .vnote { grid-column: 1 / -1; margin: 6px 0 0 2px; }
+.vtiles .ttile[aria-current="true"] { background: color-mix(in srgb, var(--accent) 18%, var(--surface)); border-color: var(--accent); }
+.vtiles .ttile.add { color: var(--muted); border-style: dashed; grid-template-columns: 30px minmax(0, 1fr); }
 .rows { display: grid; gap: var(--gap); }
 .row { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 12px; padding: var(--rowpad); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); min-width: 0; }
 .row.nopic { grid-template-columns: minmax(0, 1fr); }
@@ -542,7 +569,8 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
     <div id="srclist" style="display:contents"></div>
   </nav>
   <main>
-    <div id="veillehead" class="veillehead"><h2>Ma veille</h2><button id="vh-add" class="btn small" type="button">+ Sujet</button><button id="vh-edit" class="btn small" type="button">Modifier</button></div>
+    <div id="veillehead" class="veillehead"><h2>Ma veille</h2><button id="vh-add" class="btn small" type="button" hidden>+ Sujet</button><button id="vh-edit" class="btn small" type="button">Modifier</button></div>
+    <div id="vtopics" class="vtopics"><button id="vfold" class="navlabel vfold" type="button" aria-expanded="true"><span>Mes sujets suivis</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="vtiles" class="tiles vtiles"></div><div id="vchips" class="hchips vchips" hidden></div></div>
     <p id="intro" class="intro" hidden></p>
     <h2 id="viewtitle" class="viewtitle"></h2>
     <div id="footbar" class="footbar" hidden></div>
@@ -609,17 +637,15 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
     </form>
   </section>
   <section class="tabpane" data-pane="rubs" hidden>
-    <p class="note">Faites glisser une rubrique par la poignée ⠿ (ou utilisez les flèches) pour changer l'ordre de la barre. Touchez le nom pour le modifier, l'œil pour afficher ou masquer la rubrique. Dans la barre, un appui long sur une rubrique permet aussi de la déplacer.</p>
+    <p class="note">Activez les sujets à suivre avec l'interrupteur. Changez l'ordre avec les flèches ou en faisant glisser la poignée ⠿ : c'est l'ordre de Ma veille et de l'accueil. Touchez un sujet pour son nom, ses mots-clés, sa priorité et ses journaux.</p>
+    <p class="navlabel rubsec">Sujets suivis</p>
     <div id="rubrows" class="rubrows"></div>
-    <h3 class="grouphead">Nouvelle rubrique</h3>
-    <form id="rubadd" class="addform">
-      <input id="rubname" placeholder="Nom (ex. Cybersécurité)" required>
-      <input id="rubkw" placeholder="Mots-clés séparés par des virgules (ex. cyberattaque, rançongiciel, piratage)" required>
-      <div class="row">
-        <button id="rubreset" class="btn" type="button">Ordre d'origine</button>
-        <button class="btn primary" type="submit">Ajouter</button>
-      </div>
-    </form>
+    <p class="navlabel rubsec">Autres sujets</p>
+    <div id="rubrows2" class="rubrows"></div>
+    <div class="rubbtns">
+      <button id="rubnew" class="btn primary" type="button">+ Nouveau sujet</button>
+      <button id="rubreset" class="btn" type="button">Ordre d'origine</button>
+    </div>
   </section>
   <section class="tabpane" data-pane="links" hidden>
     <label class="field" for="tlang">Langue du bouton « Traduire » (Google Traduction)
@@ -1503,35 +1529,42 @@ $("#ra-name").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); $(
 $("#ra-hide").onclick = () => { toggleRub(raId); $("#rubact").close(); rubChanged(); };
 $("#ra-all").onclick = () => { $("#rubact").close(); openSettings("rubs"); };
 // Onglet Rubriques : glisser par la poignée, flèches, nom modifiable, œil pour masquer.
+const RUB_TABS = ["une", "saved"]; // devenus des onglets (Accueil, Bibliothèque)
+function setRubOrder(shownIds) {
+  const rest = userOrder().filter(id => !shownIds.includes(id));
+  rubPrefs.order = [...shownIds, ...rest]; saveRubs();
+}
 function renderRubRows() {
-  const box = $("#rubrows"); box.innerHTML = "";
-  const order = userOrder();
-  order.forEach((id, k) => {
-    const row = document.createElement("div"); row.className = "rubrow" + (rubHidden(id) ? " off" : "");
-    const h = document.createElement("span"); h.className = "handle"; h.textContent = "⠿"; h.setAttribute("aria-hidden", "true");
-    const ic = document.createElement("span"); ic.className = "ico"; ic.textContent = rubIcon(id);
-    const inp = document.createElement("input"); inp.value = rubricName(id); inp.setAttribute("aria-label", "Nom de la rubrique");
-    inp.onchange = () => { renameRub(id, inp.value); inp.value = rubricName(id); renderAll(); };
-    const acts = document.createElement("span"); acts.className = "acts";
-    const btn = (t, label, fn, dis) => { const b = document.createElement("button"); b.type = "button"; b.textContent = t; b.title = label; b.setAttribute("aria-label", label); b.disabled = !!dis; b.onclick = fn; acts.append(b); };
-    btn("▲", "Monter", () => { const o = userOrder(); o.splice(k, 1); o.splice(k - 1, 0, id); rubPrefs.order = o; saveRubs(); renderRubRows(); renderAll(); }, k === 0);
-    btn("▼", "Descendre", () => { const o = userOrder(); o.splice(k, 1); o.splice(k + 1, 0, id); rubPrefs.order = o; saveRubs(); renderRubRows(); renderAll(); }, k === order.length - 1);
-    if (id !== "une") btn(rubHidden(id) ? "🚫" : "👁", rubHidden(id) ? "Afficher" : "Masquer", () => { toggleRub(id); renderRubRows(); renderAll(); });
-    const cu = rubPrefs.custom.find(x => x.id === id);
-    if (cu) btn("🗑", "Supprimer", () => {
-      if (!confirm("Supprimer la rubrique « " + rubricName(id) + " » ?")) return;
-      rubPrefs.custom = rubPrefs.custom.filter(x => x.id !== id);
-      rubPrefs.hidden = rubPrefs.hidden.filter(x => x !== id); delete rubPrefs.names[id];
-      const j = RUBRICS.findIndex(r => r.id === id); if (j >= 0) RUBRICS.splice(j, 1);
-      saveRubs(); reclassify(); if (view === id) view = "une"; renderRubRows(); renderAll();
-    });
-    row.append(h, ic, inp, acts);
-    if (cu) { const kw = document.createElement("small"); kw.className = "kw"; kw.textContent = "Mots-clés : " + cu.kw; row.append(kw); }
-    h.onpointerdown = e => {
+  const box = $("#rubrows"), box2 = $("#rubrows2"); box.innerHTML = ""; box2.innerHTML = "";
+  const ids = userOrder().filter(id => !RUB_TABS.includes(id));
+  const shown = ids.filter(id => !rubHidden(id)), hidden = ids.filter(id => rubHidden(id));
+  const changed = () => { renderRubRows(); renderAll(); };
+  const mk = (id, on, k) => {
+    const row = el("div", "rubrow r2" + (on ? "" : " off"));
+    const h = el("span", "handle", on ? "⠿" : ""); h.setAttribute("aria-hidden", "true");
+    const nm = el("button", "nm"); nm.type = "button";
+    nm.append(el("span", "ico", rubIcon(id)), el("span", "t", rubricName(id)));
+    if (prioOf(id) >= 3) nm.append(el("span", "pr", "Haute"));
+    if (id !== "moi") nm.onclick = () => { openTopic(id); $("#topicdlg").addEventListener("close", () => renderRubRows(), { once: true }); };
+    const acts = el("span", "acts");
+    const btn = (t, label, fn, dis) => { const x = el("button", "", t); x.type = "button"; x.title = label; x.setAttribute("aria-label", label); x.disabled = !!dis; x.onclick = fn; acts.append(x); };
+    if (on) {
+      btn("▲", "Monter", () => { const o = [...shown]; o.splice(k, 1); o.splice(k - 1, 0, id); setRubOrder(o); changed(); }, k === 0);
+      btn("▼", "Descendre", () => { const o = [...shown]; o.splice(k, 1); o.splice(k + 1, 0, id); setRubOrder(o); changed(); }, k === shown.length - 1);
+    }
+    const sw = el("label", "switch"); sw.innerHTML = '<input type="checkbox"><span></span>';
+    const cb = sw.querySelector("input"); cb.checked = on; cb.setAttribute("aria-label", (on ? "Ne plus suivre " : "Suivre ") + rubricName(id));
+    cb.onchange = () => {
+      if (cb.checked) { rubPrefs.hidden = rubPrefs.hidden.filter(x => x !== id); setRubOrder([...shown, id]); }
+      else { rubPrefs.hidden = [...new Set([...rubPrefs.hidden, id])]; saveRubs(); if (view === id) view = shown.find(x => x !== id) || "telecoms"; }
+      changed();
+    };
+    row.append(h, nm, acts, sw);
+    if (on) h.onpointerdown = e => {
       e.preventDefault();
       try { h.setPointerCapture(e.pointerId); } catch {}
       const rows = [...box.children], from = rows.indexOf(row), y0 = e.clientY;
-      const mids = rows.map(r => { const b = r.getBoundingClientRect(); return b.top + b.height / 2; });
+      const mids = rows.map(r => { const q = r.getBoundingClientRect(); return q.top + q.height / 2; });
       const step = row.offsetHeight + 6;
       let to = from;
       row.classList.add("drag");
@@ -1547,24 +1580,17 @@ function renderRubRows() {
       };
       h.onpointerup = h.onpointercancel = () => {
         h.onpointermove = h.onpointerup = h.onpointercancel = null;
-        if (to !== from) { const o = userOrder(); o.splice(from, 1); o.splice(to, 0, id); rubPrefs.order = o; saveRubs(); renderAll(); }
+        if (to !== from) { const o = [...shown]; o.splice(from, 1); o.splice(to, 0, id); setRubOrder(o); renderAll(); }
         renderRubRows();
       };
     };
-    box.append(row);
-  });
+    return row;
+  };
+  shown.forEach((id, k) => box.append(mk(id, true, k)));
+  hidden.forEach(id => box2.append(mk(id, false)));
+  if (!hidden.length) box2.append(el("p", "note", "Tous les sujets sont suivis."));
 }
-$("#rubadd").onsubmit = e => {
-  e.preventDefault();
-  const name = $("#rubname").value.trim(), kw = $("#rubkw").value.trim();
-  if (!name || !kw) return;
-  const id = "c_" + Date.now().toString(36);
-  rubPrefs.custom.push({ id, name, kw });
-  RUBRICS.push({ id, name, custom: true, kw, re: kwRe(kw) });
-  saveRubs(); reclassify();
-  $("#rubname").value = ""; $("#rubkw").value = "";
-  renderRubRows(); renderAll();
-};
+$("#rubnew").onclick = () => { openTopic(null); $("#topicdlg").addEventListener("close", () => renderRubRows(), { once: true }); };
 $("#rubreset").onclick = () => { rubPrefs.order = []; rubPrefs.hidden = []; rubPrefs.names = {}; saveRubs(); renderRubRows(); renderAll(); };
 function go(id, sub) {
   if (id === "une") return setTab("home");
@@ -2017,6 +2043,7 @@ function render() {
   applyTab();
   if (tab === "home") return renderHome();
   if (tab === "explore") return renderExplore();
+  if (tab === "veille") try { renderVeilleTopics(); } catch (e) { console.warn("sujets", e); }
   renderList();
 }
 function renderList() {
@@ -2708,10 +2735,12 @@ for(var i=0;i<L.length;i++){var e=L[i],n=null;
 if(e.tagName==="ASIDE")n=e;else{if(e.children.length>2)continue;var t=(e.textContent||"").trim();if(!/^(les plus lus|[àa] la une)$/i.test(t))continue;n=e;
 while(n.parentElement&&n.parentElement!==document.body&&n.parentElement.getBoundingClientRect().width<W*0.45)n=n.parentElement;}
 var r=n.getBoundingClientRect();if(r.left>W*0.45&&r.width<W*0.45)n.style.setProperty("visibility","hidden","important");}}
-window.__kend=function(){var W=innerWidth,h=document.querySelector("h1"),hb=h?h.getBoundingClientRect().bottom:-1e9,ps=document.querySelectorAll("article p, main p, p"),best=null;
-for(var i=0;i<ps.length;i++){var p=ps[i],t=(p.textContent||"").trim();if(t.length<80)continue;var r=p.getBoundingClientRect();
+window.__kend=function(){var W=innerWidth,Y=scrollY,h=document.querySelector("h1"),hb=h?h.getBoundingClientRect().bottom:-1e9,best=null,L=document.querySelectorAll("p,div,li,section,span");
+for(var i=0;i<L.length;i++){var p=L[i],t;if(p.tagName==="P")t=(p.textContent||"").trim();else{t="";for(var c=p.firstChild;c;c=c.nextSibling)if(c.nodeType===3)t+=c.nodeValue;t=t.trim();}
+if(t.length<80)continue;var r=p.getBoundingClientRect();
 if(!r.height||r.width<W*0.2||r.left>W*0.5||r.top<hb)continue;if(p.closest("footer,aside,nav,header"))continue;if(best===null||r.bottom>best)best=r.bottom;}
-return best===null?-1:best;};
+if(best===null)return -1;var k=Math.round(best+Y)+"|"+document.documentElement.scrollHeight;
+if(window.__kendKey!==k){window.__kendKey=k;return -1;}return best;};
 function unwall(){var L=document.querySelectorAll("body *");for(var i=0;i<L.length;i++){var e=L[i],s=getComputedStyle(e);if(s.position!=="fixed"&&s.position!=="sticky")continue;
 var r=e.getBoundingClientRect();if(r.top>120||r.height>160)continue;var t=(e.textContent||"").replace(/\s+/g," ");if(/unwall/i.test(t)&&/reader|pin|share/i.test(t))e.style.setProperty("display","none","important");}
 var U=document.querySelectorAll('[id*="unwall" i],[class*="unwall" i]');for(var j=0;j<U.length;j++){var r2=U[j].getBoundingClientRect();if(r2.top<120&&r2.height<160)U[j].style.setProperty("display","none","important");}}
@@ -3435,7 +3464,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.42";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.43";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3574,7 +3603,8 @@ function applyTab() {
   $("#home").hidden = tab !== "home";
   $("#explore").hidden = tab !== "explore";
   $(".layout").hidden = tab !== "veille" && tab !== "library";
-  $(".menuwrap").hidden = tab !== "veille";
+  $(".menuwrap").hidden = true;
+  $("#vtopics").hidden = tab !== "veille";
   if (tab !== "veille") $("#submenu").hidden = true;
   $("#veillehead").hidden = tab !== "veille";
   $("#brandsub").textContent = { home: "Ma veille", veille: "Mes sujets suivis", explore: "Explorer", library: "Bibliothèque" }[tab];
@@ -3594,6 +3624,41 @@ document.querySelectorAll("#tabbar button").forEach(b => b.onclick = () => setTa
 $("#searchbtn").onclick = () => { setTab("explore"); setTimeout(() => $("#q").focus(), 50); };
 // En-tête « Ma veille » au-dessus de la liste des journaux.
 $(".layout").prepend($("#veillehead"));
+$("#veillehead").after($("#vtopics"));
+$("#vtopics").after($("#submenu"));
+// Ma veille : tous les sujets suivis en tuiles (ordre choisi dans Réglages), le sujet affiché en surbrillance.
+// Ma veille : bloc des sujets suivis, replié (une ligne de puces) ou déplié (tuiles). Choix retenu.
+function renderVeilleTopics() {
+  const box = $("#vtiles"), chips = $("#vchips"); box.innerHTML = ""; chips.innerHTML = "";
+  const folded = !!ui.vfold;
+  $("#vfold").setAttribute("aria-expanded", String(!folded));
+  box.hidden = folded; chips.hidden = !folded;
+  const count = rubCount();
+  const ids = userOrder().filter(x => !["une", "saved", "autres"].includes(x) && !rubHidden(x));
+  for (const id of ids) {
+    if (folded) {
+      const c = el("button", "hchip"); c.type = "button"; c.setAttribute("aria-current", String(id === view));
+      c.append(document.createTextNode(rubIcon(id) + " " + rubricName(id) + " "), el("span", "n", count(id)));
+      c.onclick = () => go(id);
+      if (id !== "moi") longPress(c, () => openTopic(id));
+      chips.append(c);
+      continue;
+    }
+    const b = el("button", "ttile" + (prioOf(id) >= 3 ? " p3" : "")); b.type = "button";
+    b.setAttribute("aria-current", String(id === view));
+    b.append(el("span", "ic", rubIcon(id)), el("span", "", rubricName(id)), el("span", "n", count(id)));
+    b.onclick = () => go(id);
+    if (id !== "moi") longPress(b, () => openTopic(id));
+    box.append(b);
+  }
+  if (!folded) {
+    const add = el("button", "ttile add"); add.type = "button";
+    add.append(el("span", "ic", "+"), el("span", "", "Nouveau sujet"));
+    add.onclick = () => openTopic(null);
+    box.append(add);
+  } else { const cur = chips.querySelector('[aria-current="true"]'); if (cur) setTimeout(() => cur.scrollIntoView({ inline: "center", block: "nearest" }), 0); }
+}
+$("#vfold").onclick = () => { ui.vfold = !ui.vfold; saveUi(); renderVeilleTopics(); };
 $("#vh-add").onclick = () => openTopic(null);
 $("#vh-edit").onclick = () => openTopic(view);
 
