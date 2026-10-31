@@ -1767,6 +1767,15 @@ const WALL_JS = `(function () {
   scan();
   var n = 0, timer = setInterval(function () { scan(); if (++n > 40) clearInterval(timer); }, 600);
 })();`;
+// Page sans couleur de fond : la fenêtre du lecteur est noire derrière, un fond blanc est posé.
+const BG_JS = `(function () {
+  function clear(e) { if (!e) return true; var c = getComputedStyle(e).backgroundColor; return !c || c === "transparent" || /rgba\\(0, 0, 0, 0\\)/.test(c); }
+  if (clear(document.documentElement) && clear(document.body)) document.documentElement.style.setProperty("background-color", "#fff", "important");
+})();`;
+async function openInChrome(url) {
+  try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#13233d" }); return; } } catch (e) { console.warn(e); }
+  location.href = url; // Repli : Android ouvre alors le navigateur du téléphone.
+}
 async function openInBrowser(url) {
   if (NATIVE) {
     // Lecteur intégré à l'appli, sans barre d'adresse (cordova-plugin-inappbrowser), sinon Chrome Custom Tabs.
@@ -1774,9 +1783,19 @@ async function openInBrowser(url) {
     if (iab && inApp) {
       try {
         const ref = iab.open(url, "_blank", "location=yes,hideurlbar=yes,toolbarcolor=#13233d,closebuttoncolor=#ffffff,navigationbuttoncolor=#ffffff,hidenavigationbuttons=no,zoom=yes,hardwareback=yes,footer=no,clearcache=no,clearsessioncache=no");
+        let loaded = false, failed = false;
+        // Page impossible à charger : elle s'ouvre dans Chrome au lieu de laisser une fenêtre noire.
+        ref.addEventListener("loaderror", ev => {
+          if (loaded || failed || (ev && ev.url && ev.url !== url && !/^https?:/.test(ev.url))) return;
+          failed = true;
+          try { ref.close(); } catch (e) {}
+          openInChrome(url);
+        });
         ref.addEventListener("loadstop", () => {
+          loaded = true;
           try {
             ref.insertCSS({ code: FIT_CSS });
+            ref.executeScript({ code: BG_JS });
             if (ui.wall) { ref.insertCSS({ code: WALL_CSS }); ref.executeScript({ code: WALL_JS }); }
             if (clean) { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); ref.executeScript({ code: AD_JS }); }
           } catch (e) {}
@@ -1785,8 +1804,7 @@ async function openInBrowser(url) {
       }
       catch (e) { console.warn(e); }
     }
-    try { if (PLUGINS.Browser) { await PLUGINS.Browser.open({ url, toolbarColor: "#173a63" }); return; } } catch (e) { console.warn(e); }
-    location.href = url; // Repli : Android ouvre alors le navigateur du téléphone.
+    await openInChrome(url);
     return;
   }
   window.open(url, "_blank", "noopener");
@@ -3411,7 +3429,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.38";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.39";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3880,11 +3898,11 @@ async function openReader(i) {
   const wait = el("p", "rdwait", "Chargement de l'article…"); body.append(wait);
   const foot = el("div", "rdfoot");
   const fb = (label, fn, primary) => { const b = el("button", "btn" + (primary ? " primary" : ""), label); b.type = "button"; b.onclick = fn; foot.append(b); };
-  fb("Lire sur le site du journal", () => openSite(i), true); fb("Traduire", () => openTranslated(i)); fb("Partager", () => openShare(i));
+  fb("Lire sur le site du journal", () => { readerSeq++; $("#reader").close(); setTimeout(() => openSite(i), 350); }, true); fb("Traduire", () => openTranslated(i)); fb("Partager", () => openShare(i));
   if (!$("#reader").open) $("#reader").showModal();
   $("#reader").scrollTop = 0;
   try {
-    const html = await articleHtml(i.link);
+    const html = await Promise.race([articleHtml(i.link), new Promise((_, no) => setTimeout(() => no(new Error("délai dépassé")), 12000))]);
     if (seq !== readerSeq) return;
     const doc = new DOMParser().parseFromString(html.replace(/<head([^>]*)>/i, '<head$1><base href="' + i.link.replace(/"/g, "&quot;") + '">'), "text/html");
     const art = new Readability(doc, { charThreshold: 300 }).parse();
@@ -3906,7 +3924,7 @@ async function openReader(i) {
     if (seq !== readerSeq) return;
     console.warn("lecture", e);
     $("#reader").close();
-    openSite(i);
+    setTimeout(() => openSite(i), 350);
   }
 }
 $("#rd-back").onclick = () => { readerSeq++; $("#reader").close(); };
