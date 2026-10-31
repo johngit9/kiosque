@@ -42,11 +42,23 @@ function parse(xml, source) {
   return out.filter(i => i.title && /^https?:/.test(i.link));
 }
 
+// ——— Événements déjà signalés : une seule notification par événement, même si plusieurs journaux en parlent ———
+const STOPW = new Set("avec dans pour plus sans sous entre apres avant cette leurs leur nous vous elle elles sont etre fait faire aussi tout tous toute toutes comme mais donc quand selon depuis encore deja tres alors ainsi contre vers chez dont celui celle ceux quel quelle quels quelles notre votre article video photos direct live france".split(" "));
+function eventWords(t) { return Array.from(new Set(norm(t).replace(/[^a-z0-9]+/g, " ").split(" ").filter(w => w.length >= 4 && !STOPW.has(w) && !/^\d+$/.test(w)))); }
+function sameEvent(a, b) {
+  let n = 0; const set = {}; a.forEach(w => { set[w] = 1; });
+  b.forEach(w => { if (set[w]) n++; });
+  return n >= 3 || (n >= 2 && n / Math.max(1, Math.min(a.length, b.length)) >= 0.5);
+}
+// Au plus MAX_HOUR notifications d'articles par heure (les suivantes sont regroupées).
+const MAX_HOUR = 4;
+
 async function check(config) {
   const seen = kvGet("seen", []);
   const seenSet = new Set(seen);
   const first = !kvGet("initialized", false);
-  const rules = (config.rules || []).map(r => ({ name: r.name, re: new RegExp(r.re) }));
+  const rules = (config.rules || []).map(r => ({ name: r.name, re: new RegExp(r.re), prio: r.prio || 2 }))
+    .sort((a, b) => b.prio - a.prio);
   const ad = config.adRe ? new RegExp(config.adRe) : null;
   const fresh = [];
   const st = { at: Date.now(), feeds: 0, errors: 0, items: 0, fresh: 0, sent: 0, first, rules: rules.length };
@@ -65,7 +77,7 @@ async function check(config) {
           const text = norm(it.title + " " + it.summary + " " + it.cats + " " + it.link);
           if (ad && ad.test(text)) continue;
           const hit = rules.find(r => r.re.test(text));
-          if (hit) fresh.push({ ...it, rule: hit.name });
+          if (hit) fresh.push({ ...it, rule: hit.name, prio: hit.prio });
         }
       } catch (e) { st.errors++; console.log("Kiosque: " + url + " " + e); }
     }
@@ -78,27 +90,53 @@ async function check(config) {
 
   const h = new Date().getHours();
   if (config.quiet && (h >= 22 || h < 7)) { st.waiting = true; kvSet("status", st); kvSet("pending", (kvGet("pending", []).concat(fresh)).slice(-30)); return 0; }
-  const all = kvGet("pending", []).concat(fresh);
+  const all = kvGet("pending", []).concat(fresh).sort((a, b) => (b.prio || 2) - (a.prio || 2));
   kvSet("pending", []);
 
+  // Un article par événement : les reprises du même sujet (dans ce lot ou déjà signalé dans les 36 h) sont écartées.
+  const now = Date.now();
+  const events = kvGet("events", []).filter(e => now - e.t < 36 * 3600e3);
+  const items = [];
+  for (const it of all) {
+    const w = eventWords(it.title);
+    const same = items.find(x => sameEvent(x.w, w));
+    if (same) { same.more = (same.more || 0) + 1; continue; }
+    if (w.length && events.some(e => sameEvent(e.w, w))) { st.dupes = (st.dupes || 0) + 1; continue; }
+    items.push({ ...it, w });
+  }
+  if (!items.length) { kvSet("events", events); kvSet("status", st); return 0; }
+
+  const times = kvGet("sentTimes", []).filter(t => now - t < 3600e3);
+  let room = Math.max(0, MAX_HOUR - times.length);
   let id = kvGet("nextId", 1000);
   const notes = [];
-  if (all.length <= 4) {
-    for (const it of all) {
-      notes.push({ id: id++, title: "◆ " + it.rule + " · " + it.source, body: it.title, scheduleAt: new Date(Date.now() + 1500), group: "kiosque" });
+  const one = it => ({ id: id++, title: (it.prio >= 3 ? "◆ " : "") + it.rule + " · " + it.source, body: it.title + (it.more ? "\n(repris par " + (it.more + 1) + " médias)" : ""), scheduleAt: new Date(now + 1500), group: "kiosque" });
+  // Priorité haute : une notification par article, tout de suite (dans la limite par heure).
+  const high = items.filter(it => it.prio >= 3), rest = items.filter(it => !(it.prio >= 3));
+  const left = [];
+  for (const it of high) { if (room > (rest.length ? 1 : 0)) { notes.push(one(it)); room--; } else left.push(it); }
+  const others = left.concat(rest);
+  // Les autres : regroupés en une seule notification résumée (ou seuls s'il n'y en a qu'un).
+  if (others.length && room > 0) {
+    if (others.length === 1) notes.push(one(others[0]));
+    else {
+      const byRule = {};
+      others.forEach(it => { byRule[it.rule] = (byRule[it.rule] || 0) + 1; });
+      notes.push({
+        id: id++, title: "Kiosque · " + others.length + " nouveaux sujets",
+        body: Object.keys(byRule).map(k => byRule[k] + " " + k).join(" · ") + "\n" + others.slice(0, 4).map(it => "• " + it.title + " (" + it.source + ")").join("\n"),
+        scheduleAt: new Date(now + 1500), group: "kiosque",
+      });
     }
-  } else {
-    const byRule = {};
-    all.forEach(it => { byRule[it.rule] = (byRule[it.rule] || 0) + 1; });
-    const detail = Object.keys(byRule).map(k => byRule[k] + " " + k).join(" · ");
-    notes.push({
-      id: id++, title: "Kiosque · " + all.length + " nouveaux articles",
-      body: detail + "\n" + all.slice(0, 4).map(it => "• " + it.title + " (" + it.source + ")").join("\n"),
-      scheduleAt: new Date(Date.now() + 1500), group: "kiosque",
-    });
-  }
+  } else if (others.length) kvSet("pending", others.slice(-30).map(({ w, ...it }) => it));
   kvSet("nextId", id > 900000 ? 1000 : id);
-  CapacitorNotifications.schedule(notes);
+  // Les événements signalés (y compris ceux du résumé) ne seront plus notifiés.
+  const told = notes.length ? items.filter(it => !(kvGet("pending", []).some(p => p.link === it.link))) : [];
+  told.forEach(it => events.push({ w: it.w, t: now }));
+  kvSet("events", events.slice(-400));
+  notes.forEach(() => times.push(now));
+  kvSet("sentTimes", times);
+  if (notes.length) CapacitorNotifications.schedule(notes);
   st.sent = notes.length; kvSet("status", st);
   return notes.length;
 }

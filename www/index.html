@@ -7,7 +7,13 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2215%22 fill=%22%2313233d%22/%3E%3Crect x=%2221%22 y=%2213%22 width=%2229%22 height=%2235%22 rx=%223.5%22 fill=%22%23ff5a3c%22 transform=%22rotate%288 35 30%29%22/%3E%3Crect x=%2214%22 y=%2216%22 width=%2231%22 height=%2237%22 rx=%223.5%22 fill=%22%23fff%22/%3E%3Crect x=%2218.5%22 y=%2221%22 width=%2222%22 height=%224.5%22 rx=%221.2%22 fill=%22%2313233d%22/%3E%3Crect x=%2218.5%22 y=%2229%22 width=%2210%22 height=%229%22 rx=%221.2%22 fill=%22%23ff5a3c%22/%3E%3Crect x=%2231%22 y=%2229%22 width=%229.5%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2231%22 y=%2233%22 width=%229.5%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2231%22 y=%2237%22 width=%227%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2218.5%22 y=%2242%22 width=%2222%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3Crect x=%2218.5%22 y=%2246%22 width=%2216%22 height=%222.2%22 rx=%221.1%22 fill=%22%23b9c3d1%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>
+// Thème choisi (Réglages → Affichage), appliqué avant l'affichage : bleu nuit sombre par défaut.
+(function () { var r = document.documentElement, u = {};
+  try { u = JSON.parse(localStorage.getItem("kiosque.ui") || "{}") || {}; } catch (e) {}
+  r.dataset.theme = u.dark === false ? "light" : "dark"; r.dataset.palette = u.theme || "nuit"; r.dataset.density = u.density == null ? 1 : u.density; })();
+</script>
 <style>
 /* Layout: menu des rubriques en haut, sources à gauche (en ligne sur mobile), fil d'articles en grille */
 :root {
@@ -332,52 +338,211 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   dialog.sheet { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; margin: 0; border-radius: 0; border: 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-top: env(safe-area-inset-top, 0px); }
   dialog.sheet.small { height: auto; max-height: 85dvh; margin: auto 0 0; border-radius: 16px 16px 0 0; }
 }
+
+/* ——— v38 : nouveau design (thème bleu nuit, accueil, barre du bas, lecture) ——— */
+:root[data-palette="nuit"] { --bg: #eef3f8; --surface: #ffffff; --surface2: #f5f8fb; --ink: #0f2238; --muted: #5a6b80; --line: #d9e2ec; --accent: #0a8fa3; --accent-ink: #ffffff; --chip: #e2f3f6; }
+:root[data-theme="dark"][data-palette="nuit"] { --bg: #0a1626; --surface: #112238; --surface2: #162b45; --ink: #eaf1f8; --muted: #8ea4bc; --line: #213a57; --accent: #2cc6d8; --accent-ink: #04212b; --chip: #15354f; --warn: #ff8a65; --fibre: #b8a2ff; --regl: #f3b866; color-scheme: dark; }
+:root { --surface2: var(--bg); --f-head: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --rowpad: 10px; --gap: 12px; --tabh: 62px; }
+:root[data-density="0"] { --rowpad: 7px; --gap: 8px; }
+:root[data-density="2"] { --rowpad: 14px; --gap: 18px; }
+body { font-size: 14px; padding-bottom: calc(var(--tabh) + env(safe-area-inset-bottom, 0px)); }
+header.top { padding-block: 8px; gap: 10px; flex-wrap: nowrap; border-bottom: 0; }
+.brand2 { display: flex; align-items: center; gap: 10px; margin: 0; min-width: 0; }
+.brand2 svg { width: 38px; height: 38px; flex: none; }
+.brand2 b { display: block; font: 700 19px/1.1 var(--f-head); letter-spacing: -0.01em; }
+.brand2 small { display: block; font-size: 12.5px; color: var(--muted); }
+.tools { gap: 6px; }
+.round { width: 38px; height: 38px; background: var(--surface2); border-color: var(--line); }
+.round svg { width: 19px; height: 19px; }
+.stamp { display: none; }
+.menuwrap { border-bottom: 1px solid var(--line); }
+.menubar { padding-block: 6px; gap: 6px; }
+.menubar button { font-size: 13px; padding: 6px 11px; background: var(--surface2); }
+.menubar button.rub { padding: 6px 11px 6px 9px; }
+.menubar button[aria-current="true"], .menubar button.tel[aria-current="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.submenu button { font-size: 13px; padding: 8px 10px 7px; }
+.layout { padding-block: 12px 24px; gap: 18px; }
+.viewtitle { font: 700 20px/1.2 var(--f-head); }
+.status { font-size: 12.5px; margin: 0 0 10px; }
+.intro { font-size: 13px; }
+.src { font-size: 13px; }
+.grid { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: var(--gap); }
+#lead:empty { display: none; }
+#lead { margin-bottom: var(--gap); }
+.grouphead { font: 600 11px var(--f-mono); }
+dialog h2 { font: 700 19px var(--f-head); }
+.btn { font-size: 13.5px; border-radius: 10px; }
+.btn.small { padding: 6px 11px; font-size: 13px; }
+.page { max-width: 760px; margin: 0 auto; padding: 4px max(16px, env(safe-area-inset-left, 0px)) 20px max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: var(--gap); }
+.hchips { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 4px; }
+.hchips::-webkit-scrollbar { display: none; }
+.hchips button { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 7px 13px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.hchips button[aria-current="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.brief { position: relative; display: grid; gap: 4px; text-align: left; width: 100%; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-radius: 16px; padding: 13px 44px 13px 15px; cursor: pointer; color: #fff;
+  background: radial-gradient(120% 140% at 100% 100%, rgb(44 198 216 / 0.45), transparent 55%), linear-gradient(120deg, #10284a, #0d3a52); }
+.brief .bk { display: flex; justify-content: space-between; gap: 8px; font: 600 11px var(--f-body); letter-spacing: 0.06em; text-transform: uppercase; color: #8fe6f0; }
+.brief .bk span:last-child { text-transform: none; letter-spacing: 0; color: #d7eef3; font-weight: 500; }
+.brief b { font: 700 16px/1.3 var(--f-head); }
+.brief small { font-size: 12.5px; color: #cfe3ec; }
+.brief svg { position: absolute; right: 14px; bottom: 14px; width: 20px; height: 20px; color: #fff; }
+.shead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 6px 0 -2px; }
+.shead h2 { font: 700 18px/1.2 var(--f-head); margin: 0; }
+.shead button { border: 0; background: none; color: var(--muted); font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; padding: 4px 0; }
+.shead button svg { width: 15px; height: 15px; }
+.big { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+.big .pic { display: block; }
+.big .pic img, .big .pic .tile { width: 100%; aspect-ratio: 16 / 8.5; object-fit: cover; display: block; border-radius: 0; height: auto; }
+.big .pic .tile { aspect-ratio: auto; height: 64px; }
+.big .bd { padding: 11px 14px 13px; display: grid; gap: 6px; }
+.big h2 { font: 700 17px/1.3 var(--f-head); margin: 0; text-wrap: balance; }
+.big h2 a, .row h3 a { text-decoration: none; color: var(--ink); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.ttile { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 9px; text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 13px; padding: 11px 11px; cursor: pointer; font-size: 13px; line-height: 1.25; }
+.ttile .ic { font-size: 21px; line-height: 1; text-align: center; }
+.ttile .n { min-width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; background: var(--chip); font: 600 11px var(--f-mono); padding: 0 6px; }
+.ttile.p3 { border-color: color-mix(in srgb, var(--accent) 70%, var(--line)); }
+.ttile.p3 .n { background: var(--accent); color: var(--accent-ink); }
+.rows { display: grid; gap: var(--gap); }
+.row { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 12px; padding: var(--rowpad); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); min-width: 0; }
+.row.nopic { grid-template-columns: minmax(0, 1fr); }
+.row .th > a { display: block; width: 82px; height: 82px; border-radius: 10px; overflow: hidden; background: var(--surface2); }
+.row .th img.thumb { width: 82px; height: 82px; aspect-ratio: auto; object-fit: cover; border-radius: 10px; }
+.row .th .tile, .lgtile { width: 82px; height: 82px; padding: 0; justify-content: center; border-left: 0; border-radius: 10px; background: color-mix(in srgb, var(--fc, var(--accent)) 16%, var(--surface2)); display: flex; align-items: center; }
+.row .th .tile span { display: none; }
+.row .th .tile img { width: 40px; height: 40px; border-radius: 9px; }
+.row .bd { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.row h3 { font: 600 14.5px/1.32 var(--f-head); margin: 0; text-wrap: pretty; }
+.rmeta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); min-width: 0; }
+.rmeta .fav { width: 16px; height: 16px; border-radius: 4px; background: #fff; object-fit: contain; flex: none; }
+.rmeta b { color: var(--ink); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rmeta .t { white-space: nowrap; }
+.rmeta .sp { flex: 1; }
+.ib { display: inline-grid; place-items: center; width: 30px; height: 30px; margin: -6px -4px -6px 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; flex: none; }
+.ib svg { width: 19px; height: 19px; }
+.ib:hover { color: var(--ink); background: var(--surface2); }
+.ib.on { color: var(--accent); }
+.ib.on svg path { fill: currentColor; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 11.5px; line-height: 1; padding: 5px 9px; border-radius: 99px; background: var(--chip); color: var(--ink); border: 0; }
+.tag.fibre { color: var(--fibre); background: color-mix(in srgb, var(--fibre) 14%, transparent); }
+.tag.regl { color: var(--regl); background: color-mix(in srgb, var(--regl) 14%, transparent); }
+.evt { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; color: var(--accent); font-size: 12.5px; font-weight: 600; cursor: pointer; padding: 2px 0; }
+.evt .fv { display: inline-flex; }
+.evt .fv img { width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 1.5px solid var(--surface); margin-left: -5px; object-fit: contain; }
+.evt .fv img:first-child { margin-left: 0; }
+.moreb { justify-self: center; }
+.empty { border: 1px dashed var(--line); border-radius: 14px; padding: 16px; color: var(--muted); font-size: 13px; text-align: center; }
+.jgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.jt { display: grid; justify-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 13px; padding: 11px 5px 9px; cursor: pointer; color: var(--ink); font-size: 11.5px; line-height: 1.2; text-align: center; min-width: 0; }
+.jt .lg { width: 46px; height: 46px; border-radius: 11px; background: #fff; display: grid; place-items: center; overflow: hidden; }
+.jt .lg img { width: 36px; height: 36px; object-fit: contain; }
+.jt .lg span { font: 700 18px var(--f-head); color: #fff; }
+.jt small { color: var(--muted); font: 10.5px var(--f-mono); }
+.jt span.nm { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 100%; }
+.searchwrap.big { max-width: none; flex: none; }
+.searchwrap.big .search { padding: 12px 14px 12px 40px; font-size: 14.5px; background: var(--surface); border-radius: 14px; }
+.pagehead { display: flex; align-items: center; gap: 10px; }
+.pagehead h2 { font: 700 20px var(--f-head); margin: 0; }
+.veillehead { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin: 0; }
+.veillehead h2 { flex: 1; font: 700 20px var(--f-head); margin: 0; }
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-top: 1px solid var(--line); padding: 4px max(8px, env(safe-area-inset-left, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-right, 0px)); box-shadow: 0 -6px 18px rgb(0 0 0 / 0.12); }
+.tabbar button { display: grid; justify-items: center; gap: 2px; border: 0; background: none; color: var(--muted); font-size: 11.5px; font-weight: 500; padding: 6px 2px 4px; cursor: pointer; border-radius: 12px; }
+.tabbar button svg { width: 23px; height: 23px; }
+.tabbar button[aria-current="true"] { color: var(--accent); font-weight: 600; }
+.tabbar button[aria-current="true"] svg path { fill: color-mix(in srgb, var(--accent) 25%, transparent); }
+.updbar { bottom: calc(var(--tabh) + 10px + env(safe-area-inset-bottom, 0px)); }
+dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border: 0; border-radius: 0; padding: 0; background: var(--bg); }
+.rdhead { position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px 40px; align-items: center; gap: 4px; padding: calc(env(safe-area-inset-top, 0px) + 6px) 8px 6px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.rdhead .ib { width: 40px; height: 40px; margin: 0; color: var(--ink); }
+.rdsrc { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 15px; min-width: 0; }
+.rdsrc img { width: 24px; height: 24px; border-radius: 6px; background: #fff; object-fit: contain; }
+.rdsrc span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rdbody { max-width: 720px; margin: 0 auto; padding: 14px 18px calc(30px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px; }
+.rdbody h1 { font: 700 23px/1.22 var(--f-head); margin: 0; text-wrap: balance; }
+.rdbody .lede { font-size: 15.5px; line-height: 1.5; margin: 0; color: var(--ink); opacity: 0.92; }
+.rdmeta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; flex-wrap: wrap; }
+.rdmeta span { display: inline-flex; align-items: center; gap: 5px; }
+.rdmeta svg { width: 15px; height: 15px; }
+.rdmeta i { width: 1px; height: 14px; background: var(--line); }
+.rdhero { width: 100%; border-radius: 14px; display: block; max-height: 380px; object-fit: cover; background: var(--surface2); }
+.rdtext { font-size: 15.5px; line-height: 1.62; overflow-wrap: anywhere; }
+.rdtext p { margin: 0 0 14px; }
+.rdtext h2, .rdtext h3, .rdtext h4 { font: 700 17px/1.3 var(--f-head); margin: 18px 0 8px; }
+.rdtext img, .rdtext video { max-width: 100%; height: auto; border-radius: 10px; display: block; margin: 10px auto; }
+.rdtext figure { margin: 12px 0; }
+.rdtext figcaption { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+.rdtext blockquote { margin: 12px 0; padding: 4px 0 4px 14px; border-left: 3px solid var(--accent); font-style: italic; }
+.rdtext a { color: var(--accent); }
+.rdtext table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 13.5px; }
+.rdtext td, .rdtext th { border: 1px solid var(--line); padding: 5px 7px; }
+.rdwait { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 10px; }
+.rdwait::before { content: ""; width: 16px; height: 16px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; }
+.rdfoot { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 8px; }
+.ialist { display: grid; gap: 4px; padding-bottom: 14px; }
+.ialist button { display: flex; align-items: center; gap: 12px; text-align: left; border: 0; background: none; color: var(--ink); padding: 11px 6px; border-radius: 10px; font-size: 14.5px; cursor: pointer; }
+.ialist button:hover { background: var(--surface2); }
+.ialist button .e { width: 24px; text-align: center; font-size: 17px; }
+.iatitle { font: 600 15px/1.35 var(--f-head) !important; }
+.cmp { display: grid; gap: 10px; padding-bottom: 16px; }
+.cmp .row { grid-template-columns: minmax(0, 1fr); }
+.blist { display: grid; gap: 10px; padding-bottom: 16px; counter-reset: b; }
+.blist .row { counter-increment: b; position: relative; }
+.blist .row::before { content: counter(b); position: absolute; left: -6px; top: -6px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font: 700 11.5px/22px var(--f-mono); text-align: center; z-index: 1; }
+.seg { display: inline-flex; background: var(--surface2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 3px; }
+.seg button { min-width: 44px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--ink); cursor: pointer; font-weight: 600; display: grid; place-items: center; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg button svg { width: 20px; height: 20px; }
+.seg.wide { display: flex; }
+.seg.wide button { flex: 1; font-size: 13.5px; }
+.sblock { border: 1px solid var(--line); border-radius: 14px; background: var(--surface2); padding: 4px 14px; margin: 0 0 12px; }
+.sblock h3 { font: 700 16px var(--f-head); margin: 10px 0 2px; }
+.srow { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 11px 0; border: 0; border-top: 1px solid var(--line); background: none; color: var(--ink); text-align: left; font-size: 14px; cursor: pointer; min-height: 48px; }
+.sblock h3 + .srow { border-top: 0; }
+.srow > span:first-child { display: grid; gap: 2px; }
+.srow small { color: var(--muted); font-size: 12px; }
+.srow .val { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 13px; white-space: nowrap; }
+.srow .val svg { width: 16px; height: 16px; }
+.srow select { border: 0; background: none; color: var(--muted); font-size: 13px; text-align: right; max-width: 55%; }
+#dlg .tabs { display: none; }
+#dlg .sheethead { justify-content: flex-start; }
+#dlg .sheethead h2 { flex: 1; }
+@media (min-width: 821px) { .layout { grid-template-columns: 200px minmax(0, 1fr); } }
+@media (max-width: 820px) { header.top { flex-wrap: nowrap; } .tools { margin-left: auto; } }
+@media (max-width: 380px) { .jgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .row { grid-template-columns: 70px minmax(0, 1fr); } .row .th > a, .row .th img.thumb, .row .th .tile { width: 70px; height: 70px; } }
 @media (prefers-reduced-motion: no-preference) {
   .card, .lead { animation: fade 0.25s ease both; }
   @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
 }
-
-/* Kiosque V37 — espace de veille personnalisé */
-.v37-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font:600 12px var(--f-sans);cursor:pointer;white-space:nowrap}
-.v37-btn:hover{border-color:var(--accent);background:var(--chip)}
-#v37dlg{width:min(760px,calc(100vw - 28px));max-height:min(88dvh,900px);border:1px solid var(--line);border-radius:20px;padding:0;background:var(--surface);color:var(--ink);box-shadow:0 24px 90px #0003}
-#v37dlg::backdrop{background:#10182799;backdrop-filter:blur(3px)}
-.v37-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
-.v37-head h2{margin:0;font-size:21px}.v37-kicker{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
-.v37-body{padding:18px 20px;display:grid;gap:18px;overflow:auto}
-.v37-hero{padding:18px;border-radius:16px;background:linear-gradient(130deg,#13233d,#145d63);color:#fff}
-.v37-hero h3{margin:5px 0 8px;font-size:20px}.v37-hero p{margin:0;color:#e4f1f2;font-size:13px;line-height:1.55}
-.v37-section h3{margin:0 0 10px;font-size:15px}.v37-topics{display:flex;flex-wrap:wrap;gap:7px}.v37-chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 10px;border-radius:99px;font-size:12px}
-.v37-form{display:grid;grid-template-columns:1fr auto;gap:8px}.v37-form input{min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:11px;font:inherit}
-.v37-note{font-size:12px;color:var(--muted);margin:8px 0 0}.v37-stories{display:grid;gap:9px}
-.v37-story{display:grid;gap:5px;padding:12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--surface)}
-.v37-story:hover{border-color:var(--accent)}.v37-story strong{font-size:14px;line-height:1.4}.v37-story small{color:var(--muted);font-size:11px}.v37-empty{padding:14px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:13px}
-@media(max-width:560px){.v37-btn{padding:7px 9px}.v37-head{padding:15px}.v37-body{padding:14px}.v37-form{grid-template-columns:1fr}.v37-hero h3{font-size:18px}}
-
 </style>
 </head>
 <body>
 <div class="sticky">
   <header class="top">
-    <h1 class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#13233d"/><g transform="translate(10 9) scale(.8)"><rect x="35" y="9" width="52" height="68" rx="6" fill="#ff5a3c" transform="rotate(9 61 43)"/><rect x="14" y="19" width="56" height="72" rx="6" fill="#fff"/><rect x="21" y="28" width="42" height="10" rx="2.5" fill="#13233d"/><rect x="21" y="44" width="19" height="17" rx="2.5" fill="#ff5a3c"/><rect x="45" y="44.5" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="51" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="57.5" width="12" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="68" width="42" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="77" width="30" height="4.5" rx="2.25" fill="#9aa8ba"/></g></svg>Kiosque</h1>
-    <div class="searchwrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="q" class="search" type="search" placeholder="Rechercher un titre, un opérateur…" aria-label="Rechercher"></div>
+    <h1 class="brand2"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#13233d"/><g transform="translate(10 9) scale(.8)"><rect x="35" y="9" width="52" height="68" rx="6" fill="#ff5a3c" transform="rotate(9 61 43)"/><rect x="14" y="19" width="56" height="72" rx="6" fill="#fff"/><rect x="21" y="28" width="42" height="10" rx="2.5" fill="#13233d"/><rect x="21" y="44" width="19" height="17" rx="2.5" fill="#ff5a3c"/><rect x="45" y="44.5" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="51" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="57.5" width="12" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="68" width="42" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="77" width="30" height="4.5" rx="2.25" fill="#9aa8ba"/></g></svg><span><b>Kiosque</b><small id="brandsub">Ma veille</small></span></h1>
     <div class="tools">
       <span id="stamp" class="stamp"></span>
+      <button id="searchbtn" class="round" type="button" aria-label="Rechercher" title="Rechercher"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       <button id="refresh" class="round" type="button" aria-label="Actualiser" title="Actualiser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button id="v37open" class="v37-btn" type="button">Ma veille</button>
-      <button id="manage" class="round" type="button" aria-label="Réglages" title="Réglages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+      <button id="manage" class="round" type="button" aria-label="Réglages" title="Réglages"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.9"/></svg></button>
     </div>
   </header>
   <div class="menuwrap"><nav id="menu" class="menubar" aria-label="Rubriques"></nav></div>
   <nav id="submenu" class="submenu" aria-label="Sous-rubriques" hidden></nav>
 </div>
 
+<section id="home" class="page" hidden></section>
+<section id="explore" class="page" hidden>
+  <div class="pagehead"><h2>Explorer</h2></div>
+  <div class="searchwrap big"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="q" class="search" type="search" placeholder="Rechercher un article ou un journal…" aria-label="Rechercher"></div>
+  <div id="exbody" style="display:contents"></div>
+</section>
 <div class="layout">
   <nav class="sources" aria-label="Journaux">
     <p class="navlabel">Journaux</p>
     <div id="srclist" style="display:contents"></div>
   </nav>
   <main>
+    <div id="veillehead" class="veillehead"><h2>Ma veille</h2><button id="vh-add" class="btn small" type="button">+ Sujet</button><button id="vh-edit" class="btn small" type="button">Modifier</button></div>
     <p id="intro" class="intro" hidden></p>
     <h2 id="viewtitle" class="viewtitle"></h2>
     <div id="footbar" class="footbar" hidden></div>
@@ -391,7 +556,8 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
 
 <dialog id="dlg" class="sheet">
   <div class="sheethead">
-    <h2>Réglages</h2>
+    <button id="setback" class="round" type="button" aria-label="Retour" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <h2 id="settitle">Réglages</h2>
     <button id="close" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   </div>
   <div class="tabs" role="tablist">
@@ -401,7 +567,33 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <button type="button" role="tab" data-tab="notif" aria-selected="false">Notifications</button>
     <button type="button" role="tab" data-tab="app" aria-selected="false">Appli</button>
   </div>
-  <section class="tabpane" data-pane="feeds">
+  <section class="tabpane" data-pane="list">
+    <div class="sblock"><h3>Affichage</h3>
+      <div class="srow"><span>Taille du texte</span><div id="ui-size" class="seg"><button type="button" data-v="0" style="font-size:12px" aria-label="Petit">A</button><button type="button" data-v="1" style="font-size:15px" aria-label="Moyen">A</button><button type="button" data-v="2" style="font-size:19px" aria-label="Grand">A</button></div></div>
+      <div class="srow"><span>Densité des menus</span><div id="ui-density" class="seg"><button type="button" data-v="0" aria-label="Serrée"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 12h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><button type="button" data-v="1" aria-label="Normale"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><button type="button" data-v="2" aria-label="Aérée"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14M5 12h14M5 18.5h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div></div>
+      <label class="srow" for="ui-dark"><span>Mode sombre</span><span class="switch"><input id="ui-dark" type="checkbox"><span></span></span></label>
+      <label class="srow" for="ui-theme"><span>Thème</span><select id="ui-theme"><option value="nuit">Bleu nuit</option><option value="classique">Classique (vert d'eau)</option></select></label>
+    </div>
+    <div class="sblock"><h3>Contenu</h3>
+      <label class="srow" for="ui-wall"><span>Bloquer les pages de consentement<small>Masque automatiquement les fenêtres de cookies et de consentement</small></span><span class="switch"><input id="ui-wall" type="checkbox"><span></span></span></label>
+      <label class="srow" for="ui-images"><span>Chargement des images</span><select id="ui-images"><option value="std">Qualité standard</option><option value="eco">Économie de données</option><option value="none">Sans images</option></select></label>
+      <label class="srow" for="ui-reader"><span>Lecture dans l'application<small>Le texte de l'article s'affiche dans Kiosque ; sinon la page du journal s'ouvre</small></span><span class="switch"><input id="ui-reader" type="checkbox"><span></span></span></label>
+      <label class="srow" for="ui-ext"><span>Ouvrir les liens externes</span><select id="ui-ext"><option value="app">Dans l'appli</option><option value="chrome">Dans Chrome</option></select></label>
+    </div>
+    <div class="sblock"><h3>Ma veille</h3>
+      <button class="srow" type="button" data-open="rubs"><span>Gérer mes sujets suivis</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="srow" type="button" data-open="feeds"><span>Gérer mes journaux</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="srow" type="button" data-open="notif"><span>Notifications</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="srow" type="button" data-open="sport"><span>Sport : mes équipes et résultats</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="srow" type="button" data-open="links"><span>Liens et traduction</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </div>
+    <div class="sblock"><h3>Données et confidentialité</h3>
+      <button id="clearcache" class="srow" type="button"><span>Effacer le cache<small id="cache-status"></small></span><span class="val"><span id="cachesize"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="srow" type="button" data-open="app"><span>Sauvegarde, lecteur et mise à jour</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <div class="srow"><span>À propos</span><span class="val">Version <b id="about"></b></span></div>
+    </div>
+  </section>
+  <section class="tabpane" data-pane="feeds" hidden>
     <p class="note">Activez les journaux à suivre et choisissez, pour chacun, le lien qui s'ouvre quand vous touchez un article. Tous les articles sont triés automatiquement dans les rubriques.</p>
     <label class="toggle-line" for="hideads"><span><b>Masquer les pubs déguisées</b><small>Articles sponsorisés, publi-rédactionnels, bons plans et codes promo</small></span><span class="switch"><input id="hideads" type="checkbox"><span></span></span></label>
     <label class="toggle-line" for="grouping"><span><b>Regrouper les articles d'un même sujet</b><small>Un seul article par sujet, les autres journaux dans « Autres articles sur ce sujet »</small></span><span class="switch"><input id="grouping" type="checkbox"><span></span></span></label>
@@ -466,9 +658,9 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   </section>
   <section class="tabpane" data-pane="app" hidden>
     <h3 class="grouphead">Lecture</h3>
-    <label class="toggle-line" for="inapp"><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
+    <label class="toggle-line" for="inapp" hidden><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
     <label class="toggle-line" for="clean"><span><b>Nettoyer les pages</b><small>Dans le lecteur intégré : pubs masquées, bandeaux de cookies refusés (« Continuer sans accepter », « Tout refuser »). Les traqueurs connus sont toujours bloqués.</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
-    <label class="field" for="zoom">Taille du texte de l'appli : <b id="zoomval"></b>
+    <label class="field" for="zoom" hidden>Taille du texte de l'appli : <b id="zoomval"></b>
       <input id="zoom" type="range" min="85" max="150" step="5">
     </label>
     <h3 class="grouphead">Sauvegarde des réglages</h3>
@@ -486,6 +678,13 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
     <p id="upd-status" class="note" role="status"></p>
   </section>
 </dialog>
+
+<nav id="tabbar" class="tabbar" aria-label="Navigation">
+  <button type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v8.5a1 1 0 0 1-1 1h-4.5V15h-5v5.5H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg><span>Accueil</span></button>
+  <button type="button" data-tab="veille"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Ma veille</span></button>
+  <button type="button" data-tab="explore"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Explorer</span></button>
+  <button type="button" data-tab="library"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5c3-1.3 5.8-1.2 8.5.5 2.7-1.7 5.5-1.8 8.5-.5v13c-3-1.3-5.8-1.2-8.5.5-2.7-1.7-5.5-1.8-8.5-.5zM12 6v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Bibliothèque</span></button>
+</nav>
 
 <div id="updbar" class="updbar" hidden>
   <span>Une nouvelle version de Kiosque est disponible.</span>
@@ -539,6 +738,44 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <p class="note">Tennis, cyclisme et Formule 1 : articles seulement (pas de résultats gratuits disponibles). Résultats : fixturedownload.com.</p>
   <div class="row"><button id="sp-done" class="btn primary" type="button">Terminé</button></div>
 </dialog>
+<dialog id="reader" class="full" aria-label="Lecture">
+  <div class="rdhead">
+    <button id="rd-back" class="ib" type="button" aria-label="Retour"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div id="rd-src" class="rdsrc"></div>
+    <button id="rd-save" class="ib" type="button" aria-label="Enregistrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4.2-6.5 4.2v-16a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+    <button id="rd-more" class="ib" type="button" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="18.5" r="1.7" fill="currentColor"/></svg></button>
+  </div>
+  <div id="rd-body" class="rdbody"></div>
+</dialog>
+<dialog id="itemact" class="sheet small">
+  <div class="sheethead"><h2 id="ia-title" class="iatitle"></h2><button id="ia-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <div id="ia-list" class="ialist"></div>
+</dialog>
+<dialog id="compare" class="sheet">
+  <div class="sheethead"><h2 id="cmp-title">Ce sujet dans les médias</h2><button id="cmp-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <p id="cmp-sub" class="note"></p>
+  <div id="cmp-list" class="cmp"></div>
+</dialog>
+<dialog id="briefdlg" class="sheet">
+  <div class="sheethead"><h2>Votre briefing du jour</h2><button id="br-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <p id="br-sub" class="note"></p>
+  <div id="br-list" class="blist"></div>
+  <div class="row"><button id="br-redo" class="btn" type="button">Refaire la sélection</button></div>
+</dialog>
+<dialog id="topicdlg" class="sheet">
+  <div class="sheethead"><h2 id="tp-title">Sujet</h2><button id="tp-x" class="round" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <label class="field" for="tp-name">Nom du sujet<input id="tp-name" type="text" placeholder="Ex. Cybersécurité"></label>
+  <label class="field" for="tp-kw" style="margin-top:12px"><span id="tp-kwlabel">Mots-clés</span><input id="tp-kw" type="text" placeholder="Séparés par des virgules : cyberattaque, rançongiciel, piratage"></label>
+  <p id="tp-kwnote" class="note"></p>
+  <h3 class="grouphead">Priorité</h3>
+  <div id="tp-prio" class="seg wide"><button type="button" data-v="3">Haute</button><button type="button" data-v="2">Normale</button><button type="button" data-v="1">Basse</button></div>
+  <p class="note">Haute : en tête de l'accueil et du briefing, notification tout de suite. Normale et basse : notifications regroupées en un résumé.</p>
+  <h3 class="grouphead">Journaux préférés</h3>
+  <p class="note" style="margin-top:0">Leurs articles passent en premier dans ce sujet.</p>
+  <div id="tp-srcs" class="chipsel"></div>
+  <label class="toggle-line" for="tp-follow"><span><b>Suivre ce sujet</b><small>Affiché dans Ma veille et sur l'accueil</small></span><span class="switch"><input id="tp-follow" type="checkbox"><span></span></span></label>
+  <div class="row"><button id="tp-left" class="btn" type="button" title="Déplacer à gauche">◀</button><button id="tp-right" class="btn" type="button" title="Déplacer à droite">▶</button><button id="tp-del" class="btn" type="button">Supprimer</button><button id="tp-save" class="btn primary" type="button">Enregistrer</button></div>
+</dialog>
 <dialog id="shotview" aria-label="Image entière"><div class="sv-scroll"><img id="sv-img" alt="Capture entière"></div><button class="sv-close" id="sv-close" type="button">Fermer</button></dialog>
 <dialog id="sharedlg" class="sheet">
   <div class="sheethead">
@@ -569,15 +806,6 @@ dialog h2 { font: 700 22px var(--f-head); margin: 0 0 4px; }
   <div class="row"><button id="sh-close" class="btn" type="button">Fermer</button></div>
 </dialog>
 
-
-<dialog id="v37dlg" aria-labelledby="v37title">
-  <div class="v37-head"><div><div class="v37-kicker">Kiosque · V37</div><h2 id="v37title">Ma veille</h2></div><button id="v37close" class="round" type="button" aria-label="Fermer">✕</button></div>
-  <div class="v37-body">
-    <section class="v37-hero"><div class="v37-kicker" style="color:#9ee5dc">Briefing du jour</div><h3 id="v37briefTitle">Votre actualité, en un coup d’œil</h3><p id="v37briefText">Votre briefing se construit à partir des articles chargés et de vos sujets suivis. Les données restent sur cet appareil.</p></section>
-    <section class="v37-section"><h3>Mes sujets suivis</h3><form id="v37form" class="v37-form"><input id="v37keywords" placeholder="Ex. fibre, IA, cybersécurité, Orange" aria-label="Mots-clés à suivre"><button class="btn primary" type="submit">Enregistrer</button></form><p class="v37-note">Séparez les sujets par des virgules. Ils servent à classer les articles et à composer votre briefing local.</p><div id="v37topics" class="v37-topics" style="margin-top:10px"></div></section>
-    <section class="v37-section"><h3>À suivre en priorité</h3><div id="v37stories" class="v37-stories"></div></section>
-  </div>
-</dialog>
 <script src="lib/readability.js"></script>
 <script src="lib/html2canvas.min.js"></script>
 <script>
@@ -662,14 +890,21 @@ const RUB_DEFAULT_ORDER = ["une", "moi", "saved", "telecoms", "politique", "inte
 const RUB_ICONS = { une: "📰", moi: "⭐", saved: "🔖", telecoms: "📡", politique: "🏛️", international: "🌍", societe: "👥", economie: "📈", entreprises: "🏢", tech: "💻", medias: "📺", sport: "🏅", culture: "🎭", sante: "🩺", environnement: "🌱", autres: "📂" };
 const rubIcon = id => RUB_ICONS[id] || "🏷️";
 let rubPrefs = (() => {
-  const d = { order: [], hidden: [], names: {}, custom: [] };
+  const d = { order: [], hidden: [], names: {}, custom: [], prio: {}, srcs: {}, kw: {} };
   try { return { ...d, ...JSON.parse(localStorage.getItem("kiosque.rubs") || "{}") }; } catch { return d; }
 })();
 function kwRe(kw) {
   const k = String(kw || "").split(",").map(x => norm(x.trim())).filter(Boolean).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+"));
   return k.length ? new RegExp("\\b(" + k.join("|") + ")") : /(?!)/;
 }
+// Reprise des mots-clés de l'essai « Ma veille » publié sur GitHub (kiosque.v37.topics) : un sujet « Mes mots-clés ».
+try {
+  const old = JSON.parse(localStorage.getItem("kiosque.v37.topics") || "[]");
+  if (Array.isArray(old) && old.length && !rubPrefs.custom.some(c => c.id === "c_v37")) rubPrefs.custom.push({ id: "c_v37", name: "Mes mots-clés", kw: old.join(", ") });
+} catch {}
 for (const c of rubPrefs.custom) RUBRICS.push({ id: c.id, name: c.name, custom: true, kw: c.kw, re: kwRe(c.kw) });
+// Mots-clés ajoutés à une rubrique intégrée (Télécoms, Tech…).
+for (const [id, kw] of Object.entries(rubPrefs.kw || {})) { const r = RUBRICS.find(x => x.id === id); if (r && kw) r.extra = kwRe(kw); }
 function saveRubs() { try { localStorage.setItem("kiosque.rubs", JSON.stringify(rubPrefs)); } catch {} }
 function userOrder() {
   const all = [...RUB_DEFAULT_ORDER, ...RUBRICS.filter(r => r.custom).map(r => r.id)];
@@ -698,7 +933,7 @@ const AD_RE = /(\bbons? plans?\b|\bcodes? promo\b|\bpromo\b|\bsoldes\b|black fri
 function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
 function classify(i) {
   const t = norm(i.title + " " + i.summary + " " + (i.cats || []).join(" "));
-  const rubrics = RUBRICS.filter(r => r.re.test(t)).map(r => r.id);
+  const rubrics = RUBRICS.filter(r => r.re.test(t) || (r.extra && r.extra.test(t))).map(r => r.id);
   // Noms d'opérateurs seuls (Orange, Free, Bouygues…) : télécoms seulement avec un mot du métier à côté.
   if (!rubrics.includes("telecoms") && TEL_NAMES.test(t) && TEL_CONTEXT.test(t)) rubrics.unshift("telecoms");
   let tel = null;
@@ -807,6 +1042,10 @@ const VIEWS = ["une", "moi", ...RUBRICS.map(r => r.id), "autres", "saved"];
 let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
 let telSub = "all";
 let sportSub = "all";
+// Interface v38 : onglet affiché (Accueil, Ma veille, Explorer, Bibliothèque) et réglages d'affichage.
+let tab = "home", lastTopic = null, homeShown = 20, exploreSrc = null, exploreAll = false;
+let ui = { dark: true, theme: "nuit", size: 1, density: 1, wall: true, images: "std", reader: true, ...store.get("kiosque.ui", {}) };
+const saveUi = () => store.set("kiosque.ui", ui);
 let filter = "all";
 let shown = PAGE;
 let results = {}; // id -> { items, error }
@@ -1067,11 +1306,13 @@ function inView(i) {
 function currentItems() {
   let items = allItems().filter(inView);
   if (filter !== "all") items = items.filter(i => i.src === filter);
-  const q = norm($("#q").value.trim());
+  const q = tab === "explore" ? norm($("#q").value.trim()) : "";
   if (q) items = items.filter(i => norm(i.title + " " + i.summary).includes(q));
   // Dans une rubrique, les articles des journaux spécialisés (L'Équipe en Sport…) passent en premier.
   const spec = i => view !== "une" && view !== "moi" && feedRubric(i.src) === view ? 1 : 0;
-  return items.sort((a, b) => spec(b) - spec(a) || (b.date || 0) - (a.date || 0));
+  if (view === "une" || view === "moi") return items.sort((a, b) => spec(b) - spec(a) || (b.date || 0) - (a.date || 0));
+  const sc = new Map(items.map(i => [i, relevance(i, view)]));
+  return items.sort((a, b) => sc.get(b) - sc.get(a) || (b.date || 0) - (a.date || 0));
 }
 
 // ——— Regroupement des articles qui parlent du même sujet ———
@@ -1154,6 +1395,7 @@ function renderMenu() {
   all.onclick = () => openRubrics(count);
   nav.append(all);
   for (const id of userOrder()) {
+    if (id === "une" || id === "saved") continue;
     if (rubHidden(id) && id !== view) continue;
     const c = count(id);
     // Rubriques sans article : seulement dans la grille (sauf Mon fil, Télécoms et la rubrique affichée).
@@ -1168,7 +1410,7 @@ function renderMenu() {
     n.textContent = items.length || id === "saved" ? c : "";
     b.append(n);
     b.onclick = () => { if (b._lp) { b._lp = false; return; } go(id); };
-    longPress(b, () => openRubActions(id));
+    longPress(b, () => openTopic(id));
     nav.append(b);
   }
   const sub = $("#submenu");
@@ -1324,8 +1566,11 @@ $("#rubadd").onsubmit = e => {
   renderRubRows(); renderAll();
 };
 $("#rubreset").onclick = () => { rubPrefs.order = []; rubPrefs.hidden = []; rubPrefs.names = {}; saveRubs(); renderRubRows(); renderAll(); };
-function go(id) {
-  view = id; filter = "all"; shown = PAGE; telSub = "all"; sportSub = "all";
+function go(id, sub) {
+  if (id === "une") return setTab("home");
+  if (id === "saved") return setTab("library");
+  tab = "veille";
+  view = id; filter = "all"; shown = PAGE; telSub = sub || "all"; sportSub = "all";
   try { history.replaceState(null, "", "#" + id); } catch {}
   renderAll(); window.scrollTo({ top: 0 });
   const cur = $("#menu [aria-current='true']"); if (cur) cur.scrollIntoView({ inline: "center", block: "nearest" });
@@ -1532,7 +1777,7 @@ async function openInBrowser(url) {
         ref.addEventListener("loadstop", () => {
           try {
             ref.insertCSS({ code: FIT_CSS });
-            ref.insertCSS({ code: WALL_CSS }); ref.executeScript({ code: WALL_JS });
+            if (ui.wall) { ref.insertCSS({ code: WALL_CSS }); ref.executeScript({ code: WALL_JS }); }
             if (clean) { ref.insertCSS({ code: READER_CSS }); ref.executeScript({ code: READER_JS }); ref.executeScript({ code: AD_JS }); }
           } catch (e) {}
         });
@@ -1547,7 +1792,9 @@ async function openInBrowser(url) {
   window.open(url, "_blank", "noopener");
 }
 // Sous le titre : les autres liens d'ouverture (le titre ouvre le lien par défaut du journal).
-function openArticle(i) { openInBrowser(buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i)); }
+function openSite(i) { openInBrowser(buildUrl(linkById(feedById(i.src)?.link || "orig").tpl, i)); }
+// Lien du journal « article d'origine » : lu dans Kiosque (texte extrait) si possible, sinon la page du journal.
+function openArticle(i) { if (readerOn(i)) openReader(i); else openSite(i); }
 function altLinks(i) {
   const def = linkById(feedById(i.src)?.link || "orig").id;
   const others = links.filter(l => l.id !== def);
@@ -1632,10 +1879,11 @@ const ogSeen = "IntersectionObserver" in window ? new IntersectionObserver(es =>
   if (!e.isIntersecting) return; ogSeen.unobserve(e.target); ogQueue.push(e.target.kOg); ogNext();
 }), { rootMargin: "300px" }) : null;
 function img(i) {
+  if (ui.images === "none") return null;
   if (!i.image && ogCache[i.link]) i.image = ogCache[i.link];
   if (!i.image) {
     const a = document.createElement("a");
-    if (!NATIVE || !ogSeen || ogCache[i.link] === "" || !/^https?:/.test(i.link || "") || /news\.google\./.test(i.link)) {
+    if (!NATIVE || !ogSeen || ui.images === "eco" || ogCache[i.link] === "" || !/^https?:/.test(i.link || "") || /news\.google\./.test(i.link)) {
       a.href = openUrl(i); a.target = "_blank"; a.rel = "noopener noreferrer"; a.tabIndex = -1;
       a.onclick = e => { if (NATIVE) { e.preventDefault(); openArticle(i); } };
       a.append(tile(i));
@@ -1742,11 +1990,19 @@ function card(i) {
 function renderAll() { specMemo = null; renderMenu(); renderSources(); render(); }
 
 function render() {
+  applyTab();
+  if (tab === "home") return renderHome();
+  if (tab === "explore") return renderExplore();
+  renderList();
+}
+function renderList() {
   const lead = $("#lead"), grid = $("#grid"), status = $("#status"), intro = $("#intro");
   lead.innerHTML = ""; grid.innerHTML = "";
+  $("#foot").before($("#footbar"));
   try { renderFoot(); } catch (e) { console.warn("foot", e); }
   const spName = view === "sport" && sportSub !== "all" ? " · " + (SPORT_SUBS.find(x => x.id === sportSub) || {}).name : "";
-  $("#viewtitle").textContent = rubricName(view) + spName + (filter !== "all" ? " · " + (feedById(filter)?.name || "") : "");
+  $("#viewtitle").textContent = (view === "saved" ? "Bibliothèque" : rubricName(view)) + spName + (filter !== "all" ? " · " + (feedById(filter)?.name || "") : "");
+  $("#viewtitle").hidden = tab === "veille" && filter === "all" && spName === "";
   const sub = view === "telecoms" && TEL_SUBS.find(s => s.id === telSub);
   intro.hidden = !(sub && sub.intro);
   if (sub && sub.intro) intro.textContent = sub.intro;
@@ -1778,20 +2034,7 @@ function render() {
   status.textContent = all.length + " articles" + (items.length < all.length ? " · " + items.length + " sujets" : "") + (errs.length ? " · indisponible pour l'instant : " + errs.map(f => f.name).join(", ") : "");
 
   const [first, ...rest] = items;
-  const wrap = document.createElement("article");
-  wrap.className = "lead";
-  const left = img(first) || document.createElement("div");
-  const right = document.createElement("div"); right.className = "body";
-  const h = document.createElement("h2"); h.append(link(first));
-  right.append(meta(first));
-  const ch = chips(first); if (ch) right.append(ch);
-  right.append(h);
-  const alt = altLinks(first); if (alt) right.append(alt);
-  if (first.summary) { const p = document.createElement("p"); p.className = "sum"; p.textContent = first.summary; right.append(p); }
-  const g0 = groupBox(first); if (g0) right.append(g0);
-  right.append(actions(first));
-  wrap.append(left, right);
-  lead.append(wrap);
+  lead.append(bigCard(first));
 
   for (const i of rest.slice(0, shown)) grid.append(card(i));
   $("#more").hidden = rest.length <= shown;
@@ -1800,7 +2043,7 @@ function render() {
 function renderSaved() {
   const status = $("#status"), lead = $("#lead");
   $("#more").hidden = true;
-  const q = norm($("#q").value.trim());
+  const q = tab === "explore" ? norm($("#q").value.trim()) : "";
   const list = q ? saved.filter(i => norm(i.title + " " + i.summary).includes(q)) : saved;
   if (!list.length) {
     status.className = "status";
@@ -2718,7 +2961,7 @@ function matchRow(m, withComp) {
 }
 function renderFootbar() {
   const bar = $("#footbar"); bar.innerHTML = "";
-  const show = view === "une" || view === "sport";
+  const show = tab === "home" || view === "sport";
   const t0 = new Date(); t0.setHours(0, 0, 0, 0);
   const soon = show ? allMatches().filter(m => followed(m) && m.state !== "post" && m.t >= +t0 && m.t < +t0 + 2 * 864e5) : [];
   bar.hidden = !soon.length;
@@ -2886,15 +3129,15 @@ const notifRules = () => [
   { id: "fibre", name: "Infra fibre", re: TEL_FIBRE.source },
   { id: "regl", name: "Réglementaire télécoms", re: TEL_REGL.source },
   { id: "telecoms", name: "Toute l'actualité télécoms", re: RUBRICS[0].re.source },
-  ...RUBRICS.slice(1).map(r => ({ id: r.id, name: rubricName(r.id), re: r.re.source })),
+  ...RUBRICS.slice(1).map(r => ({ id: r.id, name: rubricName(r.id), re: r.re.source + (r.extra ? "|" + r.extra.source : "") })),
   { id: "moi", name: "Pour moi (d'après vos enregistrés)", get re() { const t = profile().top; return t.length ? "\\b(" + t.join("|") + ")\\b" : "(?!)"; } },
   { id: "all", name: "Tous les articles", re: "." },
 ];
 let notif = store.get("kiosque.notif", { enabled: false, rules: ["fibre", "regl"], keywords: "", quiet: true });
 function notifConfig() {
-  const rules = notifRules().filter(r => notif.rules.includes(r.id)).map(r => ({ name: r.name, re: r.re }));
+  const rules = notifRules().filter(r => notif.rules.includes(r.id)).map(r => ({ name: r.name, re: r.re, prio: notifPrio(r.id) }));
   const kws = notif.keywords.split(",").map(k => norm(k.trim())).filter(Boolean).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  if (kws.length) rules.unshift({ name: "Mot-clé suivi", re: "\\b(" + kws.join("|") + ")" });
+  if (kws.length) rules.unshift({ name: "Mot-clé suivi", re: "\\b(" + kws.join("|") + ")", prio: 3 });
   return {
     enabled: notif.enabled, quiet: notif.quiet, rules, adRe: hideAds ? AD_RE.source : "",
     feeds: activeFeeds().map(f => ({ name: f.name, urls: [f.url, ...(f.more || [])] })),
@@ -3111,14 +3354,10 @@ async function showFeedLinks(f) {
 }
 $("#fl-close").onclick = () => $("#feedlinks").close();
 $("#addlink").onclick = () => { links.push({ id: "l" + Date.now(), name: "Nouveau lien", tpl: "" }); saveLinks(); renderLinks(); const ins = $("#linkrows").querySelectorAll(".tpl"); ins[ins.length - 1]?.focus(); };
-document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
-  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
-  document.querySelectorAll(".tabpane").forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
-  if (b.dataset.tab === "rubs") renderRubRows();
-});
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => showPane(b.dataset.tab));
 $("#grouping").onchange = () => { grouping = $("#grouping").checked; store.set("kiosque.group", grouping); shown = PAGE; renderAll(); };
 $("#hideads").onchange = () => { hideAds = $("#hideads").checked; store.set("kiosque.hideads", hideAds); renderAll(); };
-$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; $("#dlg").showModal(); };
+$("#manage").onclick = () => { $("#hideads").checked = hideAds; $("#grouping").checked = grouping; renderNotifPane(); renderDialog(); $("#tlang").value = transLang; showPane("list"); if (!$("#dlg").open) $("#dlg").showModal(); };
 function renderTlink() {
   const sel = $("#tlink"); sel.innerHTML = "";
   for (const l of links.filter(l => l.tpl)) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.append(o); }
@@ -3172,7 +3411,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.36";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.38";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3250,47 +3489,542 @@ $("#addform").onsubmit = e => {
   renderDialog(); renderAll(); loadAll();
 };
 
+// ——— Interface v38 : accueil, Ma veille, Explorer, Bibliothèque ———
+const SVG = {
+  save: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4.2-6.5 4.2v-16a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+  more: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="18.5" r="1.7" fill="currentColor"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  cal: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+};
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+// Affichage : thème, mode sombre, densité, taille du texte (A / A / A = 90 %, 100 %, 112 %).
+function applyUi() {
+  const r = document.documentElement;
+  r.dataset.theme = ui.dark ? "dark" : "light";
+  r.dataset.palette = ui.theme;
+  r.dataset.density = ui.density;
+  zoom = [90, 100, 112][ui.size] || 100; store.set("kiosque.zoom", zoom); applyZoom();
+  const m = document.querySelector('meta[name="theme-color"]') || document.head.appendChild(Object.assign(document.createElement("meta"), { name: "theme-color" }));
+  m.content = getComputedStyle(r).getPropertyValue("--surface").trim() || "#112238";
+}
+
+// ——— Sujets suivis : priorité et pertinence ———
+const TOPIC_SKIP = ["une", "moi", "saved", "autres"];
+const PRIO_NAME = { 3: "Haute", 2: "Normale", 1: "Basse" };
+function prioOf(id) { return (rubPrefs.prio || {})[id] || (id === "telecoms" ? 3 : 2); }
+const topicIds = () => userOrder().filter(id => !TOPIC_SKIP.includes(id) && !rubHidden(id));
+function notifPrio(id) {
+  if (id === "fibre" || id === "regl") return prioOf("telecoms");
+  if (id === "moi") return 2;
+  if (id === "all") return 1;
+  return prioOf(id);
+}
+function freshness(i) { const h = (Date.now() - (+new Date(i.date) || 0)) / 3600e3; return h < 0 ? 4 : 4 * Math.exp(-h / 12); }
+// Poids d'un article pour l'accueil et le briefing : sujets suivis (selon leur priorité), nombre de médias, fraîcheur.
+function topicScore(i) {
+  let sc = 0;
+  for (const id of topicIds()) if (inRubric(i, id)) {
+    sc = Math.max(sc, { 3: 3, 2: 1, 1: 0.3 }[prioOf(id)] + (((rubPrefs.srcs || {})[id] || []).includes(i.src) ? 1 : 0));
+  }
+  if (i.tel && (i.tel.fibre || i.tel.regl)) sc += 0.5;
+  return sc;
+}
+const importance = i => topicScore(i) * 1.5 + Math.min(6, (i._grp || []).length) * 1.2 + freshness(i);
+// Pertinence dans un sujet : mots-clés dans le titre (puis le résumé), journal préféré ou spécialisé, fraîcheur.
+function relevance(i, id) {
+  const r = RUBRICS.find(x => x.id === id);
+  const tt = norm(i.title), ts = norm(i.summary || "");
+  let sc = freshness(i);
+  for (const re of [r && r.re, r && r.extra]) if (re) { if (re.test(tt)) sc += 3; else if (re.test(ts)) sc += 1; }
+  if (r && r.custom && r.kw) for (const k of r.kw.split(",").map(x => norm(x.trim())).filter(Boolean)) if (tt.includes(k)) sc += 2;
+  if (((rubPrefs.srcs || {})[id] || []).includes(i.src)) sc += 3;
+  if (feedRubric(i.src) === id) sc += 2;
+  return sc;
+}
+
+// ——— Onglets ———
+function applyTab() {
+  document.body.dataset.tab = tab;
+  $("#home").hidden = tab !== "home";
+  $("#explore").hidden = tab !== "explore";
+  $(".layout").hidden = tab !== "veille" && tab !== "library";
+  $(".menuwrap").hidden = tab !== "veille";
+  if (tab !== "veille") $("#submenu").hidden = true;
+  $("#veillehead").hidden = tab !== "veille";
+  $("#brandsub").textContent = { home: "Ma veille", veille: "Mes sujets suivis", explore: "Explorer", library: "Bibliothèque" }[tab];
+  document.querySelectorAll("#tabbar button").forEach(b => b.setAttribute("aria-current", String(b.dataset.tab === tab)));
+}
+const firstTopic = () => topicIds()[0] || "telecoms";
+function setTab(t) {
+  if (t === "library") { if (view !== "saved") lastTopic = view; view = "saved"; }
+  else if (t === "veille" && (view === "saved" || view === "une")) view = lastTopic && !["une", "saved"].includes(lastTopic) ? lastTopic : firstTopic();
+  if (t === "explore" && tab !== "explore") exploreSrc = null;
+  tab = t; filter = "all"; shown = PAGE; homeShown = 20;
+  renderAll();
+  window.scrollTo({ top: 0 });
+  if (t === "veille") { const cur = $("#menu [aria-current='true']"); if (cur) cur.scrollIntoView({ inline: "center", block: "nearest" }); }
+}
+document.querySelectorAll("#tabbar button").forEach(b => b.onclick = () => setTab(b.dataset.tab));
+$("#searchbtn").onclick = () => { setTab("explore"); setTimeout(() => $("#q").focus(), 50); };
+// En-tête « Ma veille » au-dessus de la liste des journaux.
+$(".layout").prepend($("#veillehead"));
+$("#vh-add").onclick = () => openTopic(null);
+$("#vh-edit").onclick = () => openTopic(view);
+
+// ——— Éléments communs : logo du journal, mots-clés, lignes et grande carte ———
+function feedHost(f, link) { try { return new URL((f && f.url) || link).hostname.replace(/^(www|feeds?|services|dwh|rss)\./, ""); } catch { return ""; } }
+function favUrl(src, link) { const h = feedHost(feedById(src), link); return h ? "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(h) : ""; }
+function favImg(src, link, cls) {
+  const im = el("img", cls || "fav"); im.alt = ""; im.loading = "lazy"; im.referrerPolicy = "no-referrer";
+  const u = favUrl(src, link); if (u) im.src = u; im.onerror = () => { im.style.visibility = "hidden"; };
+  return im;
+}
+const srcName = i => feedById(i.src)?.name || i.srcName || i.src;
+function tagsFor(i) {
+  const out = [];
+  if (i.tel) { if (i.tel.fibre) out.push(["Infra fibre", "fibre"]); if (i.tel.regl) out.push(["Réglementation", "regl"]); if (!i.tel.fibre && !i.tel.regl) out.push(["Télécoms", ""]); }
+  for (const r of i.rubrics || []) if (r !== "autres" && r !== "telecoms" && out.length < 3) out.push([rubricName(r), ""]);
+  if (view === "sport" && tab === "veille") for (const sp of sportOf(i)) if (sp !== "autre" && out.length < 3) out.push([sportById(sp).name, ""]);
+  if (!out.length) return null;
+  const box = el("div", "tags");
+  for (const [t, c] of out.slice(0, 3)) box.append(el("span", "tag" + (c ? " " + c : ""), t));
+  return box;
+}
+function rmeta(i, withBtns) {
+  const m = el("div", "rmeta");
+  m.append(favImg(i.src, i.link), el("b", "", srcName(i)), el("span", "t", "· " + ago(new Date(i.date))), el("span", "sp"));
+  if (withBtns) {
+    const s = el("button", "ib" + (isSaved(i) ? " on" : "")); s.type = "button"; s.innerHTML = SVG.save;
+    s.setAttribute("aria-label", isSaved(i) ? "Retirer des enregistrés" : "Enregistrer"); s.onclick = () => toggleSave(i);
+    const mo = el("button", "ib"); mo.type = "button"; mo.innerHTML = SVG.more; mo.setAttribute("aria-label", "Plus d'actions");
+    const grp = i._grp ? [i, ...i._grp] : null;
+    mo.onclick = () => openItemActions(i, grp);
+    m.append(s, mo);
+  }
+  return m;
+}
+// « Repris par N médias » : ouvre la comparaison des titres de chaque journal.
+function evtButton(i) {
+  if (!i._grp || !i._grp.length) return null;
+  const all = [i, ...i._grp], n = new Set(all.map(o => o.src)).size;
+  const b = el("button", "evt"); b.type = "button";
+  const fv = el("span", "fv"); [...new Set(all.map(o => o.src))].slice(0, 4).forEach(src => fv.append(favImg(src, all.find(o => o.src === src).link, "")));
+  b.append(fv, document.createTextNode(n > 1 ? "Repris par " + n + " médias · comparer" : all.length + " articles sur ce sujet"));
+  b.onclick = () => openCompare(all);
+  return b;
+}
+function titleLink(i, tagName) {
+  const h = el(tagName);
+  const a = link(i);
+  a.onclick = e => { if (NATIVE || readerOn(i)) { e.preventDefault(); openArticle(i); } };
+  h.append(a);
+  return h;
+}
+function thumb(i) {
+  const p = img(i);
+  if (p) { p.onclick = e => { if (NATIVE || readerOn(i)) { e.preventDefault(); openArticle(i); } }; return p; }
+  return null;
+}
+function row(i) {
+  const r = el("article", "row");
+  const p = ui.images === "none" ? null : thumb(i);
+  if (p) { const th = el("div", "th"); th.append(p); r.append(th); } else r.classList.add("nopic");
+  const bd = el("div", "bd");
+  bd.append(rmeta(i, true), titleLink(i, "h3"));
+  const t = tagsFor(i); if (t) bd.append(t);
+  const e = evtButton(i); if (e) bd.append(e);
+  r.append(bd);
+  return r;
+}
+// Les listes (sujets, bibliothèque) utilisent les lignes du nouveau design.
+function card(i) { return row(i); }
+function bigCard(i) {
+  const c = el("article", "big");
+  const p = ui.images === "none" ? null : thumb(i);
+  if (p) { const w = el("div", "pic"); w.append(p); c.append(w); }
+  const bd = el("div", "bd");
+  bd.append(rmeta(i, true), titleLink(i, "h2"));
+  const t = tagsFor(i); if (t) bd.append(t);
+  const e = evtButton(i); if (e) bd.append(e);
+  c.append(bd);
+  return c;
+}
+function shead(title, more, fn) {
+  const h = el("div", "shead"); h.append(el("h2", "", title));
+  if (more) { const b = el("button"); b.type = "button"; b.innerHTML = more + SVG.chev; b.onclick = fn; h.append(b); }
+  return h;
+}
+const byDate = list => list.slice().sort((a, b) => (b.date || 0) - (a.date || 0));
+function eventsOf(list) { const g = grouping; grouping = true; try { return groupItems(byDate(list)); } finally { grouping = g; } }
+function loadState() {
+  const pending = activeFeeds().filter(f => !results[f.id]).length;
+  if (allItems().length) return null;
+  return pending ? "Chargement des flux…" : NO_NET_HINT();
+}
+
+// ——— Accueil ———
+function renderHome() {
+  const box = $("#home");
+  $("#foot").before($("#footbar")); // le bandeau des matchs est rangé avant de vider l'accueil
+  box.innerHTML = "";
+  // Puces : Tous, focus télécoms, puis les sujets suivis par priorité.
+  const ch = el("div", "hchips");
+  const chipB = (label, cur, fn) => { const b = el("button", "", label); b.type = "button"; b.setAttribute("aria-current", String(!!cur)); b.onclick = fn; ch.append(b); };
+  chipB("Tous", true, () => {});
+  if (topicIds().includes("telecoms")) { chipB("Infra fibre", false, () => go("telecoms", "fibre")); chipB("Réglementation", false, () => go("telecoms", "regl")); }
+  topicIds().slice().sort((a, b) => prioOf(b) - prioOf(a)).slice(0, 6).forEach(id => chipB(rubIcon(id) + " " + rubricName(id), false, () => go(id)));
+  box.append(ch);
+  renderFootbar(); box.append($("#footbar"));
+  const items = allItems();
+  const wait = loadState();
+  // Carte « Votre briefing du jour ».
+  const br = briefing();
+  const bc = el("button", "brief"); bc.type = "button";
+  const k = el("div", "bk"); k.append(el("span", "", "Votre briefing du jour"), el("span", "", new Date().toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" })));
+  const nTopic = items.filter(i => topicScore(i) > 0 && freshness(i) > 0.5).length;
+  bc.append(k, el("b", "", "L'essentiel de votre actualité, au même endroit."),
+    el("small", "", br.items.length ? br.items.length + " titres prioritaires · " + nTopic + " articles récents sur vos sujets suivis" : wait || "La sélection se prépare…"));
+  bc.insertAdjacentHTML("beforeend", SVG.chev);
+  bc.onclick = openBrief;
+  box.append(bc);
+  if (wait) { box.append(el("div", "empty", wait)); return; }
+  // À la une : l'événement le plus important des dernières heures.
+  const heads = eventsOf(items);
+  const recent = heads.filter(i => Date.now() - (+new Date(i.date) || 0) < 36 * 3600e3);
+  const lead = (recent.length ? recent : heads).slice(0, 80).sort((a, b) => importance(b) - importance(a))[0];
+  box.append(shead("À la une", "Voir tout", () => setTab("explore")));
+  if (lead) box.append(bigCard(lead));
+  // Mes sujets suivis : quatre tuiles, les priorités hautes d'abord.
+  const count = rubCount();
+  const tops = topicIds().map((id, k) => ({ id, k, n: count(id), p: prioOf(id) })).sort((a, b) => b.p - a.p || (b.n > 0) - (a.n > 0) || a.k - b.k).slice(0, 4);
+  box.append(shead("Mes sujets suivis", "Voir tout", () => setTab("veille")));
+  const tg = el("div", "tiles");
+  for (const t of tops) {
+    const b = el("button", "ttile" + (t.p >= 3 ? " p3" : "")); b.type = "button";
+    b.append(el("span", "ic", rubIcon(t.id)), el("span", "", rubricName(t.id)), el("span", "n", t.n));
+    b.onclick = () => go(t.id);
+    longPress(b, () => openTopic(t.id));
+    tg.append(b);
+  }
+  box.append(tg);
+  // Derniers articles : un seul par événement, du plus récent au plus ancien.
+  box.append(shead("Derniers articles"));
+  const list = el("div", "rows");
+  const rest = heads.filter(i => i !== lead);
+  rest.slice(0, homeShown).forEach(i => list.append(row(i)));
+  box.append(list);
+  if (rest.length > homeShown) { const m = el("button", "btn moreb", "Afficher plus d'articles"); m.type = "button"; m.onclick = () => { homeShown += 20; renderHome(); }; box.append(m); }
+}
+
+// ——— Briefing du jour : une dizaine de titres prioritaires, choisis une fois par jour (à partir de 6 h) ———
+const dayKey = () => { const d = new Date(); if (d.getHours() < 6) d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); };
+function briefing(force) {
+  const day = dayKey(), saved0 = store.get("kiosque.brief", null);
+  const live = new Map(allItems().map(i => [i.link, i]));
+  if (!force && saved0 && saved0.day === day && saved0.items.length) return { ...saved0, items: saved0.items.map(x => ({ ...x, ...(live.get(x.link) || {}), n: x.n })) };
+  const all = allItems().filter(i => Date.now() - (+new Date(i.date) || 0) < 30 * 3600e3);
+  if (!all.length) return { day, items: [] };
+  const heads = eventsOf(all).map(i => ({ i, sc: topicScore(i) * 2 + Math.min(6, (i._grp || []).length) * 1.5 + freshness(i) * 0.5 }));
+  heads.sort((a, b) => b.sc - a.sc);
+  const pick = heads.slice(0, 10).map(({ i }) => ({ title: i.title, link: i.link, src: i.src, srcName: srcName(i), date: i.date, image: i.image, summary: i.summary, rubrics: i.rubrics, tel: i.tel, n: new Set([i, ...(i._grp || [])].map(o => o.src)).size, grp: (i._grp || []).map(o => o.link) }));
+  const out = { day, at: Date.now(), items: pick };
+  // Gardé pour la journée seulement quand tous les journaux ont répondu (sinon sélection provisoire).
+  if (activeFeeds().every(f => results[f.id])) store.set("kiosque.brief", out);
+  return out;
+}
+function openBrief(force) {
+  const b = briefing(force === true);
+  $("#br-sub").textContent = b.items.length ? "Sélection du " + new Date(b.at || Date.now()).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }) + " : les sujets que vous suivez en priorité et les événements repris par plusieurs médias." : (loadState() || "Pas encore assez d'articles récents.");
+  const box = $("#br-list"); box.innerHTML = "";
+  const live = new Map(allItems().map(i => [i.link, i]));
+  for (const x of b.items) {
+    const i = live.get(x.link) || { ...x, date: new Date(x.date) };
+    const r = row(i);
+    if (x.n > 1 && !r.querySelector(".evt")) {
+      const g = (x.grp || []).map(l => live.get(l)).filter(Boolean);
+      const e = el("button", "evt", "Repris par " + x.n + " médias" + (g.length ? " · comparer" : "")); e.type = "button";
+      if (g.length) e.onclick = () => openCompare([i, ...g]);
+      r.querySelector(".bd").append(e);
+    }
+    box.append(r);
+  }
+  if (!$("#briefdlg").open) $("#briefdlg").showModal();
+}
+$("#br-x").onclick = () => $("#briefdlg").close();
+$("#br-redo").onclick = () => openBrief(true);
+
+// ——— Comparer les médias sur un même événement ———
+function openCompare(all) {
+  const box = $("#cmp-list"); box.innerHTML = "";
+  const n = new Set(all.map(o => o.src)).size;
+  $("#cmp-sub").textContent = n + " média" + (n > 1 ? "s" : "") + " · " + all.length + " article" + (all.length > 1 ? "s" : "") + " sur cet événement, du plus récent au plus ancien.";
+  for (const o of byDate(all)) {
+    const r = el("article", "row nopic"), bd = el("div", "bd");
+    bd.append(rmeta(o, false), titleLink(o, "h3"));
+    if (o.summary) bd.append(el("p", "note", o.summary.length > 220 ? o.summary.slice(0, 220) + "…" : o.summary));
+    r.append(bd); box.append(r);
+  }
+  if (!$("#compare").open) $("#compare").showModal();
+}
+$("#cmp-x").onclick = () => $("#compare").close();
+
+// ——— Menu ⋮ d'un article ———
+function openItemActions(i, grp) {
+  $("#ia-title").textContent = i.title;
+  const box = $("#ia-list"); box.innerHTML = "";
+  const add = (e, label, fn) => { const b = el("button"); b.type = "button"; b.append(el("span", "e", e), document.createTextNode(label)); b.onclick = () => { $("#itemact").close(); fn(); }; box.append(b); };
+  if (NATIVE) add("📖", "Lire dans Kiosque", () => openReader(i));
+  add("🌐", "Ouvrir sur le site du journal", () => openSite(i));
+  add("🔤", "Traduire (Google Traduction)", () => openTranslated(i));
+  add("📤", "Partager", () => openShare(i));
+  if (grp && grp.length > 1) add("🗞️", "Comparer les médias (" + new Set(grp.map(o => o.src)).size + ")", () => openCompare(grp));
+  for (const l of links) if (l.id !== "orig" && l.id !== "translate") add("🔗", l.name, () => openInBrowser(buildUrl(l.tpl, i)));
+  add(isSaved(i) ? "✖" : "🔖", isSaved(i) ? "Retirer des enregistrés" : "Enregistrer", () => toggleSave(i));
+  $("#itemact").showModal();
+}
+$("#ia-x").onclick = () => $("#itemact").close();
+
+// ——— Explorer : recherche, journaux, articles récents ———
+function renderExplore() {
+  const box = $("#exbody"); box.innerHTML = "";
+  const q = norm($("#q").value.trim());
+  const items = allItems();
+  const wait = loadState();
+  const jtile = f => {
+    const b = el("button", "jt"); b.type = "button";
+    const lg = el("span", "lg"); lg.style.background = "#fff";
+    const im = favImg(f.id, f.url, ""); im.src = (favUrl(f.id, f.url) || "").replace("sz=64", "sz=128");
+    im.onerror = () => { im.remove(); lg.style.background = f.color; lg.append(el("span", "", (f.name || "?").replace(/^(le|la|les|l')\s*/i, "").slice(0, 2).toUpperCase())); };
+    lg.append(im);
+    const n = items.filter(i => i.src === f.id).length;
+    b.append(lg, el("span", "nm", f.name), el("small", "", results[f.id]?.error ? "indisponible" : n ? n + " art." : "…"));
+    b.onclick = () => { exploreSrc = f.id; renderExplore(); window.scrollTo({ top: 0 }); };
+    return b;
+  };
+  const listOf = (list, max) => { const l = el("div", "rows"); list.slice(0, max).forEach(i => l.append(row(i))); return l; };
+  if (exploreSrc) {
+    const f = feedById(exploreSrc) || { name: exploreSrc };
+    box.append(shead(f.name, "Tous les journaux", () => { exploreSrc = null; renderExplore(); }));
+    const mine = byDate(items.filter(i => i.src === exploreSrc));
+    box.append(mine.length ? listOf(mine, 60) : el("div", "empty", results[exploreSrc]?.error ? "Ce journal ne répond pas pour l'instant." : "Aucun article pour l'instant."));
+    return;
+  }
+  if (q) {
+    const js = activeFeeds().filter(f => norm(f.name).includes(q));
+    if (js.length) { box.append(shead("Journaux")); const g = el("div", "jgrid"); js.forEach(f => g.append(jtile(f))); box.append(g); }
+    const found = eventsOf(items.filter(i => norm(i.title + " " + i.summary).includes(q)));
+    box.append(shead(found.length ? found.length + " sujet" + (found.length > 1 ? "s" : "") + " trouvé" + (found.length > 1 ? "s" : "") : "Articles"));
+    box.append(found.length ? listOf(found, 60) : el("div", "empty", "Aucun article ne correspond à « " + $("#q").value.trim() + " »."));
+    return;
+  }
+  box.append(shead("Journaux et sources", exploreAll ? "Moins" : "Tous", () => { exploreAll = !exploreAll; renderExplore(); }));
+  const g = el("div", "jgrid");
+  activeFeeds().slice(0, exploreAll ? 999 : 8).forEach(f => g.append(jtile(f)));
+  box.append(g);
+  if (exploreAll) { const m = el("button", "btn moreb", "Gérer mes journaux"); m.type = "button"; m.onclick = () => openSettings("feeds"); box.append(m); }
+  box.append(shead("Articles récents"));
+  if (wait) { box.append(el("div", "empty", wait)); return; }
+  const heads = eventsOf(items);
+  box.append(listOf(heads, homeShown));
+  if (heads.length > homeShown) { const m = el("button", "btn moreb", "Afficher plus d'articles"); m.type = "button"; m.onclick = () => { homeShown += 20; renderExplore(); }; box.append(m); }
+}
+
+// ——— Lecture d'un article dans Kiosque ———
+// Le téléphone télécharge la page et en extrait le texte (Readability, comme le mode lecture de Firefox).
+// Article réservé aux abonnés ou texte introuvable : la page du journal s'ouvre comme avant.
+const readerOn = i => ui.reader && (NATIVE || window.__kiosqueReader) && /^https?:/.test(i.link || "") && !/news\.google\./.test(i.link) && linkById(feedById(i.src)?.link || "orig").id === "orig";
+let readerItem = null, readerSeq = 0;
+async function articleHtml(url) {
+  let html = "";
+  try { html = await fetchPage(url); } catch (e) { html = ""; }
+  if (!html || /�/.test(html.slice(0, 30000))) { try { const d = await fetchDecoded(url); if (d) html = d; } catch {} }
+  if (!html) throw new Error("page introuvable");
+  return html;
+}
+function cleanArticle(htmlStr, base) {
+  const t = document.createElement("template"); t.innerHTML = htmlStr;
+  t.content.querySelectorAll("script,style,link,meta,iframe,object,embed,form,input,button,select,textarea,noscript,svg,canvas,aside,nav,footer").forEach(n => n.remove());
+  t.content.querySelectorAll("*").forEach(n => {
+    for (const a of [...n.attributes]) {
+      const k = a.name.toLowerCase();
+      if (n.tagName === "IMG" && (k === "data-src" || k === "data-lazy-src" || k === "data-original") && !n.getAttribute("src")) n.setAttribute("src", a.value);
+      if (!["href", "src", "alt", "colspan", "rowspan"].includes(k)) n.removeAttribute(a.name);
+    }
+    if (n.tagName === "IMG") {
+      const u = absUrl(n.getAttribute("src") || "", base);
+      if (!u || /^data:/.test(u) || ui.images === "none") { n.remove(); return; }
+      n.setAttribute("src", u); n.setAttribute("loading", "lazy"); n.setAttribute("referrerpolicy", "no-referrer");
+    }
+    if (n.tagName === "A") { const u = absUrl(n.getAttribute("href") || "", base); if (/^https?:/.test(u)) n.setAttribute("href", u); else n.removeAttribute("href"); }
+  });
+  return t.content;
+}
+async function openReader(i) {
+  readerItem = i; const seq = ++readerSeq;
+  const f = feedById(i.src);
+  const src = $("#rd-src"); src.innerHTML = ""; src.append(favImg(i.src, i.link, ""), el("span", "", srcName(i)));
+  $("#rd-save").classList.toggle("on", isSaved(i));
+  const body = $("#rd-body"); body.innerHTML = "";
+  const t = tagsFor(i); if (t) body.append(t);
+  body.append(el("h1", "", i.title));
+  const lede = el("p", "lede", i.summary || ""); if (i.summary) body.append(lede);
+  const meta = el("div", "rdmeta");
+  const d = new Date(i.date);
+  meta.innerHTML = '<span>' + SVG.cal + '<b></b></span><i></i><span class="rt">' + SVG.clock + '<b>…</b></span>';
+  meta.querySelector("b").textContent = isNaN(d) ? "" : d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) + " · " + hm(d);
+  body.append(meta);
+  const hero = el("img", "rdhero"); hero.alt = ""; hero.referrerPolicy = "no-referrer";
+  if (i.image && ui.images !== "none") { hero.src = i.image; hero.onerror = () => hero.remove(); body.append(hero); }
+  const wait = el("p", "rdwait", "Chargement de l'article…"); body.append(wait);
+  const foot = el("div", "rdfoot");
+  const fb = (label, fn, primary) => { const b = el("button", "btn" + (primary ? " primary" : ""), label); b.type = "button"; b.onclick = fn; foot.append(b); };
+  fb("Lire sur le site du journal", () => openSite(i), true); fb("Traduire", () => openTranslated(i)); fb("Partager", () => openShare(i));
+  if (!$("#reader").open) $("#reader").showModal();
+  $("#reader").scrollTop = 0;
+  try {
+    const html = await articleHtml(i.link);
+    if (seq !== readerSeq) return;
+    const doc = new DOMParser().parseFromString(html.replace(/<head([^>]*)>/i, '<head$1><base href="' + i.link.replace(/"/g, "&quot;") + '">'), "text/html");
+    const art = new Readability(doc, { charThreshold: 300 }).parse();
+    const txt = (art && art.textContent || "").replace(/\s+/g, " ").trim();
+    if (txt.length < 700) throw new Error("texte trop court (" + txt.length + ")");
+    const content = cleanArticle(art.content, i.link);
+    const tx = el("div", "rdtext"); tx.append(content);
+    // Pas deux fois la même photo ni le même chapeau.
+    const first = tx.querySelector("img");
+    if (first && hero.isConnected && hero.src && first.src.split("?")[0] === hero.src.split("?")[0]) first.remove();
+    if (!hero.isConnected && first && !i.image && ui.images !== "none") { hero.src = first.src; first.remove(); wait.before(hero); }
+    if (!i.summary && art.excerpt) { lede.textContent = art.excerpt; meta.before(lede); }
+    tx.querySelectorAll("a[href]").forEach(a => a.onclick = e => { e.preventDefault(); openInBrowser(a.href); });
+    const words = txt.split(" ").length;
+    meta.querySelector(".rt b").textContent = Math.max(1, Math.round(words / 230)) + " min de lecture";
+    wait.replaceWith(tx);
+    body.append(foot);
+  } catch (e) {
+    if (seq !== readerSeq) return;
+    console.warn("lecture", e);
+    $("#reader").close();
+    openSite(i);
+  }
+}
+$("#rd-back").onclick = () => { readerSeq++; $("#reader").close(); };
+$("#rd-save").onclick = () => { if (readerItem) { toggleSave(readerItem); $("#rd-save").classList.toggle("on", isSaved(readerItem)); } };
+$("#rd-more").onclick = () => { if (readerItem) openItemActions(readerItem, null); };
+// Bouton retour du téléphone : le chargement en cours est abandonné.
+$("#reader").addEventListener("cancel", () => { readerSeq++; });
+
+// ——— Sujet : créer ou modifier (nom, mots-clés, priorité, journaux préférés, suivi) ———
+let tpId = null, tpPrio = 2;
+function openTopic(id) {
+  if (id && TOPIC_SKIP.includes(id)) id = null;
+  tpId = id;
+  const r = id && RUBRICS.find(x => x.id === id);
+  const custom = !id || (r && r.custom);
+  $("#tp-title").textContent = id ? rubIcon(id) + " " + rubricName(id) : "Nouveau sujet";
+  $("#tp-name").value = id ? rubricName(id) : "";
+  $("#tp-kwlabel").textContent = custom ? "Mots-clés" : "Mots-clés en plus";
+  $("#tp-kw").value = id ? (custom ? r.kw || "" : (rubPrefs.kw || {})[id] || "") : "";
+  $("#tp-kwnote").textContent = custom ? "Un article entre dans ce sujet dès qu'un mot-clé apparaît dans son titre, son résumé ou ses catégories." : "Ce sujet reconnaît déjà ses articles automatiquement ; ajoutez ici des noms ou des mots à suivre en plus.";
+  tpPrio = id ? prioOf(id) : 2;
+  document.querySelectorAll("#tp-prio button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.v === tpPrio)));
+  const sb = $("#tp-srcs"); sb.innerHTML = "";
+  const pref = new Set(id ? (rubPrefs.srcs || {})[id] || [] : []);
+  for (const f of activeFeeds()) chip(sb, f.name, pref.has(f.id), on => { if (on) pref.add(f.id); else pref.delete(f.id); });
+  sb.kPref = pref;
+  $("#tp-follow").checked = !id || !rubHidden(id);
+  $("#tp-del").hidden = !(id && r && r.custom);
+  $("#tp-left").hidden = $("#tp-right").hidden = !id;
+  if (!$("#topicdlg").open) $("#topicdlg").showModal();
+}
+document.querySelectorAll("#tp-prio button").forEach(b => b.onclick = () => { tpPrio = +b.dataset.v; document.querySelectorAll("#tp-prio button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+$("#tp-x").onclick = () => $("#topicdlg").close();
+$("#tp-left").onclick = () => { if (tpId) { moveRub(tpId, -1); rubChanged(); } };
+$("#tp-right").onclick = () => { if (tpId) { moveRub(tpId, 1); rubChanged(); } };
+$("#tp-del").onclick = () => {
+  const id = tpId; if (!id || !confirm("Supprimer le sujet « " + rubricName(id) + " » ?")) return;
+  rubPrefs.custom = rubPrefs.custom.filter(x => x.id !== id);
+  rubPrefs.hidden = rubPrefs.hidden.filter(x => x !== id); delete rubPrefs.names[id];
+  const j = RUBRICS.findIndex(r => r.id === id); if (j >= 0) RUBRICS.splice(j, 1);
+  saveRubs(); reclassify(); if (view === id) view = firstTopic();
+  $("#topicdlg").close(); syncNotif(); renderAll();
+};
+$("#tp-save").onclick = () => {
+  const name = $("#tp-name").value.trim(), kw = $("#tp-kw").value.trim();
+  let id = tpId;
+  if (!id) {
+    if (!name || !kw) { $("#tp-kwnote").textContent = "Indiquez un nom et au moins un mot-clé."; return; }
+    id = "c_" + Date.now().toString(36);
+    rubPrefs.custom.push({ id, name, kw });
+    RUBRICS.push({ id, name, custom: true, kw, re: kwRe(kw) });
+  } else {
+    const r = RUBRICS.find(x => x.id === id), c = rubPrefs.custom.find(x => x.id === id);
+    if (c) { if (kw) { c.kw = kw; r.kw = kw; r.re = kwRe(kw); } }
+    else { rubPrefs.kw = rubPrefs.kw || {}; if (kw) { rubPrefs.kw[id] = kw; r.extra = kwRe(kw); } else { delete rubPrefs.kw[id]; delete r.extra; } }
+    if (name) renameRub(id, name);
+  }
+  rubPrefs.prio = rubPrefs.prio || {}; rubPrefs.prio[id] = tpPrio;
+  rubPrefs.srcs = rubPrefs.srcs || {}; rubPrefs.srcs[id] = [...$("#tp-srcs").kPref];
+  const follow = $("#tp-follow").checked;
+  rubPrefs.hidden = follow ? rubPrefs.hidden.filter(x => x !== id) : [...new Set([...rubPrefs.hidden, id])];
+  // Priorité haute : le sujet déclenche aussi les notifications.
+  if (tpPrio >= 3 && !notif.rules.includes(id)) notif.rules = [...notif.rules, id];
+  saveRubs(); reclassify(); syncNotif();
+  $("#topicdlg").close();
+  if (follow) { view = id; if (tab !== "home") tab = "veille"; } else if (view === id) view = firstTopic();
+  renderAll();
+};
+
+// ——— Réglages en liste ———
+const PANE_TITLES = { list: "Réglages", feeds: "Mes journaux", rubs: "Mes sujets suivis", links: "Liens et traduction", notif: "Notifications", app: "Sauvegarde et mise à jour" };
+function showPane(p) {
+  document.querySelectorAll("#dlg .tabpane").forEach(x => x.hidden = x.dataset.pane !== p);
+  $("#settitle").textContent = PANE_TITLES[p] || "Réglages";
+  $("#setback").hidden = p === "list";
+  if (p === "rubs") renderRubRows();
+  if (p === "list") renderSetList();
+  $("#dlg").scrollTop = 0;
+}
+const CACHE_KEYS = ["kiosque.cache", "kiosque.ogimg2", "kiosque.sportdata", "kiosque.brief"];
+function cacheBytes() { let n = 0; for (const k of CACHE_KEYS) { try { n += (localStorage.getItem(k) || "").length * 2; } catch {} } return n; }
+function renderSetList() {
+  const seg = (id, v) => document.querySelectorAll(id + " button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.v === v)));
+  seg("#ui-size", ui.size); seg("#ui-density", ui.density);
+  $("#ui-dark").checked = ui.dark; $("#ui-theme").value = ui.theme;
+  $("#ui-wall").checked = ui.wall; $("#ui-images").value = ui.images; $("#ui-reader").checked = ui.reader;
+  $("#ui-ext").value = inApp ? "app" : "chrome";
+  const b = cacheBytes(); $("#cachesize").textContent = b > 1e6 ? (b / 1e6).toFixed(1).replace(".", ",") + " Mo" : Math.round(b / 1e3) + " Ko";
+  $("#about").textContent = BUILD;
+}
+const uiSet = (k, v) => { ui[k] = v; saveUi(); applyUi(); renderSetList(); };
+document.querySelectorAll("#ui-size button").forEach(b => b.onclick = () => uiSet("size", +b.dataset.v));
+document.querySelectorAll("#ui-density button").forEach(b => b.onclick = () => uiSet("density", +b.dataset.v));
+$("#ui-dark").onchange = () => uiSet("dark", $("#ui-dark").checked);
+$("#ui-theme").onchange = () => uiSet("theme", $("#ui-theme").value);
+$("#ui-wall").onchange = () => uiSet("wall", $("#ui-wall").checked);
+$("#ui-images").onchange = () => { uiSet("images", $("#ui-images").value); renderAll(); };
+$("#ui-reader").onchange = () => uiSet("reader", $("#ui-reader").checked);
+$("#ui-ext").onchange = () => { inApp = $("#ui-ext").value === "app"; store.set("kiosque.inapp", inApp); $("#inapp").checked = inApp; };
+document.querySelectorAll("#dlg [data-open]").forEach(b => b.onclick = () => {
+  if (b.dataset.open === "sport") { $("#dlg").close(); openSportPrefs(); return; }
+  showPane(b.dataset.open);
+});
+$("#setback").onclick = () => showPane("list");
+$("#clearcache").onclick = () => {
+  for (const k of CACHE_KEYS) { try { localStorage.removeItem(k); } catch {} }
+  for (const k of Object.keys(ogCache)) delete ogCache[k];
+  sportData = {};
+  $("#cache-status").textContent = "Cache effacé : les articles et images seront rechargés.";
+  renderSetList(); loadAll(); loadSport(true);
+};
+
 $("#refresh").onclick = loadAll;
 $("#more").onclick = () => { shown += PAGE; render(); };
-let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { shown = PAGE; render(); }, 150); };
-
-
-/* V37: veille personnalisée et briefing quotidien calculés localement */
-(() => {
-  const dlg = document.getElementById("v37dlg");
-  if (!dlg) return;
-  const $v = id => document.getElementById(id);
-  const key = "kiosque.v37.topics";
-  const getTopics = () => { try { const x=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(x)?x.filter(Boolean).slice(0,30):[]; } catch { return []; } };
-  const setTopics = arr => { try { localStorage.setItem(key, JSON.stringify(arr)); } catch {} };
-  const normV = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-  const escV = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const itemsV = () => { try { return typeof allItems==="function" ? allItems().filter(i=>i && i.title && i.link) : []; } catch { return []; } };
-  const scoreV = (i, topics) => {
-    const t=normV([i.title,i.description,i.summary,i.src,i.source].join(" "));
-    let score=0;
-    for(const topic of topics){const k=normV(topic).trim(); if(k && t.includes(k)) score+=Math.max(1,k.split(/\s+/).length*2);}
-    return score;
-  };
-  function renderV(){
-    const topics=getTopics(), items=itemsV();
-    $v("v37keywords").value=topics.join(", ");
-    $v("v37topics").innerHTML=topics.length?topics.map(t=>'<span class="v37-chip">'+escV(t)+'</span>').join(""):'<span class="v37-note">Aucun sujet enregistré pour le moment.</span>';
-    const ranked=items.map(i=>({i,score:scoreV(i,topics)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-    const candidates=(ranked.length?ranked:items.map(i=>({i,score:0}))).slice(0,5);
-    const count=items.length;
-    $v("v37briefTitle").textContent=topics.length ? (ranked.length ? ranked.length+" article(s) correspondent à votre veille" : "Vos sujets sont prêts à être suivis") : "Les titres à retenir aujourd’hui";
-    $v("v37briefText").textContent=count ? (topics.length ? (ranked.length ? "Sur "+count+" articles chargés, "+ranked.length+" correspondent à vos sujets prioritaires. Voici les plus pertinents." : "Aucun article chargé ne correspond encore à vos mots-clés. Les derniers titres restent disponibles ci-dessous.") : count+" articles sont disponibles dans les flux chargés. Ajoutez vos sujets pour personnaliser le briefing.") : "Aucun article n’est encore chargé. Actualisez les flux puis revenez ici. Le briefing est généré localement, sans résumé IA ni envoi de données.";
-    $v("v37stories").innerHTML=candidates.length?candidates.map(({i,score})=>'<a class="v37-story" href="'+escV(i.link)+'" target="_blank" rel="noopener noreferrer"><small>'+escV((typeof feedById==="function" && feedById(i.src)?.name) || i.src || i.source || "Kiosque")+(score?" · correspondance "+score:"")+'</small><strong>'+escV(i.title)+'</strong><small>Ouvrir l’article ↗</small></a>').join(""):'<div class="v37-empty">Aucun article disponible pour le moment. Appuyez sur Actualiser dans Kiosque.</div>';
-  }
-  $v("v37open").addEventListener("click",()=>{renderV();dlg.showModal();});
-  $v("v37close").addEventListener("click",()=>dlg.close());
-  dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
-  $v("v37form").addEventListener("submit",e=>{e.preventDefault();const arr=[...new Set($v("v37keywords").value.split(",").map(x=>x.trim()).filter(Boolean))].slice(0,30);setTopics(arr);renderV();});
-  window.addEventListener("hashchange",()=>{if(!dlg.open)return;renderV();});
-})();
+let qt; $("#q").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { shown = PAGE; exploreSrc = null; render(); }, 150); };
 
 restoreCache();
+applyUi();
 renderAll();
 if (allItems().length) requestAnimationFrame(() => setTimeout(hideSplash, 50));
 loadAll();
