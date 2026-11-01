@@ -226,6 +226,8 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .vchips .hchip.gear { border-style: dashed; color: var(--muted); }
 .diag { margin: 10px 0 4px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; }
 .diag .note { margin: 0 0 6px; }
+.diag .row { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; background: none; box-shadow: none; }
+.diag .row .btn { flex: 1 1 140px; min-width: 0; white-space: normal; line-height: 1.25; }
 .note.warn { color: var(--warn); }
 .rubrows { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 4px; }
 .rubrow { display: grid; grid-template-columns: 28px 26px minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); touch-action: pan-y; }
@@ -3323,11 +3325,12 @@ function showNotifStatus(st, now) {
   parts.push(st.wake ? "Dernier réveil en arrière-plan : " + fmtWhen(st.wake) + "." : "Dernier réveil en arrière-plan : jamais pour l'instant (Android n'a pas encore lancé Kiosque).");
   if (st.at) {
     let t = (now ? "Vérification faite " : "Dernière vérification : ") + fmtWhen(st.at) + " · " + (st.feeds || 0) + " journaux lus" + (st.errors ? " (" + st.errors + " en erreur)" : "") + ", " + (st.fresh || 0) + " article" + (st.fresh > 1 ? "s" : "") + " pour vous, " + (st.sent || 0) + " notification" + (st.sent > 1 ? "s" : "") + " envoyée" + (st.sent > 1 ? "s" : "") + ".";
+    if (st.errors && st.err) t += " Erreur : " + st.err + ".";
     if (st.first) t += " Première lecture : Kiosque note les articles déjà parus et ne préviendra que pour les suivants.";
     if (st.waiting) t += " Nuit : notifications regroupées pour le matin.";
     parts.push(t);
   } else if (st.ran && !st.enabled) parts.push("Les notifications d'articles sont désactivées.");
-  if (st.matchAt) parts.push("Matchs : " + (st.matches || 0) + " notification" + (st.matches > 1 ? "s" : "") + " à " + hm(new Date(st.matchAt)) + ".");
+  if (st.matchAt) parts.push("Matchs : " + (st.matchN != null ? st.matchN + " match(s) à venir de vos équipes, " : "") + (st.matches || 0) + " notification" + (st.matches > 1 ? "s" : "") + " à " + hm(new Date(st.matchAt)) + "." + (st.matchErr ? " Erreur : " + st.matchErr + "." : ""));
   $("#notif-last").textContent = parts.join(" ");
   const late = notif.enabled && (!st.wake || Date.now() - st.wake > 2 * 3600e3);
   if (late) $("#notif-battery").hidden = false;
@@ -3536,7 +3539,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.46";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.47";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
