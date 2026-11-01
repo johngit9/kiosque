@@ -50,6 +50,26 @@ function sameEvent(a, b) {
   b.forEach(w => { if (set[w]) n++; });
   return n >= 3 || (n >= 2 && n / Math.max(1, Math.min(a.length, b.length)) >= 0.5);
 }
+// Lecture d'une adresse : deux essais (avec puis sans en-têtes), et la raison de l'échec gardée pour le diagnostic.
+let lastErr = "";
+function errText(e) { try { return String((e && (e.message || e)) || "erreur inconnue").slice(0, 120); } catch (x) { return "erreur inconnue"; } }
+async function getText(url, opts) {
+  let why = "";
+  for (const o of opts ? [opts, undefined] : [undefined]) {
+    try {
+      const res = o ? await fetch(url, o) : await fetch(url);
+      const status = res && typeof res.status === "number" ? res.status : 0;
+      const ok = res && (res.ok === true || (status >= 200 && status < 400));
+      if (ok || (res && res.ok === undefined && !status)) {
+        const t = await res.text();
+        if (t && t.length > 20) return t;
+        why = "réponse vide (HTTP " + status + ")";
+      } else why = "HTTP " + status + (res && res.ok !== undefined ? "" : " (ok absent)");
+    } catch (e) { why = errText(e); }
+  }
+  lastErr = why;
+  throw new Error(why);
+}
 // Au plus MAX_HOUR notifications d'articles par heure (les suivantes sont regroupées).
 const MAX_HOUR = 4;
 
@@ -57,18 +77,18 @@ async function check(config) {
   const seen = kvGet("seen", []);
   const seenSet = new Set(seen);
   const first = !kvGet("initialized", false);
-  const rules = (config.rules || []).map(r => ({ name: r.name, re: new RegExp(r.re), prio: r.prio || 2 }))
+  const rules = (config.rules || []).map(r => { try { return { name: r.name, re: new RegExp(r.re), prio: r.prio || 2 }; } catch (e) { return null; } }).filter(Boolean)
     .sort((a, b) => b.prio - a.prio);
   const ad = config.adRe ? new RegExp(config.adRe) : null;
   const fresh = [];
-  const st = { at: Date.now(), feeds: 0, errors: 0, items: 0, fresh: 0, sent: 0, first, rules: rules.length };
+  // Le réveil en arrière-plan (wake) est gardé : avant la v47, il était effacé ici, d'où « jamais » dans le diagnostic.
+  const st = { at: Date.now(), wake: kvGet("status", {}).wake, feeds: 0, errors: 0, items: 0, fresh: 0, sent: 0, first, rules: rules.length };
   for (const f of config.feeds || []) {
     for (const url of f.urls) {
       try {
-        const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Kiosque RSS reader)" } });
-        if (!res.ok) { st.errors++; continue; }
+        const xml = await getText(url, { headers: { "User-Agent": "Mozilla/5.0 (Kiosque RSS reader)" } });
         st.feeds++;
-        for (const it of parse(await res.text(), f.name)) {
+        for (const it of parse(xml, f.name)) {
           st.items++;
           if (seenSet.has(it.link)) continue;
           seenSet.add(it.link); seen.push(it.link);
@@ -79,7 +99,7 @@ async function check(config) {
           const hit = rules.find(r => r.re.test(text));
           if (hit) fresh.push({ ...it, rule: hit.name, prio: hit.prio });
         }
-      } catch (e) { st.errors++; console.log("Kiosque: " + url + " " + e); }
+      } catch (e) { st.errors++; if (!st.err) st.err = f.name + " : " + errText(e); console.log("Kiosque: " + url + " " + e); }
     }
   }
   kvSet("seen", seen.slice(-1500));
@@ -159,9 +179,7 @@ async function fetchMatches(m) {
   (m.teams || []).forEach(t => { teams[t] = 1; });
   for (const lg of m.comps || []) {
     try {
-      const res = await fetch(lg.url);
-      if (!res.ok) continue;
-      const list = JSON.parse(await res.text());
+      const list = JSON.parse(await getText(lg.url));
       for (const r of list) {
         const t = isoTime(r.DateUtc);
         if (!(t > now.getTime() - 3600e3 && t < now.getTime() + 3 * 864e5)) continue;
@@ -170,7 +188,7 @@ async function fetchMatches(m) {
         if (!mine && !fr) continue;
         out.push({ id: lg.id + ":" + r.MatchNumber, t, lg: lg.name, icon: lg.icon || "⚽", title: short(r.HomeTeam) + " – " + short(r.AwayTeam) });
       }
-    } catch (e) { console.log("Kiosque sport: " + lg.id + " " + e); }
+    } catch (e) { m.err = lg.name + " : " + errText(e); console.log("Kiosque sport: " + lg.id + " " + e); }
   }
   return out;
 }
@@ -204,7 +222,7 @@ async function checkMatches(m) {
   kvSet("matchDone", done.slice(-300));
   kvSet("nextId", id > 900000 ? 1000 : id);
   if (notes.length) CapacitorNotifications.schedule(notes);
-  const st = kvGet("status", {}); st.matches = notes.length; st.matchAt = Date.now(); kvSet("status", st);
+  const st = kvGet("status", {}); st.matches = notes.length; st.matchAt = Date.now(); st.matchN = cache.list.length; st.matchErr = m.err || ""; kvSet("status", st);
 }
 
 async function runAll() {
