@@ -215,6 +215,15 @@ dialog { border: 1px solid var(--line); border-radius: 16px; background: var(--s
 .footbar { margin: 0 0 16px; display: flex; flex-direction: column; gap: 6px; }
 .footbar div { border-left: 3px solid var(--accent); background: var(--chip); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 14px; }
 .footbar b { font-weight: 700; }
+.footbar button { display: block; width: 100%; text-align: left; color: var(--ink); font: inherit; border: 0; border-left: 3px solid var(--accent); background: var(--chip); padding: 8px 30px 8px 12px; border-radius: 0 8px 8px 0; font-size: 14px; cursor: pointer; position: relative; }
+.footbar button::after { content: "›"; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--accent); }
+.foottoggle { display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 0 0 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); font: 600 15px var(--f-body); cursor: pointer; }
+.foottoggle svg { width: 20px; height: 20px; transition: transform .2s; color: var(--accent); }
+.foottoggle[aria-expanded="true"] { border-radius: 14px 14px 0 0; margin-bottom: 0; border-bottom-color: transparent; }
+.foottoggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.foottoggle[aria-expanded="true"] + .foot { border-top-left-radius: 0; border-top-right-radius: 0; border-top: 0; }
+.vhint { margin: 2px 2px 6px; font-size: 12.5px; color: var(--muted); }
+.vchips .hchip.gear { border-style: dashed; color: var(--muted); }
 .diag { margin: 10px 0 4px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; }
 .diag .note { margin: 0 0 6px; }
 .note.warn { color: var(--warn); }
@@ -566,7 +575,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
 <body>
 <div class="sticky">
   <header class="top">
-    <h1 class="brand2"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#13233d"/><g transform="translate(10 9) scale(.8)"><rect x="35" y="9" width="52" height="68" rx="6" fill="#ff5a3c" transform="rotate(9 61 43)"/><rect x="14" y="19" width="56" height="72" rx="6" fill="#fff"/><rect x="21" y="28" width="42" height="10" rx="2.5" fill="#13233d"/><rect x="21" y="44" width="19" height="17" rx="2.5" fill="#ff5a3c"/><rect x="45" y="44.5" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="51" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="57.5" width="12" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="68" width="42" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="77" width="30" height="4.5" rx="2.25" fill="#9aa8ba"/></g></svg><span><b>Kiosque</b><small id="brandsub">Ma veille</small></span></h1>
+    <h1 class="brand2"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#13233d"/><g transform="translate(10 9) scale(.8)"><rect x="35" y="9" width="52" height="68" rx="6" fill="#ff5a3c" transform="rotate(9 61 43)"/><rect x="14" y="19" width="56" height="72" rx="6" fill="#fff"/><rect x="21" y="28" width="42" height="10" rx="2.5" fill="#13233d"/><rect x="21" y="44" width="19" height="17" rx="2.5" fill="#ff5a3c"/><rect x="45" y="44.5" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="51" width="18" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="45" y="57.5" width="12" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="68" width="42" height="4.5" rx="2.25" fill="#9aa8ba"/><rect x="21" y="77" width="30" height="4.5" rx="2.25" fill="#9aa8ba"/></g></svg><span><b>Kiosque</b><small id="brandsub">À la une</small></span></h1>
     <div class="tools">
       <span id="stamp" class="stamp"></span>
       <button id="searchbtn" class="round" type="button" aria-label="Rechercher" title="Rechercher"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
@@ -591,10 +600,11 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
   </nav>
   <main>
     <div id="veillehead" class="veillehead"><h2>Ma veille</h2><button id="vh-add" class="btn small" type="button" hidden>+ Sujet</button><button id="vh-edit" class="btn small" type="button">Modifier</button></div>
-    <div id="vtopics" class="vtopics"><button id="vfold" class="navlabel vfold" type="button" aria-expanded="true"><span>Mes sujets suivis</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="vtiles" class="tiles vtiles"></div><div id="vchips" class="hchips vchips" hidden></div></div>
+    <div id="vtopics" class="vtopics"><button id="vfold" class="navlabel vfold" type="button" aria-expanded="true"><span>Mes sujets suivis</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="vtiles" class="tiles vtiles"></div><div id="vchips" class="hchips vchips" hidden></div><p id="vhint" class="vhint"></p></div>
     <p id="intro" class="intro" hidden></p>
     <h2 id="viewtitle" class="viewtitle"></h2>
     <div id="footbar" class="footbar" hidden></div>
+    <button id="foottoggle" class="foottoggle" type="button" hidden aria-expanded="false"><span>⚽ Matchs, résultats et classements</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <section id="foot" class="foot" hidden></section>
     <p id="status" class="status">Chargement des flux…</p>
     <section id="lead"></section>
@@ -625,6 +635,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
     </div>
     <div class="sblock"><h3>Contenu</h3>
       <label class="srow" for="ui-wall"><span>Bloquer les pages de consentement<small>Sur l'article d'origine : masque les fenêtres de cookies (pas sur les liens définis)</small></span><span class="switch"><input id="ui-wall" type="checkbox"><span></span></span></label>
+      <label class="srow" for="clean"><span>Nettoyer les pages<small>Pubs et encarts promotionnels retirés dans la lecture et sur l'article d'origine, bandeaux de cookies refusés (pas sur les liens définis)</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
       <label class="srow" for="ui-images"><span>Chargement des images</span><select id="ui-images"><option value="std">Qualité standard</option><option value="eco">Économie de données</option><option value="none">Sans images</option></select></label>
       <label class="srow" for="ui-reader"><span>Lecture dans l'application<small>Le texte de l'article s'affiche dans Kiosque ; sinon la page du journal s'ouvre</small></span><span class="switch"><input id="ui-reader" type="checkbox"><span></span></span></label>
       <label class="srow" for="ui-ext"><span>Ouvrir les liens externes</span><select id="ui-ext"><option value="app">Dans l'appli</option><option value="chrome">Dans Chrome</option></select></label>
@@ -638,7 +649,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
     </div>
     <div class="sblock"><h3>Données et confidentialité</h3>
       <button id="clearcache" class="srow" type="button"><span>Effacer le cache<small id="cache-status"></small></span><span class="val"><span id="cachesize"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
-      <button class="srow" type="button" data-open="app"><span>Sauvegarde, lecteur et mise à jour</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <button class="srow" type="button" data-open="app"><span>Sauvegarde et mise à jour</span><span class="val"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
       <div class="srow"><span>À propos</span><span class="val">Version <b id="about"></b></span></div>
     </div>
   </section>
@@ -721,9 +732,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
       </div>
       <p id="backup-status" class="note" role="status"></p>
     </div>
-      <h3 class="grouphead">Lecture</h3>
     <label class="toggle-line" for="inapp" hidden><span><b>Lire dans l'appli</b><small>Sans barre d'adresse, avec zoom. Désactivez pour lire dans Chrome (utile si un site affiche une vérification en boucle).</small></span><span class="switch"><input id="inapp" type="checkbox"><span></span></span></label>
-    <label class="toggle-line" for="clean"><span><b>Nettoyer les pages</b><small>Sur l'article d'origine (pas sur les liens définis) : pubs masquées, bandeaux de cookies refusés (« Continuer sans accepter », « Tout refuser »). Les traqueurs connus sont toujours bloqués.</small></span><span class="switch"><input id="clean" type="checkbox"><span></span></span></label>
     <label class="field" for="zoom" hidden>Taille du texte de l'appli : <b id="zoomval"></b>
       <input id="zoom" type="range" min="85" max="150" step="5">
     </label>
@@ -731,7 +740,7 @@ dialog.full { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh
 </dialog>
 
 <nav id="tabbar" class="tabbar" aria-label="Navigation">
-  <button type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v8.5a1 1 0 0 1-1 1h-4.5V15h-5v5.5H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg><span>Accueil</span></button>
+  <button type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v8.5a1 1 0 0 1-1 1h-4.5V15h-5v5.5H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg><span>À la une</span></button>
   <button type="button" data-tab="veille"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Ma veille</span></button>
   <button type="button" data-tab="explore"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Explorer</span></button>
   <button type="button" data-tab="library"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5c3-1.3 5.8-1.2 8.5.5 2.7-1.7 5.5-1.8 8.5-.5v13c-3-1.3-5.8-1.2-8.5.5-2.7-1.7-5.5-1.8-8.5-.5zM12 6v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Bibliothèque</span></button>
@@ -1089,7 +1098,7 @@ if (!store.get("kiosque.links", null)) { store.set("kiosque.links", links); stor
 const saveLinks = () => store.set("kiosque.links", links);
 const linkById = id => links.find(l => l.id === id) || links[0];
 let saved = store.get("kiosque.saved", []);
-const VIEWS = ["une", "moi", ...RUBRICS.map(r => r.id), "autres", "saved"];
+const VIEWS = ["une", "multi", "moi", ...RUBRICS.map(r => r.id), "autres", "saved"];
 let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "une";
 let telSub = "all";
 let sportSub = "all";
@@ -1135,8 +1144,9 @@ function parseFeed(xmlText, feed) {
       title: stripHtml(textOf(el, "title")),
       link: textOf(el, "link") || (el.querySelector("guid")?.textContent || "").trim(),
       date: new Date(textOf(el, "pubDate") || [...el.getElementsByTagName("*")].find(n => n.localName === "date")?.textContent || 0),
-      summary: stripHtml(rawDesc).slice(0, 400),
+      summary: cleanSummary(stripHtml(rawDesc)).slice(0, 400),
       image: findImage(el, rawDesc + (encoded ? encoded.textContent : "")),
+      site: el.querySelector("source")?.getAttribute("url") || "",
       cats: [...el.querySelectorAll("category")].map(c => c.textContent.trim()),
     });
   }
@@ -1147,12 +1157,28 @@ function parseFeed(xmlText, feed) {
       title: stripHtml(textOf(el, "title")),
       link: link ? link.getAttribute("href") : "",
       date: new Date(textOf(el, "published") || textOf(el, "updated") || 0),
-      summary: stripHtml(rawDesc).slice(0, 400),
+      summary: cleanSummary(stripHtml(rawDesc)).slice(0, 400),
       image: findImage(el, rawDesc),
       cats: [...el.querySelectorAll("category")].map(c => c.getAttribute("term") || c.textContent.trim()),
     });
   }
+  // Flux Google Actualités : le vrai site (pour son logo) et le titre sans « - Nom du site ».
+  if (/news\.google\./.test(feed.url || "")) {
+    const hosts = {};
+    for (const i of out) {
+      let h = ""; try { h = new URL(i.site).hostname.replace(/^www\./, ""); } catch {}
+      if (h) hosts[h] = (hosts[h] || 0) + 1;
+      i.title = i.title.replace(/\s+[-–|]\s+[^-–|]{3,60}$/, "");
+    }
+    const best = Object.keys(hosts).sort((a, b) => hosts[b] - hosts[a])[0];
+    if (best && feedSite[feed.id] !== best) { feedSite[feed.id] = best; store.set("kiosque.feedsite", feedSite); }
+  }
   return out.filter(i => i.title && /^https?:/i.test(i.link)).map(i => ({ ...i, src: feed.id, ...classify(i) }));
+}
+// Fin de résumé ajoutée par WordPress : « […] L'article X est apparu en premier sur Y ».
+function cleanSummary(t) {
+  return (t || "").replace(/\s*L[’']article .{0,240}? est apparu en premier sur .*$/i, "")
+    .replace(/\s*(\[(…|\.\.\.)\]|…)\s*L[’']article\b.*$/i, " […]").replace(/\s*The post .{0,240}? appeared first on .*$/i, "").trim();
 }
 async function fetchDecoded(url) {
   if (!NATIVE || !/^https?:/.test(url) || typeof PageShot === "undefined" || !PageShot) return "";
@@ -1254,7 +1280,10 @@ function NO_NET_HINT() {
   return "Aucun article n'a pu être chargé" + why + "." + where;
 }
 function feedById(id) { return feeds.find(f => f.id === id); }
-function rubricName(id) { return rubPrefs.names[id] || ENTRY_NAMES[id] || (RUBRICS.find(r => r.id === id) || {}).name || id; }
+// Site réel des flux passant par Google Actualités (appris à la lecture du flux), pour afficher son logo.
+let feedSite = store.get("kiosque.feedsite", {});
+function rubricName(id) { if (id === "multi") return vsel.length ? vsel.map(x => rubricNameRaw(x)).join(" + ") : "Tous mes sujets"; return rubricNameRaw(id); }
+function rubricNameRaw(id) { return rubPrefs.names[id] || ENTRY_NAMES[id] || (RUBRICS.find(r => r.id === id) || {}).name || id; }
 function ago(d) {
   d = d instanceof Date ? d : new Date(d);
   if (!d || isNaN(d) || d.getTime() === 0) return "";
@@ -1346,8 +1375,13 @@ function feedRubric(id) {
   return specMemo.get(id) || null;
 }
 const inRubric = (i, id) => i.rubrics.includes(id) || feedRubric(i.src) === id;
+// Ma veille : plusieurs sujets à la fois (vsel). view = "multi" quand 0 ou 2+ sujets sont cochés (0 = tous les sujets suivis).
+let vsel = store.get("kiosque.vsel", []);
+const followedIds = () => userOrder().filter(x => !["une", "saved", "autres"].includes(x) && !rubHidden(x));
+const selIds = () => vsel.length ? vsel : followedIds().filter(x => x !== "moi");
 function inView(i) {
   if (view === "une") return true;
+  if (view === "multi") return selIds().some(id => id === "moi" ? forMe(i) : inRubric(i, id));
   if (view === "moi") return forMe(i);
   if (!inRubric(i, view)) return false;
   if (view === "telecoms" && telSub !== "all") return !!i.tel?.[telSub];
@@ -1361,7 +1395,7 @@ function currentItems() {
   if (q) items = items.filter(i => norm(i.title + " " + i.summary).includes(q));
   // Dans une rubrique, les articles des journaux spécialisés (L'Équipe en Sport…) passent en premier.
   const spec = i => view !== "une" && view !== "moi" && feedRubric(i.src) === view ? 1 : 0;
-  if (view === "une" || view === "moi") return items.sort((a, b) => spec(b) - spec(a) || (b.date || 0) - (a.date || 0));
+  if (view === "une" || view === "moi" || view === "multi") return items.sort((a, b) => spec(b) - spec(a) || (b.date || 0) - (a.date || 0));
   const sc = new Map(items.map(i => [i, relevance(i, view)]));
   return items.sort((a, b) => sc.get(b) - sc.get(a) || (b.date || 0) - (a.date || 0));
 }
@@ -1622,6 +1656,7 @@ function go(id, sub) {
   if (id === "saved") return setTab("library");
   tab = "veille";
   view = id; filter = "all"; shown = PAGE; telSub = sub || "all"; sportSub = "all";
+  if (id !== "multi") { vsel = [id]; store.set("kiosque.vsel", vsel); }
   try { history.replaceState(null, "", "#" + id); } catch {}
   renderAll(); window.scrollTo({ top: 0 });
   const cur = $("#menu [aria-current='true']"); if (cur) cur.scrollIntoView({ inline: "center", block: "nearest" });
@@ -1925,8 +1960,7 @@ function tile(i) {
   const f = feedById(i.src) || { name: i.srcName || i.src, color: "#13233d" };
   const t = document.createElement("div"); t.className = "tile";
   t.style.setProperty("--fc", f.color);
-  let host = "";
-  try { host = new URL(f.url || i.link).hostname.replace(/^(www|feeds?|services|dwh|rss)\./, ""); } catch {}
+  const host = feedHost(feedById(i.src) || f, i.link);
   if (host) {
     const im = document.createElement("img"); im.alt = ""; im.loading = "lazy"; im.referrerPolicy = "no-referrer";
     im.src = "https://www.google.com/s2/favicons?sz=128&domain=" + encodeURIComponent(host);
@@ -2074,7 +2108,7 @@ function render() {
 function renderList() {
   const lead = $("#lead"), grid = $("#grid"), status = $("#status"), intro = $("#intro");
   lead.innerHTML = ""; grid.innerHTML = "";
-  $("#foot").before($("#footbar"));
+  $("#foottoggle").before($("#footbar"));
   try { renderFoot(); } catch (e) { console.warn("foot", e); }
   const spName = view === "sport" && sportSub !== "all" ? " · " + (SPORT_SUBS.find(x => x.id === sportSub) || {}).name : "";
   $("#viewtitle").textContent = (view === "saved" ? "Bibliothèque" : rubricName(view)) + spName + (filter !== "all" ? " · " + (feedById(filter)?.name || "") : "");
@@ -3046,7 +3080,8 @@ function renderFootbar() {
   const soon = show ? allMatches().filter(m => followed(m) && m.state !== "post" && m.t >= +t0 && m.t < +t0 + 2 * 864e5) : [];
   bar.hidden = !soon.length;
   for (const m of soon.slice(0, 4)) {
-    const d = new Date(m.t), x = document.createElement("div"), b = document.createElement("b");
+    const d = new Date(m.t), x = document.createElement("button"), b = document.createElement("b");
+    x.type = "button"; x.onclick = () => openMatches("teams");
     b.textContent = sportById(m.c.sport).icon + " " + (m.state === "in" ? "En ce moment" : dayLabel(d) + " " + hm(d)) + " · " + shortTeam(m.home) + " – " + shortTeam(m.away);
     x.append(b, document.createTextNode(" · " + m.c.name + (m.state === "in" && m.hs !== null ? " · " + m.hs + "-" + m.as : "")));
     bar.append(x);
@@ -3067,11 +3102,21 @@ function renderSportSub(sub, items) {
     sub.append(b);
   }
 }
+// Ouvre Sport avec le panneau des matchs déplié (bandeau du prochain match, bouton en haut de Sport).
+function openMatches(tabId) {
+  ui.sfoot = true; saveUi();
+  if (tabId) { sportPrefs.tab = tabId; saveSport(); }
+  if (!(tab === "veille" && view === "sport")) go("sport"); else renderAll();
+  setTimeout(() => { const f = $("#foottoggle"); if (f && !f.hidden) window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 70, behavior: "smooth" }); }, 50);
+}
+$("#foottoggle").onclick = () => { ui.sfoot = !ui.sfoot; saveUi(); renderFoot(); };
 // Panneau Sport : Mes équipes, Résultats, Classement, ⚙ Mes sports.
 function renderFoot() {
   renderFootbar();
-  const box = $("#foot");
-  box.hidden = view !== "sport";
+  const box = $("#foot"), tg = $("#foottoggle");
+  tg.hidden = view !== "sport" || tab !== "veille";
+  tg.setAttribute("aria-expanded", String(!!ui.sfoot));
+  box.hidden = view !== "sport" || !ui.sfoot;
   if (box.hidden) return;
   loadSport(false);
   box.innerHTML = "";
@@ -3491,7 +3536,7 @@ $("#import").onchange = async () => {
 };
 
 // Mise à jour : compare le commit de cette version à celui de la dernière APK publiée.
-const BUILD = "1.45";     // numéro de version, ex. 1.42 (posé par android.yml)
+const BUILD = "1.46";     // numéro de version, ex. 1.42 (posé par android.yml)
 const COMMIT = "6a2e683";
 const RELEASE_API = "https://api.github.com/repos/johngit9/kiosque/releases/tags/android";
 $("#build").textContent = BUILD.startsWith("__") ? "version de développement" : BUILD;
@@ -3634,7 +3679,7 @@ function applyTab() {
   $("#vtopics").hidden = tab !== "veille";
   if (tab !== "veille") $("#submenu").hidden = true;
   $("#veillehead").hidden = tab !== "veille";
-  $("#brandsub").textContent = { home: "Ma veille", veille: "Mes sujets suivis", explore: "Explorer", library: "Bibliothèque" }[tab];
+  $("#brandsub").textContent = { home: "À la une", veille: "Mes sujets suivis", explore: "Explorer", library: "Bibliothèque" }[tab];
   document.querySelectorAll("#tabbar button").forEach(b => b.setAttribute("aria-current", String(b.dataset.tab === tab)));
 }
 const firstTopic = () => topicIds()[0] || "telecoms";
@@ -3656,41 +3701,46 @@ $("#vtopics").after($("#submenu"));
 // Ma veille : tous les sujets suivis en tuiles (ordre choisi dans Réglages), le sujet affiché en surbrillance.
 // Ma veille : bloc des sujets suivis, replié (une ligne de puces) ou déplié (tuiles). Choix retenu.
 function renderVeilleTopics() {
-  const box = $("#vtiles"), chips = $("#vchips"); box.innerHTML = ""; chips.innerHTML = "";
-  const folded = !!ui.vfold;
-  $("#vfold").setAttribute("aria-expanded", String(!folded));
-  box.hidden = folded; chips.hidden = !folded;
-  const count = rubCount();
-  const ids = userOrder().filter(x => !["une", "saved", "autres"].includes(x) && !rubHidden(x));
+  const chips = $("#vchips"); chips.innerHTML = ""; chips.hidden = false;
+  $("#vtiles").hidden = true; $("#vfold").hidden = true;
+  const count = rubCount(), ids = followedIds();
+  const pick = id => {
+    const base = view === "multi" ? vsel : [view];
+    vsel = id === null ? [] : base.includes(id) ? base.filter(x => x !== id) : [...base, id];
+    store.set("kiosque.vsel", vsel);
+    tab = "veille"; filter = "all"; shown = PAGE; telSub = "all"; sportSub = "all";
+    view = vsel.length === 1 ? vsel[0] : "multi";
+    renderAll(); window.scrollTo({ top: 0 });
+  };
+  const all = el("button", "hchip"); all.type = "button"; all.textContent = "Tout";
+  all.setAttribute("aria-current", String(view === "multi" && !vsel.length)); all.onclick = () => pick(null);
+  chips.append(all);
   for (const id of ids) {
-    if (folded) {
-      const c = el("button", "hchip"); c.type = "button"; c.setAttribute("aria-current", String(id === view));
-      c.append(document.createTextNode(rubIcon(id) + " " + rubricName(id) + " "), el("span", "n", count(id)));
-      c.onclick = () => go(id);
-      if (id !== "moi") longPress(c, () => openTopic(id));
-      chips.append(c);
-      continue;
-    }
-    const b = el("button", "ttile" + (prioOf(id) >= 3 ? " p3" : "")); b.type = "button";
-    b.setAttribute("aria-current", String(id === view));
-    b.append(el("span", "ic", rubIcon(id)), el("span", "", rubricName(id)), el("span", "n", count(id)));
-    b.onclick = () => go(id);
-    if (id !== "moi") longPress(b, () => openTopic(id));
-    box.append(b);
+    const on = view === "multi" ? vsel.includes(id) : id === view;
+    const c = el("button", "hchip"); c.type = "button"; c.setAttribute("aria-current", String(on)); c.setAttribute("aria-pressed", String(on));
+    c.append(document.createTextNode((on && (vsel.length > 1) ? "✓ " : "") + rubIcon(id) + " " + rubricName(id) + " "), el("span", "n", count(id)));
+    c.onclick = () => pick(id);
+    if (id !== "moi") longPress(c, () => openTopic(id));
+    chips.append(c);
   }
-  if (!folded) {
-    const add = el("button", "ttile add"); add.type = "button";
-    add.append(el("span", "ic", "+"), el("span", "", "Nouveau sujet"));
-    add.onclick = () => openTopic(null);
-    box.append(add);
-  } else { const cur = chips.querySelector('[aria-current="true"]'); if (cur) setTimeout(() => cur.scrollIntoView({ inline: "center", block: "nearest" }), 0); }
+  const gear = el("button", "hchip gear"); gear.type = "button"; gear.textContent = "⚙ Gérer"; gear.onclick = () => openSettings("rubs");
+  chips.append(gear);
+  const hint = $("#vhint"); if (hint) hint.textContent = view === "multi" ? (vsel.length ? vsel.length + " sujets combinés · touchez un sujet pour l'ajouter ou le retirer" : "Tous vos sujets suivis · touchez des sujets pour les combiner") : "Touchez d'autres sujets pour les ajouter";
+  const cur = chips.querySelector('[aria-current="true"]'); if (cur) setTimeout(() => cur.scrollIntoView({ inline: "center", block: "nearest" }), 0);
 }
 $("#vfold").onclick = () => { ui.vfold = !ui.vfold; saveUi(); renderVeilleTopics(); };
 $("#vh-add").onclick = () => openTopic(null);
-$("#vh-edit").onclick = () => openTopic(view);
+$("#vh-edit").onclick = () => view === "multi" || view === "moi" ? openSettings("rubs") : openTopic(view);
 
 // ——— Éléments communs : logo du journal, mots-clés, lignes et grande carte ———
-function feedHost(f, link) { try { return new URL((f && f.url) || link).hostname.replace(/^(www|feeds?|services|dwh|rss)\./, ""); } catch { return ""; } }
+function feedHost(f, link) {
+  let h = ""; try { h = new URL((f && f.url) || link).hostname.replace(/^(www|feeds?|services|dwh|rss)\./, ""); } catch { return ""; }
+  if (/(^|\.)news\.google\.|^google\./.test(h) && f) {
+    const m = /site(?::|%3A)([\w.-]+\.[a-z]{2,})/i.exec(f.url || "");
+    return (m && m[1].replace(/^www\./, "")) || feedSite[f.id] || h;
+  }
+  return h;
+}
 function favUrl(src, link) { const h = feedHost(feedById(src), link); return h ? "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(h) : ""; }
 function favImg(src, link, cls) {
   const im = el("img", cls || "fav"); im.alt = ""; im.loading = "lazy"; im.referrerPolicy = "no-referrer";
@@ -3783,7 +3833,7 @@ function loadState() {
 // ——— Accueil ———
 function renderHome() {
   const box = $("#home");
-  $("#foot").before($("#footbar")); // le bandeau des matchs est rangé avant de vider l'accueil
+  $("#foottoggle").before($("#footbar")); // le bandeau des matchs est rangé avant de vider l'accueil
   box.innerHTML = "";
   // Rubriques : toutes, en grille de 3 ; le titre replie le bloc en une ligne de puces (choix retenu).
   const folded = !!ui.hfold, count = rubCount();
@@ -3807,9 +3857,15 @@ function renderHome() {
     }
     box.append(g);
   }
-  renderFootbar(); box.append($("#footbar"));
+  const rubBlock = [...box.childNodes]; box.innerHTML = "";
   const items = allItems();
   const wait = loadState();
+  // À la une en premier (demande d'Alain, v46) : l'événement le plus important des dernières heures.
+  const heads = wait ? [] : eventsOf(items);
+  const recent = heads.filter(i => Date.now() - (+new Date(i.date) || 0) < 36 * 3600e3);
+  const lead = (recent.length ? recent : heads).slice(0, 80).sort((a, b) => importance(b) - importance(a))[0];
+  if (lead) { box.append(shead("À la une", "Voir tout", () => setTab("explore"))); box.append(bigCard(lead)); }
+  renderFootbar(); box.append($("#footbar"));
   // Carte « Votre briefing du jour ».
   const br = briefing();
   const bc = el("button", "brief"); bc.type = "button";
@@ -3820,13 +3876,8 @@ function renderHome() {
   bc.insertAdjacentHTML("beforeend", SVG.chev);
   bc.onclick = openBrief;
   box.append(bc);
+  rubBlock.forEach(n => box.append(n));
   if (wait) { box.append(el("div", "empty", wait)); return; }
-  // À la une : l'événement le plus important des dernières heures.
-  const heads = eventsOf(items);
-  const recent = heads.filter(i => Date.now() - (+new Date(i.date) || 0) < 36 * 3600e3);
-  const lead = (recent.length ? recent : heads).slice(0, 80).sort((a, b) => importance(b) - importance(a))[0];
-  box.append(shead("À la une", "Voir tout", () => setTab("explore")));
-  if (lead) box.append(bigCard(lead));
   // Mes sujets suivis : affichés dans Ma veille seulement (demande d'Alain, v44).
   // Derniers articles : un seul par événement, du plus récent au plus ancien.
   box.append(shead("Derniers articles"));
@@ -3962,8 +4013,30 @@ async function articleHtml(url) {
   if (!html) throw new Error("page introuvable");
   return html;
 }
+// Pubs dans le texte de l'article : blocs marqués pub/sponsor/promo, mentions « Publicité », « À lire aussi »,
+// et images cliquables qui mènent vers un autre site (bannières, offres commerciales).
+const AD_CLASS = /(^|[\s_-])(ads?|advert\w*|pub|publicite|sponsor\w*|promo\w*|partenaire\w*|affil\w*|taboola|outbrain|related|lire-aussi|a-lire|newsletter|cta|offre\w*|deal\w*|bons?-plans?)([\s_-]|$)/i;
+const AD_TEXT = /^\s*(publicit[ée]|sponsoris[ée]e?|contenu sponsoris[ée]|annonce|partenaire|en partenariat avec|offre partenaire|code promo|bon plan|à lire aussi|a lire aussi|lire aussi|à voir aussi|voir aussi|sur le même sujet|découvrez aussi)(?![a-zà-ÿ])/i;
+function stripAds(root, base) {
+  if (!clean) return;
+  let host = ""; try { host = new URL(base).hostname.replace(/^www\./, ""); } catch {}
+  const same = u => { try { const h = new URL(u, base).hostname.replace(/^www\./, ""); return !host || h === host || h.endsWith("." + host) || host.endsWith("." + h); } catch { return true; } };
+  root.querySelectorAll("[class],[id]").forEach(n => { if (n.isConnected && n !== root && AD_CLASS.test((n.getAttribute("class") || "") + " " + (n.id || "")) && (n.textContent || "").length < 1500) n.remove(); });
+  root.querySelectorAll("p,div,section,li,span,strong,em,h2,h3,h4,h5,figcaption").forEach(n => { if (n.isConnected && AD_TEXT.test(n.textContent || "") && (n.textContent || "").trim().length < 160) n.remove(); });
+  root.querySelectorAll("a[href] img").forEach(im => {
+    const a = im.closest("a"), href = a.getAttribute("href") || "";
+    if (/\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(href) || same(href)) return;
+    (im.closest("figure") || a).remove();
+  });
+}
+// Même image sous plusieurs tailles (WordPress : photo-1024x576.jpg et photo.jpg) : même clé.
+function imgKey(u) {
+  try { u = new URL(u).pathname; } catch { u = (u || "").split("?")[0]; }
+  return decodeURIComponent(u.split("/").pop() || "").toLowerCase().replace(/-(\d{2,4}x\d{2,4}|scaled|large|medium|thumb\w*|e\d{10,})(?=\.\w+$)/g, "").replace(/\.(jpe?g|png|webp|gif|avif)$/, "");
+}
 function cleanArticle(htmlStr, base) {
   const t = document.createElement("template"); t.innerHTML = htmlStr;
+  stripAds(t.content, base);
   t.content.querySelectorAll("script,style,link,meta,iframe,object,embed,form,input,button,select,textarea,noscript,svg,canvas,aside,nav,footer").forEach(n => n.remove());
   t.content.querySelectorAll("*").forEach(n => {
     for (const a of [...n.attributes]) {
@@ -4006,16 +4079,29 @@ async function openReader(i) {
     const html = await Promise.race([articleHtml(i.link), new Promise((_, no) => setTimeout(() => no(new Error("délai dépassé")), 12000))]);
     if (seq !== readerSeq) return;
     const doc = new DOMParser().parseFromString(html.replace(/<head([^>]*)>/i, '<head$1><base href="' + i.link.replace(/"/g, "&quot;") + '">'), "text/html");
+    stripAds(doc.body, i.link); // avant Readability, qui efface les classes des blocs
     const art = new Readability(doc, { charThreshold: 300 }).parse();
     const txt = (art && art.textContent || "").replace(/\s+/g, " ").trim();
     if (txt.length < 700) throw new Error("texte trop court (" + txt.length + ")");
     const content = cleanArticle(art.content, i.link);
     const tx = el("div", "rdtext"); tx.append(content);
-    // Pas deux fois la même photo ni le même chapeau.
+    // Pas deux fois la même photo (même sous une autre taille) ni le même chapeau.
+    const seenImg = new Set(hero.isConnected && hero.src ? [imgKey(hero.src)] : []);
+    tx.querySelectorAll("img").forEach(im => {
+      const k = imgKey(im.src);
+      if (k && seenImg.has(k)) { const fig = im.closest("figure"); (fig && fig.querySelectorAll("img").length === 1 ? fig : im).remove(); }
+      else seenImg.add(k);
+    });
     const first = tx.querySelector("img");
-    if (first && hero.isConnected && hero.src && first.src.split("?")[0] === hero.src.split("?")[0]) first.remove();
-    if (!hero.isConnected && first && !i.image && ui.images !== "none") { hero.src = first.src; first.remove(); wait.before(hero); }
+    if (!hero.isConnected && first && !i.image && ui.images !== "none") { hero.src = first.src; (first.closest("figure") || first).remove(); wait.before(hero); }
     if (!i.summary && art.excerpt) { lede.textContent = art.excerpt; meta.before(lede); }
+    // Titre répété en tête du texte : retiré.
+    const h1 = tx.querySelector("h1,h2"), tk = x => norm(x).replace(/[^a-z0-9]+/g, " ").trim().slice(0, 18);
+    if (h1 && tk(h1.textContent).length > 8 && tk(i.title) === tk(h1.textContent)) h1.remove();
+    // Chapeau déjà en tête de l'article : on le retire.
+    const lk = norm(lede.textContent).replace(/[^a-z0-9]+/g, " ").trim().slice(0, 70);
+    if (lede.isConnected && lk.length > 30 && norm(tx.textContent.slice(0, 1200)).replace(/[^a-z0-9]+/g, " ").includes(lk)) lede.remove();
+    tx.querySelectorAll("p,figure,div").forEach(n => { if (!n.textContent.trim() && !n.querySelector("img,video")) n.remove(); });
     tx.querySelectorAll("a[href]").forEach(a => a.onclick = e => { e.preventDefault(); openInBrowser(a.href, true); });
     const words = txt.split(" ").length;
     meta.querySelector(".rt b").textContent = Math.max(1, Math.round(words / 230)) + " min de lecture";
